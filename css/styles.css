@@ -85,7 +85,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 8px 40px 40px 8px;
+      padding: 8px  40px 8px 40px;
       overflow: visible; 
       background-color: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
@@ -650,15 +650,13 @@
         font-size: 1.8em;
         color: var(--text-color);
         cursor: pointer;
-        padding: 10px; /* 採用更大的padding */
-        line-height: 1;
-        z-index: 1101; /* 確保層級高 */
+    padding: 5px;
+    line-height: 1;
+    z-index: 2000; /* 確保層級高 */
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         left: 15px;
-        min-width: 44px; /* 為觸摸設備提供更大的可點擊區域 */
-        min-height: 44px; /* 為觸摸設備提供更大的可點擊區域 */
     }
     
     .mobile-nav {
@@ -811,15 +809,12 @@
 
     /* --- Step 4.2: Ensure complete styles for mobile toggle --- */
     #mobile-menu-toggle {
-        display: block !important; /* 使用 !important 強制顯示 */
-        visibility: visible !important; /* 確保可見性 */
-        opacity: 1 !important; /* 确保不透明 */
-        font-size: 1.6em;
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        transform: translateY(-50%);
-        z-index: 1101; /* 保持原有的z-index值 */
+        display: block !important; /* 修改/確認: 使用 !important 強制顯示 */
+        font-size: 1.6em;         /* 確認 */
+        position: absolute;       /* 添加/確認: 確保有定位 */
+        top: 50%;                 /* 添加/確認: 確保垂直居中 */
+        left: 10px;               /* 確認 */
+        transform: translateY(-50%); /* 添加/確認: 確保精確垂直居中 */
     }
 
     .main-container {
