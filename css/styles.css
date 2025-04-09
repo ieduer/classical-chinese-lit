@@ -1,192 +1,473 @@
-h1, h2, h3 {
-    font-family: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif; /* 標題使用無襯線字體 */
+/* Ghibli 風格調色板和基礎設置 */
+:root {
+    /* Light Mode */
+    --bg-color: #f4f1e9; /* 柔和米白 */
+    --content-bg: rgba(255, 255, 255, 0.88); /* 帶透明度的內容背景 */
+    --nav-bg: rgba(230, 235, 224, 0.85); /* 導航背景，略帶綠色調 */
+    --text-color: #4d453e; /* 主要文字 - 深棕色 */
+    --text-secondary: #7a726a; /* 次要文字 - 灰棕色 */
+    --header-color: #5c6e58; /* 標題顏色 - 柔和綠 */
+    --accent-color: #8db580; /* 強調色 - 較亮的綠色 */
+    --border-color: #d3c0a4; /* 邊框色 - 沙色 */
+    --button-hover-bg: #d8e0cc; /* 按鈕懸停背景 */
+    --scrollbar-thumb: #b0a89a;
+    --scrollbar-track: rgba(230, 235, 224, 0.5);
+    --ai-bg: rgba(250, 250, 245, 0.95); /* AI 背景 */
+    --ai-user-bubble: #cde2c6; /* 用戶氣泡 - 淡綠 */
+    --ai-ai-bubble: #e8e8e0; /* AI 氣泡 - 淺灰 */
+    --shadow-color: rgba(80, 70, 60, 0.1);
 }
 
-.container {
-    display: flex;
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 15px;
+body.dark-mode {
+    /* Dark Mode */
+    --bg-color: #3a3f37; /* 深綠灰背景 */
+    --content-bg: rgba(40, 45, 38, 0.9); /* 深色內容背景 */
+    --nav-bg: rgba(55, 60, 52, 0.88); /* 深色導航背景 */
+    --text-color: #d8d2c9; /* 主要文字 - 淺米色 */
+    --text-secondary: #a0988f; /* 次要文字 - 灰白色 */
+    --header-color: #a8c0a0; /* 標題顏色 - 亮綠灰 */
+    --accent-color: #709464; /* 強調色 - 柔和綠 */
+    --border-color: #5e564a; /* 邊框色 - 深灰棕 */
+    --button-hover-bg: #4a5244; /* 按鈕懸停背景 */
+    --scrollbar-thumb: #787168;
+    --scrollbar-track: rgba(55, 60, 52, 0.5);
+    --ai-bg: rgba(30, 35, 28, 0.95); /* AI 背景 */
+    --ai-user-bubble: #52694c; /* 用戶氣泡 - 暗綠 */
+    --ai-ai-bubble: #454a41; /* AI 氣泡 - 深灰 */
+    --shadow-color: rgba(0, 0, 0, 0.2);
 }
 
-#navigation {
-    width: 25%; /* 導航佔寬度 */
-    min-width: 180px;
-    padding-right: 20px;
-    border-right: 1px solid #eee;
-    height: calc(100vh - 100px); /* 示例高度，讓其可滾動 */
-    overflow-y: auto;
-}
-
-#navigation ul {
-    list-style: none;
-    padding: 0;
+body {
+    font-family: 'Noto Serif SC', 'ZCOOL XiaoWei', serif; /* 優先使用 Noto Serif SC, 備用小薇體 */
+    line-height: 1.7;
     margin: 0;
+    padding: 0;
+    background: var(--bg-color) url('bg.webp') no-repeat center center fixed; /* 添加背景圖 */
+    background-size: cover; /* 覆蓋整個視口 */
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-#navigation li a { /* 假設未來是鏈接 */
-    display: block;
-    padding: 8px 5px;
-    text-decoration: none;
-    color: #555;
-    border-radius: 3px;
+header {
+    display: flex;
+    justify-content: center; /* 水平居中標題 */
+    align-items: center;
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.1); /* 輕微模糊背景效果 */
+    backdrop-filter: blur(5px);
+    position: relative; /* 為了定位切換按鈕 */
+    border-bottom: 1px solid var(--border-color);
+}
+
+#main-title {
+    margin: 0;
+    color: var(--header-color);
+    font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', sans-serif; /* 標題使用不同字體 */
+    font-size: 1.8em;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px var(--shadow-color);
+}
+
+#dark-mode-toggle {
+    position: absolute;
+    right: 30px; /* 放在右邊 */
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.8em; /* 圖標大小 */
     cursor: pointer;
+    padding: 0 5px;
+    color: var(--text-color); /* 隨主題變化 */
 }
 
-#navigation li a:hover,
-#navigation li a.active-poem { /* active-poem 將由 JS 添加 */
-    background-color: #e8e8e0; /* 懸停/選中時的背景色 */
-    color: #000;
+.main-container {
+    display: flex;
+    flex-grow: 1; /* 佔滿剩餘垂直空間 */
+    max-width: 1600px; /* 可以適當加寬 */
+    width: 95%;
+    margin: 20px auto;
+    gap: 20px; /* 欄間距 */
+    padding: 0 10px;
 }
 
-
-#content-area {
-    width: 75%; /* 內容區域佔剩餘寬度 */
-    padding-left: 20px;
+/* 左右導航欄樣式 */
+.side-nav {
+    width: 23%; /* 調整寬度 */
+    min-width: 220px;
+    background-color: var(--nav-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px; /* 更圓潤的邊角 */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 120px); /* 限制最大高度，留下 header 和 footer 空間 */
+    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-#poem-content h1 {
-    margin-top: 0;
-    color: #4a4a4a;
-}
-
-#poem-content .meta {
-    font-size: 0.9em;
-    color: #777;
-    margin-bottom: 20px;
-}
-
-#poem-content p {
-    margin-bottom: 1em;
-    padding: 10px; /* 段落內邊距 */
-    text-indent: 2em; /* 首行縮進 */
-}
-
-/* 用於段落區隔的示例樣式 */
-#poem-content p:nth-child(odd) {
-    background-color: rgba(230, 230, 220, 0.3); /* 淡色交替背景 */
-}
-
-footer {
+.side-nav h2 {
     text-align: center;
-    margin-top: 40px;
-    padding: 20px;
-    color: #888;
-    font-size: 0.9em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--header-color);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 1.3em;
 }
 
-/* 響應式設計初步 (非常基礎) */
-@media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-    #navigation {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #eee;
-        margin-bottom: 20px;
-        padding-right: 0;
-        height: auto; /* 移動端取消固定高度 */
-        max-height: 40vh; /* 限制最大高度 */
-    }
-    #content-area {
-        width: 100%;
-        padding-left: 0;
-    }
+.poem-list-container {
+    flex-grow: 1; /* 佔滿導航欄剩餘空間 */
+    overflow-y: auto; /* 內容超出時滾動 */
+    list-style: none;
+    padding: 0 5px 0 0; /* 右側留空給滾動條 */
+    margin: 0;
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); /* Firefox */
 }
 
-/* AI 界面樣式 (基礎) */
-#ai-chat-interface {
-   position: fixed;
-   bottom: 10px;
-   right: 10px;
-   width: 300px;
-   max-height: 400px;
-   background-color: #fff;
-   border: 1px solid #ccc;
-   box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-   border-radius: 5px;
-   padding: 10px;
-   display: flex;
-   flex-direction: column;
-   z-index: 1000; /* 確保在頂層 */
+/* Webkit 瀏覽器滾動條樣式 */
+.poem-list-container::-webkit-scrollbar {
+    width: 8px;
 }
-#ai-messages {
-   flex-grow: 1;
-   overflow-y: auto;
-   margin-bottom: 10px;
-   border-bottom: 1px solid #eee;
-   padding-bottom: 5px;
+.poem-list-container::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: 4px;
 }
-#ai-input {
-   width: calc(100% - 22px); /* 減去 padding 和 border */
-   padding: 8px;
-   border: 1px solid #ccc;
-   border-radius: 3px;
-   margin-bottom: 5px;
-}
-#ai-chat-interface button {
-   padding: 5px 10px;
-   cursor: pointer;
-}
-#ai-close-btn {
-   position: absolute;
-   top: 5px;
-   right: 5px;
-   background: none;
-   border: none;
-   font-size: 1.2em;
-   cursor: pointer;
+.poem-list-container::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+    border: 2px solid var(--scrollbar-track); /* 創造邊距效果 */
 }
 
-/* 使導航按鈕看起來更像按鈕 */
-#navigation button.nav-button {
+.side-nav button.nav-button {
     display: block;
     width: 100%;
-    padding: 8px 5px;
+    padding: 10px 8px; /* 增加內邊距 */
     text-align: left;
     background: none;
     border: none;
-    font-family: inherit; /* 繼承 body 的字體 */
-    font-size: 0.95em;
-    color: #555;
-    border-radius: 3px;
+    border-bottom: 1px dashed rgba(128, 128, 128, 0.1); /* 非常淡的分隔線 */
+    font-family: inherit;
+    font-size: 1em; /* 目錄字號 */
+    color: var(--text-color);
+    border-radius: 5px;
     cursor: pointer;
-    line-height: 1.4;
+    line-height: 1.5;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.side-nav button.nav-button:last-child {
+    border-bottom: none;
 }
 
-#navigation button.nav-button:hover,
-#navigation button.nav-button.active-poem { /* active-poem 由 JS 添加 */
-    background-color: #e8e8e0;
-    color: #000;
+.side-nav button.nav-button:hover,
+.side-nav button.nav-button.active-poem {
+    background-color: var(--button-hover-bg);
+    color: var(--header-color); /* 選中時用標題色 */
+    font-weight: bold;
 }
 
-/* AI 消息樣式 */
+/* 滾動指示器 */
+.scroll-indicator {
+    text-align: center;
+    font-size: 1em; /* 稍微調大 */
+    color: var(--text-secondary);
+    opacity: 0; /* 默認隱藏 */
+    height: 0; /* 默認不佔空間 */
+    overflow: hidden;
+    transition: opacity 0.3s ease, height 0.3s ease;
+}
+.scroll-indicator.visible {
+    opacity: 0.6; /* 可見時的透明度 */
+    height: 1.2em; /* 可見時的高度 */
+}
+
+
+/* 中間內容區 */
+#center-content {
+    width: 54%; /* 調整寬度 */
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 25px 35px; /* 增加內邊距 */
+    overflow-y: auto; /* 如果內容太長也允許滾動 */
+    font-size: 1.15em; /* 整體字號加大 */
+    box-shadow: 0 2px 8px var(--shadow-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    max-height: calc(100vh - 120px); /* 與導航欄同高 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
+}
+
+ /* Webkit 瀏覽器滾動條樣式 for center */
+#center-content::-webkit-scrollbar {
+    width: 8px;
+}
+#center-content::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05); /* 內容區滾動條背景淡一些 */
+    border-radius: 4px;
+}
+#center-content::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 4px;
+    border: 2px solid var(--content-bg);
+}
+
+
+#placeholder-text {
+    text-align: center;
+    color: var(--text-secondary);
+    padding-top: 50px;
+}
+#placeholder-text h2 {
+     color: var(--header-color);
+     font-size: 1.5em;
+     margin-bottom: 20px;
+}
+
+#poem-display-area h1 {
+    font-size: 2em; /* 詩文標題更大 */
+    color: var(--header-color);
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+#poem-display-area .meta {
+    font-size: 0.95em; /* 作者信息字號 */
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#poem-display-area p {
+    text-indent: 2em;
+    line-height: 1.9; /* 更大的行高 */
+    margin-bottom: 1.5em; /* 段落間距 */
+    padding: 8px 0; /* 輕微的垂直內邊距 */
+}
+ /* 內容區段落交替背景 (更柔和) */
+#poem-display-area p:nth-child(even) { /* 改為 even 試試效果 */
+     /* background-color: rgba(138, 175, 124, 0.05); */ /* 非常淡的綠色背景 */
+     /* 或者取消交替背景，讓 Ghibli 風格更純粹 */
+}
+
+
+/* AI 聊天界面樣式 */
+ #open-ai-btn {
+     position: fixed;
+     bottom: 20px;
+     right: 20px;
+     font-size: 2em;
+     background-color: var(--accent-color);
+     color: white;
+     border: none;
+     border-radius: 50%;
+     width: 55px;
+     height: 55px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     cursor: pointer;
+     box-shadow: 0 2px 10px var(--shadow-color);
+     z-index: 999;
+     transition: background-color 0.3s ease;
+ }
+ #open-ai-btn:hover {
+     background-color: var(--header-color);
+ }
+
+
+#ai-chat-interface {
+    position: fixed;
+    bottom: 80px; /* 調整位置，避免被打開按鈕遮擋 */
+    right: 20px;
+    width: 320px; /* 調整寬度 */
+    max-height: 450px; /* 增加高度 */
+    background-color: var(--ai-bg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    border-radius: 12px; /* 統一圓角 */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    opacity: 0; /* 初始透明 */
+    transform: translateY(20px); /* 初始向下偏移 */
+    pointer-events: none; /* 初始不可交互 */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+ #ai-chat-interface.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto; /* 可見時可交互 */
+}
+
+
+#ai-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.4em;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    line-height: 1;
+}
+#ai-close-btn:hover {
+    color: var(--text-color);
+}
+
+#ai-chat-interface h3 {
+    text-align: center;
+    margin: 0 0 15px 0;
+    color: var(--header-color);
+    font-family: 'Noto Sans SC', sans-serif;
+}
+
+#ai-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding-right: 5px; /* 留出滾動條空間 */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--ai-bg);
+}
+ /* Webkit AI messages scrollbar */
+#ai-messages::-webkit-scrollbar { width: 6px; }
+#ai-messages::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
+#ai-messages::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
+
+
 #ai-messages .message {
-    padding: 6px 10px;
-    margin-bottom: 8px;
-    border-radius: 15px;
-    max-width: 85%;
-    word-wrap: break-word; /* 長單詞或鏈接換行 */
+    padding: 8px 12px; /* 增加氣泡內邊距 */
+    margin-bottom: 10px;
+    border-radius: 18px; /* 更圓的氣泡 */
+    max-width: 90%;
+    word-wrap: break-word;
+    line-height: 1.5;
+    font-size: 0.95em;
+    box-shadow: 0 1px 2px var(--shadow-color);
 }
 
 #ai-messages .user {
-    background-color: #d1eaff; /* 用戶消息背景色 */
-    margin-left: auto; /* 右對齊 */
-    border-bottom-right-radius: 3px; /* 使其看起來像對話氣泡 */
+    background-color: var(--ai-user-bubble);
+    color: var(--bg-color); /* 深色模式下文字變淺 */
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
 }
+ body.dark-mode #ai-messages .user {
+     color: var(--text-color); /* 確保深色模式下用戶文字可讀 */
+ }
 
 #ai-messages .ai {
-    background-color: #e9e9eb; /* AI 消息背景色 */
-    margin-right: auto; /* 左對齊 */
-    border-bottom-left-radius: 3px; /* 使其看起來像對話氣泡 */
+    background-color: var(--ai-ai-bubble);
+    color: var(--text-color); /* 確保AI文字在兩種模式下都可讀 */
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
 }
 
 #ai-messages .thinking,
 #ai-messages .system {
     font-style: italic;
-    color: #888;
+    color: var(--text-secondary);
     text-align: center;
     background: none;
     font-size: 0.9em;
+    box-shadow: none;
 }
+
+.ai-input-area {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+#ai-input {
+    flex-grow: 1;
+    padding: 10px; /* 輸入框內邊距 */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--content-bg); /* 與內容區背景類似 */
+    color: var(--text-color);
+    font-size: 0.95em;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+#ai-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(141, 181, 128, 0.3); /* 聚焦時光暈 */
+}
+
+#ai-send-btn {
+    padding: 8px 15px; /* 發送按鈕大小 */
+    cursor: pointer;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+}
+#ai-send-btn:hover {
+    background-color: var(--header-color);
+}
+
+footer {
+    text-align: center;
+    margin-top: auto; /* 將 footer 推到底部 */
+    padding: 15px;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    background-color: rgba(255, 255, 255, 0.05); /* 輕微背景 */
+    backdrop-filter: blur(2px);
+    border-top: 1px solid var(--border-color);
+}
+
+/* 響應式設計調整 */
+@media (max-width: 1024px) {
+    .main-container {
+        flex-direction: column;
+        width: 98%;
+        gap: 15px;
+        margin: 10px auto;
+    }
+    .side-nav {
+        width: 100%;
+        max-height: 35vh; /* 移動端限制導航高度 */
+        min-width: auto;
+    }
+    #center-content {
+        width: 100%;
+        order: 2; /* 內容區在中間 */
+        max-height: none; /* 取消最大高度限制 */
+    }
+    #left-nav { order: 1; }
+    #right-nav { order: 3; }
+
+    #main-title { font-size: 1.5em; }
+    #dark-mode-toggle { font-size: 1.5em; right: 15px; }
+    #poem-display-area h1 { font-size: 1.7em; }
+    #center-content { padding: 15px 20px; font-size: 1.1em; }
+}
+
+ @media (max-width: 600px) {
+     #main-title { font-size: 1.3em; }
+     #dark-mode-toggle { right: 10px; }
+     .side-nav { padding: 10px; }
+     .side-nav h2 { font-size: 1.1em; margin-bottom: 10px; }
+     .side-nav button.nav-button { padding: 8px 5px; font-size: 0.95em;}
+     #center-content { padding: 15px; font-size: 1.05em; }
+     #poem-display-area h1 { font-size: 1.5em; }
+     #poem-display-area .meta { font-size: 0.9em; margin-bottom: 20px; }
+     #poem-display-area p { line-height: 1.8; margin-bottom: 1.2em; }
+
+     #open-ai-btn { width: 50px; height: 50px; font-size: 1.8em; bottom: 15px; right: 15px; }
+     #ai-chat-interface { width: calc(100% - 30px); /* 幾乎佔滿寬度 */ bottom: 70px; right: 15px; max-height: 60vh;}
+ }

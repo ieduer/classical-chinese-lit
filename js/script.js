@@ -1,208 +1,320 @@
-console.log("古典詩文集腳本已載入。");
+console.log("高考默寫腳本已載入。");
 
-// 全局變數存儲詩文數據
+// 全局變數
 let poemsData = [];
+let wenyanwenData = [];
+let shiciquData = [];
+let allPoemsMap = new Map(); // 按 order 快速查找
 
 // DOM 元素引用
-const poemListElement = document.getElementById('poem-list');
-const poemContentElement = document.getElementById('poem-content');
+const wenyanwenListElement = document.getElementById('wenyanwen-list');
+const shiciquListElement = document.getElementById('shiciqu-list');
+const centerContentElement = document.getElementById('center-content');
+const poemDisplayArea = document.getElementById('poem-display-area');
+const placeholderTextElement = document.getElementById('placeholder-text');
+
+const darkModeToggleButton = document.getElementById('dark-mode-toggle');
+const bodyElement = document.body;
+
+// AI 相關 DOM
 const aiInterface = document.getElementById('ai-chat-interface');
 const aiCloseBtn = document.getElementById('ai-close-btn');
 const aiSendBtn = document.getElementById('ai-send-btn');
 const aiInputElement = document.getElementById('ai-input');
 const aiMessagesElement = document.getElementById('ai-messages');
+const openAiBtn = document.getElementById('open-ai-btn');
 
 
 // --- 函數定義 ---
 
 /**
- * 異步加載詩文數據
+ * 異步加載並處理詩文數據
  */
 async function loadPoems() {
     try {
         const response = await fetch('data/poems.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         poemsData = await response.json();
-        console.log("詩文數據已成功載入:", poemsData);
+        console.log("詩文數據已成功載入:", poemsData.length, "篇");
 
-        // 按 order 排序 (儘管 JSON 中已有序，以防萬一)
         poemsData.sort((a, b) => a.order - b.order);
 
-        // 渲染導航
-        renderNavigation();
-        // 設置導航監聽器
-        setupNavigationListener();
+        // 分類數據並建立 Map
+        wenyanwenData = [];
+        shiciquData = [];
+        allPoemsMap.clear(); // 清空舊數據
+        poemsData.forEach(poem => {
+            allPoemsMap.set(poem.order, poem); // 建立 order -> poem 的映射
+            if (poem.category === '文言文') {
+                wenyanwenData.push(poem);
+            } else if (poem.category === '诗词曲') {
+                shiciquData.push(poem);
+            }
+            // 可以添加其他分類或處理未分類的
+        });
+
+        console.log("文言文:", wenyanwenData.length, "篇");
+        console.log("诗词曲:", shiciquData.length, "篇");
+
+        // 渲染左右導航
+        renderNavigation(wenyanwenData, wenyanwenListElement);
+        renderNavigation(shiciquData, shiciquListElement);
+
+        // 設置導航監聽器 (只需設置一次，包含兩側)
+        setupNavigationListeners();
+
+        // 初始化滾動指示器
+        setupScrollIndicators(document.getElementById('left-nav'));
+        setupScrollIndicators(document.getElementById('right-nav'));
 
     } catch (error) {
-        console.error("無法載入詩文數據:", error);
-        poemListElement.innerHTML = '<li>加載詩文列表失敗</li>';
-        poemContentElement.innerHTML = '<p>抱歉，無法載入詩文內容。請檢查網絡連接或聯繫管理員。</p>';
+        console.error("無法載入或處理詩文數據:", error);
+        if(wenyanwenListElement) wenyanwenListElement.innerHTML = '<li>加載列表失敗</li>';
+        if(shiciquListElement) shiciquListElement.innerHTML = '<li>加載列表失敗</li>';
+        if(placeholderTextElement) placeholderTextElement.innerHTML = '<p>抱歉，無法載入詩文列表。請稍後再試。</p>';
     }
 }
 
 /**
- * 渲染左側導航目錄
+ * 渲染指定導航列表
+ * @param {Array} data - 要渲染的詩文數據數組
+ * @param {HTMLElement} listElement - 目標 UL 元素
  */
-function renderNavigation() {
-    if (!poemListElement) return; // 防禦性編程
+function renderNavigation(data, listElement) {
+    if (!listElement) return;
+    listElement.innerHTML = ''; // 清空
 
-    poemListElement.innerHTML = ''; // 清空 "載入中..."
+    if (data.length === 0) {
+        listElement.innerHTML = '<li>暫無篇目</li>';
+        return;
+    }
 
-    poemsData.forEach(poem => {
+    data.forEach(poem => {
         const listItem = document.createElement('li');
-        // 使用 button 可能更符合語義，因為它觸發動作而非跳轉
         const button = document.createElement('button');
-        button.textContent = poem.title;
-        button.dataset.poemOrder = poem.order; // 使用 data-* 屬性存儲標識符
-        button.classList.add('nav-button'); // 添加樣式類 (可選)
+        button.textContent = `${poem.title} - ${poem.author}`; // 合併標題和作者
+        button.dataset.poemOrder = poem.order;
+        button.classList.add('nav-button');
+        button.title = `${poem.title} - ${poem.author} (${poem.dynasty})`; // Tooltip 顯示朝代
 
         listItem.appendChild(button);
-        poemListElement.appendChild(listItem);
+        listElement.appendChild(listItem);
     });
-     console.log("導航目錄已渲染。");
+    console.log(`已渲染導航列表: ${listElement.id}`);
 }
 
 /**
- * 設置導航點擊事件監聽器 (事件委託)
+ * 設置左右導航的點擊事件監聽器 (事件委託)
  */
-function setupNavigationListener() {
-    if (!poemListElement) return;
+function setupNavigationListeners() {
+    const leftNav = document.getElementById('left-nav');
+    const rightNav = document.getElementById('right-nav');
 
-    poemListElement.addEventListener('click', (event) => {
-        // 檢查點擊的是否是我們添加的按鈕
+    const handleClick = (event) => {
         if (event.target && event.target.tagName === 'BUTTON' && event.target.dataset.poemOrder) {
             const order = parseInt(event.target.dataset.poemOrder, 10);
-            const selectedPoem = poemsData.find(p => p.order === order);
+            const selectedPoem = allPoemsMap.get(order); // 從 Map 中快速查找
 
             if (selectedPoem) {
                 displayPoemContent(selectedPoem);
 
-                // 更新導航的激活狀態
-                // 移除所有按鈕的 active 類
-                poemListElement.querySelectorAll('button').forEach(btn => {
+                // 更新所有導航按鈕的激活狀態
+                document.querySelectorAll('.side-nav button.nav-button').forEach(btn => {
                     btn.classList.remove('active-poem');
                 });
-                // 給當前點擊的按鈕添加 active 類
-                event.target.classList.add('active-poem');
-                 console.log(`已選擇詩文: ${selectedPoem.title}`);
+                event.target.classList.add('active-poem'); // 激活當前點擊的按鈕
+                console.log(`已選擇詩文 (Order ${order}): ${selectedPoem.title}`);
             } else {
-                console.warn(`未找到 order 為 ${order} 的詩文。`);
+                console.warn(`未在 Map 中找到 order 為 ${order} 的詩文。`);
             }
         }
-    });
+    };
+
+    if (leftNav) leftNav.addEventListener('click', handleClick);
+    if (rightNav) rightNav.addEventListener('click', handleClick);
 }
 
 /**
- * 在右側主區域顯示選中的詩文內容
+ * 在中間主區域顯示選中的詩文內容
  * @param {object} poem - 選中的詩文對象
  */
 function displayPoemContent(poem) {
-    if (!poemContentElement) return;
+    if (!poemDisplayArea || !placeholderTextElement) return;
 
-    poemContentElement.innerHTML = ''; // 清空先前內容
+    placeholderTextElement.style.display = 'none'; // 隱藏說明文字
+    poemDisplayArea.innerHTML = ''; // 清空先前內容
 
-    // 創建並添加標題
     const titleElement = document.createElement('h1');
     titleElement.textContent = poem.title;
-    poemContentElement.appendChild(titleElement);
+    poemDisplayArea.appendChild(titleElement);
 
-    // 創建並添加作者和朝代信息
     const metaElement = document.createElement('p');
-    metaElement.classList.add('meta'); // 使用 CSS class
+    metaElement.classList.add('meta');
     metaElement.textContent = `${poem.author} (${poem.dynasty})`;
-    poemContentElement.appendChild(metaElement);
+    poemDisplayArea.appendChild(metaElement);
 
-    // 創建並添加段落
-    poem.paragraphs.forEach((paragraphText, index) => {
+    poem.paragraphs.forEach((paragraphText) => {
         const paragraphElement = document.createElement('p');
-        // 注意：直接設置 textContent 可以防止 XSS 攻擊，比 innerHTML 安全
         paragraphElement.textContent = paragraphText;
-        // CSS 中的 nth-child 已經處理了背景色，無需在此添加類
-        poemContentElement.appendChild(paragraphElement);
+        poemDisplayArea.appendChild(paragraphElement);
+        // 注意: 段落隱藏/顯示功能將在下一階段添加
     });
-     console.log(`已顯示詩文: ${poem.title}`);
+
+    poemDisplayArea.style.display = 'block'; // 顯示詩文區域
+    centerContentElement.scrollTop = 0; // 每次加載新內容時滾動到頂部
+    console.log(`已顯示詩文: ${poem.title}`);
 }
 
 /**
- * 處理 AI 聊天界面的開關和消息發送 (初步框架)
+ * 設置黑暗模式切換
  */
-function setupAIChatInterface() {
-    if (aiCloseBtn && aiInterface) {
-        aiCloseBtn.addEventListener('click', () => {
-            aiInterface.style.display = 'none';
-        });
+function setupDarkMode() {
+    // 頁面加載時檢查本地存儲
+    if (localStorage.getItem('theme') === 'dark') {
+        bodyElement.classList.add('dark-mode');
     }
 
-    // 這裡可以添加打開 AI 窗口的邏輯，例如綁定到某個一直顯示的按鈕
-    // const openAiBtn = document.getElementById('open-ai-btn');
-    // if (openAiBtn) {
-    //    openAiBtn.addEventListener('click', () => {
-    //       aiInterface.style.display = 'flex'; // 'flex' 以便內部佈局
-    //       aiInputElement.focus();
-    //    });
-    // }
-
-
-    if (aiSendBtn && aiInputElement && aiMessagesElement) {
-        aiSendBtn.addEventListener('click', handleAISend);
-        aiInputElement.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                handleAISend();
+    if (darkModeToggleButton) {
+        darkModeToggleButton.addEventListener('click', () => {
+            bodyElement.classList.toggle('dark-mode');
+            // 保存用戶偏好
+            if (bodyElement.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                console.log("已切換到黑暗模式");
+            } else {
+                localStorage.setItem('theme', 'light');
+                console.log("已切換到明亮模式");
             }
         });
     }
 }
 
-function handleAISend() {
-    const userQuery = aiInputElement.value.trim();
-    if (!userQuery) return;
+/**
+ * 設置滾動指示器 (上下箭頭) 的邏輯
+ * @param {HTMLElement} navContainer - 包含列表和指示器的 nav 元素
+ */
+ function setupScrollIndicators(navContainer) {
+    if (!navContainer) return;
+    const listContainer = navContainer.querySelector('.poem-list-container');
+    const indicatorTop = navContainer.querySelector('.scroll-indicator.top');
+    const indicatorBottom = navContainer.querySelector('.scroll-indicator.bottom');
 
-    // 顯示用戶消息
-    appendAIMessage(userQuery, 'user');
-    aiInputElement.value = '';
+    if (!listContainer || !indicatorTop || !indicatorBottom) return;
 
-    // 顯示思考中...
-    appendAIMessage('思考中...', 'ai thinking');
+    const updateIndicators = () => {
+         // 添加一個小的閾值，避免在邊緣時誤判
+        const threshold = 5;
+        const { scrollTop, scrollHeight, clientHeight } = listContainer;
 
-    // TODO: 在 Phase 3 中調用 Cloudflare Worker
-    // callAIWorker(userQuery);
-    // 暫時模擬 AI 回應
-    setTimeout(() => {
-        // 移除 "思考中..."
-        const thinkingMsg = aiMessagesElement.querySelector('.thinking');
-        if(thinkingMsg) thinkingMsg.remove();
-        // 添加模擬回應
-        appendAIMessage(`這是對 "${userQuery}" 的模擬回應。實際功能將在後續階段實現。`, 'ai');
-    }, 1500);
+        // 檢查是否可以向上滾動
+        indicatorTop.classList.toggle('visible', scrollTop > threshold);
 
-    aiInputElement.focus();
+        // 檢查是否可以向下滾動
+        indicatorBottom.classList.toggle('visible', scrollTop + clientHeight < scrollHeight - threshold);
+    };
+
+    // 監聽滾動事件
+    listContainer.addEventListener('scroll', updateIndicators);
+
+    // 初始檢查 + 窗口大小變化時也檢查 (使用 ResizeObserver 更佳，但 resize 兼容性好)
+    // 使用 setTimeout 確保在初始渲染後再檢查
+    setTimeout(updateIndicators, 100);
+    window.addEventListener('resize', updateIndicators);
+
+     // 添加 MutationObserver 監聽列表內容變化（例如異步加載完成後）
+    const observer = new MutationObserver(updateIndicators);
+    observer.observe(listContainer, { childList: true, subtree: true });
+}
+
+
+/**
+ * 處理 AI 聊天界面的交互
+ */
+function setupAIChatInterface() {
+    if (!aiInterface || !openAiBtn || !aiCloseBtn || !aiSendBtn || !aiInputElement || !aiMessagesElement) {
+        console.warn("AI 界面部分元素缺失，無法完全初始化。");
+        return;
+    }
+
+    // 打開 AI 窗口
+    openAiBtn.addEventListener('click', () => {
+        aiInterface.classList.add('visible'); // 添加 'visible' 類來觸發 CSS 過渡
+        aiInterface.style.display = 'flex'; // 確保 display 屬性正確
+        aiInputElement.focus();
+        console.log("AI 聊天窗口已打開");
+    });
+
+    // 關閉 AI 窗口
+    aiCloseBtn.addEventListener('click', () => {
+        aiInterface.classList.remove('visible'); // 移除 'visible' 類
+         // 在過渡動畫完成後再隱藏，避免動畫失效
+        aiInterface.addEventListener('transitionend', () => {
+            if (!aiInterface.classList.contains('visible')) {
+                aiInterface.style.display = 'none';
+            }
+        }, { once: true }); // 確保監聽器只執行一次
+        console.log("AI 聊天窗口已關閉");
+    });
+
+    // 發送消息
+    const handleAISend = () => {
+        const userQuery = aiInputElement.value.trim();
+        if (!userQuery) return;
+
+        appendAIMessage(userQuery, 'user');
+        aiInputElement.value = '';
+        appendAIMessage('AI 正在思考...', 'ai thinking');
+
+        // TODO: Phase 3 - 替換為實際調用 Cloudflare Worker 的邏輯
+        callAIWorkerMock(userQuery); // 使用模擬函數
+
+        aiInputElement.focus();
+    };
+
+    aiSendBtn.addEventListener('click', handleAISend);
+    aiInputElement.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) { // 按 Enter 發送，Shift+Enter 換行 (雖然 input 不支持)
+             event.preventDefault(); // 阻止默認的 Enter 行為 (如果有的話)
+            handleAISend();
+        }
+    });
 }
 
 /**
  * 向 AI 聊天窗口添加消息
  * @param {string} message - 消息內容
- * @param {string} sender - 'user', 'ai', 或 'system', 'thinking' 等
+ * @param {string} sender - 'user', 'ai', 'system', 'thinking' 等CSS類名
  */
 function appendAIMessage(message, sender) {
     const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', sender); // 添加基礎 'message' 類和發送者特定類
+    messageDiv.classList.add('message', sender); // 添加多個類
     messageDiv.textContent = message;
     aiMessagesElement.appendChild(messageDiv);
-    // 滾動到底部
-    aiMessagesElement.scrollTop = aiMessagesElement.scrollHeight;
+    aiMessagesElement.scrollTop = aiMessagesElement.scrollHeight; // 自動滾動到底部
 }
 
+/**
+ * 模擬調用 AI Worker (僅用於前端演示)
+ * @param {string} query
+ */
+function callAIWorkerMock(query) {
+     console.log("模擬調用 AI，問題:", query);
+    setTimeout(() => {
+        // 移除 "思考中..."
+        const thinkingMsg = aiMessagesElement.querySelector('.thinking');
+        if (thinkingMsg) thinkingMsg.remove();
+
+        // 模擬的回應
+        const aiResponse = `這是針對 "${query}" 的 Ghibli 風格模擬回答。\n真正的 AI 回答將更具體和有用。\n\n例如，我可以幫你解釋詞語、分析句子或提供背景知識。`;
+        appendAIMessage(aiResponse, 'ai');
+    }, 1500 + Math.random() * 1000); // 模擬網絡延遲
+}
 
 // --- 初始化 ---
-
-// 在 DOM 完全載入後執行的代碼
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM 已載入，開始加載詩文。");
-    loadPoems(); // 開始加載詩文數據並渲染導航
-    // setupAIChatInterface(); // 設置 AI 界面交互（目前主要是關閉和模擬發送）
-
-    // 可以在這裡添加一個按鈕來打開 AI 窗口
-    // 例如，在 footer 或 header 添加一個按鈕，然後用 JS 獲取它並添加監聽器
+    console.log("DOM 已載入，開始初始化...");
+    setupDarkMode();
+    loadPoems(); // 加載詩文數據是核心
+    setupAIChatInterface(); // 初始化 AI 界面交互
+    console.log("初始化完成。");
 });

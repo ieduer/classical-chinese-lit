@@ -1,41 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高考默寫</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- 可以考慮引入一個 Ghibli 風格的字體，或依賴系統字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <header>
-        <h1>古典詩文集</h1>
+        <h1 id="main-title">高考默寫</h1>
+        <button id="dark-mode-toggle" title="切換模式">🌗</button>
     </header>
 
-    <div class="container">
-        <nav id="navigation">
-            <h2>目錄</h2>
-            <ul id="poem-list">
-                <!-- 詩文列表將由 JS 動態載入 -->
+    <div class="main-container">
+        <!-- 左側導航: 文言文 -->
+        <nav id="left-nav" class="side-nav">
+            <h2>文言文</h2>
+            <div class="scroll-indicator top" aria-hidden="true">▲</div>
+            <ul id="wenyanwen-list" class="poem-list-container">
                 <li>載入中...</li>
             </ul>
+            <div class="scroll-indicator bottom" aria-hidden="true">▼</div>
         </nav>
 
-        <main id="content-area">
-            <article id="poem-content">
+        <!-- 中間主內容區 -->
+        <main id="center-content">
+            <div id="placeholder-text">
+                <h2>歡迎來到 高考默寫</h2>
+                <p>請從左右兩側的目錄中選擇一篇詩文開始閱讀。</p>
+                <p>本站點收錄了常見的古典詩文篇目，旨在提供一個簡潔、舒適的閱讀和學習環境。</p>
+                <!-- 你可以在此處添加更多說明文字 -->
+            </div>
+            <article id="poem-display-area" style="display: none;">
                 <!-- 選中的詩文將顯示在此 -->
-                <p>請從左側目錄選擇一篇詩文閱讀。</p>
             </article>
         </main>
 
-        <!-- AI 聊天界面區域 (目前隱藏) -->
-        <aside id="ai-chat-interface" style="display: none;">
-            <h3>AI 助手</h3>
-            <div id="ai-messages"></div>
-            <input type="text" id="ai-input" placeholder="與 AI 對話...">
-            <button id="ai-send-btn">發送</button>
-            <button id="ai-close-btn">關閉</button>
-        </aside>
+        <!-- 右側導航: 诗词曲 -->
+        <nav id="right-nav" class="side-nav">
+            <h2>诗词曲</h2>
+             <div class="scroll-indicator top" aria-hidden="true">▲</div>
+            <ul id="shiciqu-list" class="poem-list-container">
+                <li>載入中...</li>
+            </ul>
+             <div class="scroll-indicator bottom" aria-hidden="true">▼</div>
+        </nav>
     </div>
 
+    <!-- AI 聊天界面區域 (初始隱藏) -->
+    <aside id="ai-chat-interface" style="display: none;">
+        <button id="ai-close-btn" title="關閉">✕</button>
+        <h3>AI 助手</h3>
+        <div id="ai-messages"></div>
+        <div class="ai-input-area">
+            <input type="text" id="ai-input" placeholder="輸入你的問題...">
+            <button id="ai-send-btn">發送</button>
+        </div>
+    </aside>
+    <!-- 可以添加一個永久顯示的按鈕來觸發 AI 窗口 -->
+     <button id="open-ai-btn" title="打開 AI 助手">💬</button>
+
     <footer>
-        <p>靜心閱讀</p>
+        <p>Ghibli Style Classical Lit</p>
     </footer>
 
     <script src="js/script.js" defer></script>
-    <!-- <script src="js/ai_interface.js" defer></script> -->
 </body>
 </html>
-```
