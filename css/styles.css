@@ -767,57 +767,94 @@
     }
     #mobile-nav-close:hover { color: var(--text-color); }
     
-    /* --- Responsive Design Adjustments --- */
-    @media (max-width: 1024px) {
-        header { padding: 6px 20px; height: calc(var(--header-height) - 4px); }
-        footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
-        #main-title { font-size: 1.4em; }
-        #dark-mode-toggle { font-size: 1.4em; right: 10px; }
-        #mobile-menu-toggle { font-size: 1.6em; left: 10px; }
-    
-        .main-container {
-            flex-direction: column;
-            width: 100%;
-            padding: 0 5px;
-            margin: 8px auto 10px auto;
-            gap: 10px;
-            flex-grow: 1;
-            overflow: visible;
-        }
-        .side-nav { display: none; }
-    
-        #center-content {
-            width: auto;
-            order: 0;
-            margin: 0;
-            flex-grow: 1;
-            min-height: 300px;
-            padding: 15px;
-            font-size: 1.05em;
-            max-height: none;
-            overflow-y: visible;
-        }
-        /* Poem H1 style handled by .poem-main-text h1 */
+/* ... (之前的全局樣式, @font-face, :root, body, header, .main-container, .side-nav 等) ... */
+
+/* --- Responsive Design Adjustments --- */
+
+/* Tablet Styles (e.g., 801px to 1024px) - Keep sidebars visible, adjust layout */
+@media (max-width: 1024px) {
+    /* Keep sidebars visible here, DO NOT set display: none */
+    .main-container {
+        width: 98%; /* Slightly wider */
+        gap: 15px;  /* Reduce gap */
     }
-    
-    @media (max-width: 600px) {
-         #main-title { font-size: 1.2em; }
-         #dark-mode-toggle { font-size: 1.4em; }
-         #mobile-menu-toggle { font-size: 1.5em; }
-    
-         .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
-         #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
-    
-         .main-container { margin: 5px auto 8px auto; gap: 8px; }
-         #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
-         .poem-main-text h1 { font-size: 1.4em; }
-         .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
-         .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; }
-         .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
-         .question-item { margin-bottom: 15px; }
-         .answer { margin-left: 0.8em; padding: 8px; }
-    
-         #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
-         #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}
-         footer { font-size: 0.8em; }
+    .side-nav {
+        width: 25%; /* Adjust sidebar width for tablets */
+        min-width: 200px; /* Adjust min-width */
+        padding: 12px; /* Slightly reduce padding */
     }
+    #center-content {
+        width: 50%; /* Adjust content width */
+        padding: 15px 25px; /* Adjust padding */
+        font-size: 1.1em; /* Slightly adjust font size */
+    }
+    /* Adjust other elements like header/footer/AI if needed for this range */
+    #main-title { font-size: 1.5em; }
+    #dark-mode-toggle { font-size: 1.5em; right: 15px; }
+    #mobile-menu-toggle { display: none; } /* Keep mobile toggle hidden here */
+}
+
+/* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
+@media (max-width: 800px) { /* Changed breakpoint */
+    header { padding: 6px 20px; height: calc(var(--header-height) - 4px); }
+    footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
+    #main-title { font-size: 1.4em; }
+    #dark-mode-toggle { font-size: 1.4em; right: 10px; }
+    #mobile-menu-toggle {
+        display: block; /* Show mobile toggle NOW */
+        font-size: 1.6em;
+        left: 10px;
+    }
+
+    .main-container {
+        flex-direction: column; /* Stack elements */
+        width: 100%;
+        padding: 0 5px;
+        margin: 8px auto 10px auto;
+        gap: 10px;
+        overflow: visible;
+    }
+    .side-nav {
+        display: none; /* Hide sidebars NOW */
+    }
+
+    #center-content {
+        width: auto; /* Full width in column */
+        order: 0;
+        margin: 0;
+        flex-grow: 1;
+        min-height: 300px;
+        padding: 15px;
+        font-size: 1.05em;
+        max-height: none;
+        overflow-y: visible;
+    }
+    /* Styles for h1 etc. inside center content are already defined */
+}
+
+/* Mobile Phones (e.g., <= 600px) - Further adjustments */
+ @media (max-width: 600px) {
+     /* Keep rules from max-width: 800px unless overridden */
+     #main-title { font-size: 1.2em; }
+     #dark-mode-toggle { font-size: 1.4em; }
+     #mobile-menu-toggle { font-size: 1.5em; }
+
+     .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
+     #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
+
+     .main-container { margin: 5px auto 8px auto; gap: 8px; }
+     #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
+     .poem-main-text h1 { font-size: 1.4em; }
+     .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
+     .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; }
+     .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
+     .question-item { margin-bottom: 15px; }
+     .answer { margin-left: 0.8em; padding: 8px; }
+
+     #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
+     #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}
+     footer { font-size: 0.8em; }
+ }
+
+/* ... (Rest of the CSS - AI styles, footer, etc.) ... */
+/* Ensure AI and Footer styles are outside or correctly placed relative to media queries */
