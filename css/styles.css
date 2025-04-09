@@ -650,13 +650,15 @@
         font-size: 1.8em;
         color: var(--text-color);
         cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-    z-index: 1101; /* 確保層級高 */
+        padding: 10px; /* 採用更大的padding */
+        line-height: 1;
+        z-index: 1101; /* 確保層級高 */
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         left: 15px;
+        min-width: 44px; /* 為觸摸設備提供更大的可點擊區域 */
+        min-height: 44px; /* 為觸摸設備提供更大的可點擊區域 */
     }
     
     .mobile-nav {
