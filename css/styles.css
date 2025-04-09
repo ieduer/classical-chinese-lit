@@ -138,3 +138,55 @@ footer {
    font-size: 1.2em;
    cursor: pointer;
 }
+
+/* 使導航按鈕看起來更像按鈕 */
+#navigation button.nav-button {
+    display: block;
+    width: 100%;
+    padding: 8px 5px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-family: inherit; /* 繼承 body 的字體 */
+    font-size: 0.95em;
+    color: #555;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+#navigation button.nav-button:hover,
+#navigation button.nav-button.active-poem { /* active-poem 由 JS 添加 */
+    background-color: #e8e8e0;
+    color: #000;
+}
+
+/* AI 消息樣式 */
+#ai-messages .message {
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    border-radius: 15px;
+    max-width: 85%;
+    word-wrap: break-word; /* 長單詞或鏈接換行 */
+}
+
+#ai-messages .user {
+    background-color: #d1eaff; /* 用戶消息背景色 */
+    margin-left: auto; /* 右對齊 */
+    border-bottom-right-radius: 3px; /* 使其看起來像對話氣泡 */
+}
+
+#ai-messages .ai {
+    background-color: #e9e9eb; /* AI 消息背景色 */
+    margin-right: auto; /* 左對齊 */
+    border-bottom-left-radius: 3px; /* 使其看起來像對話氣泡 */
+}
+
+#ai-messages .thinking,
+#ai-messages .system {
+    font-style: italic;
+    color: #888;
+    text-align: center;
+    background: none;
+    font-size: 0.9em;
+}
