@@ -20,7 +20,7 @@
       --button-hover-bg: #d8e0cc;
       --scrollbar-thumb: #b0a89a;
       --scrollbar-track: rgba(230, 235, 224, 0.5);
-      --ai-bg: rgba(250, 250, 245, 0.95);
+      --ai-bg: rgba(250, 250, 245, 0.95); /* Fallback AI BG */
       --ai-user-bubble: #cde2c6;
       --ai-ai-bubble: #e8e8e0;
       --shadow-color: rgba(80, 70, 60, 0.1);
@@ -52,7 +52,7 @@
       --button-hover-bg: #4a5244;
       --scrollbar-thumb: #787168;
       --scrollbar-track: rgba(55, 60, 52, 0.5);
-      --ai-bg: rgba(30, 35, 28, 0.95);
+      --ai-bg: rgba(30, 35, 28, 0.95); /* Fallback AI BG Dark */
       --ai-user-bubble: #52694c;
       --ai-ai-bubble: #454a41;
       --shadow-color: rgba(0, 0, 0, 0.2);
@@ -230,6 +230,7 @@
       color: var(--header-color);
   }
   
+  
   .scroll-indicator {
       text-align: center;
       font-size: 1em;
@@ -284,7 +285,7 @@
   }
   
   #poem-display-area {
-      text-align: center; /* Keep container centered for block elements */
+      text-align: center; /* Container remains centered */
   }
   
   /* Styles specifically for the main poem text container */
@@ -302,14 +303,14 @@
       margin-bottom: 25px;
   }
   .poem-main-text p {
-      /* --- Revert to Centered Style --- */
-      text-align: center; /* Center align text */
-      text-indent: 0;     /* No indent for centered text */
+      /* --- Reverted to Centered Style --- */
+      text-align: center;
+      text-indent: 0;
       line-height: 1.8;
-      margin: 0 auto 1.2em auto; /* Center block, bottom margin */
+      margin: 0 auto 1.2em auto;
       padding: 0;
       max-width: 90%;
-      font-weight: bold;  /* Keep bold */
+      font-weight: bold; /* Keep bold */
   }
   
   /* Exam Marker Styling */
@@ -335,7 +336,7 @@
       margin-top: 40px;
       padding-top: 20px;
       border-top: 1px dashed var(--border-color);
-      text-align: left; /* Keep questions left-aligned */
+      text-align: left;
   }
   
   .exam-questions h2 {
@@ -395,40 +396,20 @@
     to { opacity: 1; transform: translateY(0); }
   }
   
-  /* AI 聊天界面樣式 */
-  #open-ai-btn {
-       position: fixed;
-       bottom: 15px;
-       right: 15px;
-       font-size: 1.8em;
-       background-color: var(--accent-color);
-       color: white;
-       border: none;
-       border-radius: 50%;
-       width: 50px;
-       height: 50px;
-       display: flex;
-       justify-content: center;
-       align-items: center;
-       cursor: pointer;
-       box-shadow: 0 2px 10px var(--shadow-color);
-       z-index: 999;
-       transition: background-color 0.3s ease;
-   }
-   #open-ai-btn:hover {
-       background-color: var(--header-color);
-   }
-  
+  /* AI 聊天界面樣式 - Glassmorphism Update */
   #ai-chat-interface {
       position: fixed;
       bottom: 75px;
       right: 15px;
       width: 310px;
       max-height: 400px;
-      background-color: var(--ai-bg);
-      border: 1px solid var(--border-color);
+      /* --- Glassmorphism Effect --- */
+      background-color: rgba(255, 255, 255, 0.15); /* Very transparent white */
+      backdrop-filter: blur(15px) saturate(150%); /* Blur and saturation */
+      -webkit-backdrop-filter: blur(15px) saturate(150%); /* Safari */
+      border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white border */
       box-shadow: 0 4px 15px var(--shadow-color);
-      border-radius: 12px;
+      border-radius: 15px; /* Slightly more rounded */
       padding: 12px;
       display: none;
       flex-direction: column;
@@ -437,6 +418,10 @@
       transform: translateY(20px);
       pointer-events: none;
       transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  }
+  body.dark-mode #ai-chat-interface {
+      background-color: rgba(30, 35, 28, 0.25); /* Darker transparent base */
+      border: 1px solid rgba(255, 255, 255, 0.1);
   }
    #ai-chat-interface.visible {
       display: flex;
@@ -473,10 +458,15 @@
       margin-bottom: 8px;
       padding-right: 5px;
       scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) var(--ai-bg);
+      scrollbar-color: var(--scrollbar-thumb) rgba(255, 255, 255, 0.1); /* Adjust scrollbar track for glass */
   }
+  body.dark-mode #ai-messages {
+       scrollbar-color: var(--scrollbar-thumb) rgba(0, 0, 0, 0.1);
+  }
+  
   #ai-messages::-webkit-scrollbar { width: 6px; }
-  #ai-messages::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
+  #ai-messages::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+  body.dark-mode #ai-messages::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
   #ai-messages::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
   
   #ai-messages .message {
@@ -491,50 +481,89 @@
   }
   
   #ai-messages .user {
-      background-color: var(--ai-user-bubble);
-      color: var(--bg-color);
+      background-color: rgba(112, 148, 100, 0.7); /* Darker, less transparent green */
+      color: white; /* Ensure white text */
       margin-left: auto;
       border-bottom-right-radius: 5px;
   }
-   body.dark-mode #ai-messages .user { color: var(--text-color); }
+  body.dark-mode #ai-messages .user {
+      background-color: rgba(82, 105, 76, 0.8); /* Dark mode user bubble */
+      color: var(--text-color);
+  }
   
   #ai-messages .ai {
-      background-color: var(--ai-ai-bubble);
-      color: var(--text-color);
+      background-color: rgba(232, 232, 224, 0.7); /* Less transparent light grey */
+      color: #333; /* Ensure dark text */
       margin-right: auto;
       border-bottom-left-radius: 5px;
+  }
+  body.dark-mode #ai-messages .ai {
+      background-color: rgba(69, 74, 65, 0.8); /* Dark mode AI bubble */
+      color: var(--text-color);
   }
   
   #ai-messages .thinking,
   #ai-messages .system {
       font-style: italic;
-      color: var(--text-secondary);
+      color: var(--text-color); /* Make system messages more visible on glass */
       text-align: center;
-      background: none;
+      background-color: rgba(255, 255, 255, 0.1); /* Subtle background */
+      padding: 4px;
+      border-radius: 4px;
       font-size: 0.85em;
       box-shadow: none;
+      margin-top: 5px;
+      margin-bottom: 5px;
+  }
+  body.dark-mode #ai-messages .thinking,
+  body.dark-mode #ai-messages .system {
+       background-color: rgba(0, 0, 0, 0.1);
+  }
+  #ai-messages .system.error { /* Style for error messages */
+      color: var(--no-question-color);
+      font-weight: bold;
+      background-color: rgba(192, 57, 43, 0.1);
+  }
+  body.dark-mode #ai-messages .system.error {
+       background-color: rgba(231, 76, 60, 0.15);
   }
   
   .ai-input-area {
       display: flex;
       gap: 6px;
       margin-top: 5px;
+      align-items: flex-end; /* Align button to bottom */
   }
   
-  #ai-input {
+  .ai-input-area textarea {
       flex-grow: 1;
       padding: 8px;
-      border: 1px solid var(--border-color);
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Lighter border for glass */
       border-radius: 6px;
-      background-color: var(--content-bg);
+      background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent input bg */
       color: var(--text-color);
       font-size: 0.9em;
+      font-family: inherit;
+      resize: none;
+      overflow-y: hidden;
+      line-height: 1.4;
+      min-height: 38px;
+      box-sizing: border-box;
       transition: background-color 0.3s ease, border-color 0.3s ease;
   }
-  #ai-input:focus {
+  body.dark-mode .ai-input-area textarea {
+      background-color: rgba(40, 45, 38, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  
+  .ai-input-area textarea:focus {
       outline: none;
       border-color: var(--accent-color);
       box-shadow: 0 0 0 2px rgba(141, 181, 128, 0.3);
+      background-color: rgba(255, 255, 255, 0.5); /* Slightly less transparent on focus */
+  }
+  body.dark-mode .ai-input-area textarea:focus {
+       background-color: rgba(40, 45, 38, 0.8);
   }
   
   #ai-send-btn {
@@ -545,6 +574,8 @@
       border: none;
       border-radius: 6px;
       font-size: 0.9em;
+      flex-shrink: 0; /* Prevent button shrinking */
+      height: 38px; /* Match textarea min-height */
       transition: background-color 0.2s ease;
   }
   #ai-send-btn:hover { background-color: var(--header-color); }
@@ -692,7 +723,6 @@
   }
   #mobile-nav-close:hover { color: var(--text-color); }
   
-  
   /* --- Responsive Design Adjustments --- */
   @media (max-width: 1024px) {
       header { padding: 6px 20px; height: calc(var(--header-height) - 4px); }
@@ -723,7 +753,7 @@
           max-height: none;
           overflow-y: visible;
       }
-      /* h1 style is handled by .poem-main-text h1 now */
+      /* Poem H1 style handled by .poem-main-text h1 */
   }
   
   @media (max-width: 600px) {
@@ -738,7 +768,7 @@
        #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
        .poem-main-text h1 { font-size: 1.4em; }
        .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
-       .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; } /* Adjust main text styles for mobile */
+       .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; }
        .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
        .question-item { margin-bottom: 15px; }
        .answer { margin-left: 0.8em; padding: 8px; }
