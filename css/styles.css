@@ -85,7 +85,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 8px 20px;
+      padding: 8px 8px 40px 8px 40px;
+      overflow: visible; 
       background-color: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
       position: relative;
@@ -102,6 +103,7 @@
       font-size: 1.6em;
       font-weight: 700;
       text-shadow: 1px 1px 2px var(--shadow-color);
+      min-width: 0;
   }
   
   #dark-mode-toggle {
@@ -648,13 +650,13 @@
         font-size: 1.8em;
         color: var(--text-color);
         cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    z-index: 1101; /* 確保層級高 */
         position: absolute;
-        left: 15px;
         top: 50%;
         transform: translateY(-50%);
-        padding: 5px;
-        line-height: 1;
-        z-index: 1101;
+        left: 15px;
     }
     
     .mobile-nav {
@@ -795,15 +797,24 @@
 }
 
 /* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
-@media (max-width: 800px) { /* Changed breakpoint */
-    header { padding: 6px 20px; height: calc(var(--header-height) - 4px); }
+@media (max-width: 800px) {
+    /* --- Step 4.1: Adjust Header Padding --- */
+    header {
+        padding: 6px 15px; /* 修改此行: 減少左右 padding */
+        height: calc(var(--header-height) - 4px);
+    }
     footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
     #main-title { font-size: 1.4em; }
     #dark-mode-toggle { font-size: 1.4em; right: 10px; }
+
+    /* --- Step 4.2: Ensure complete styles for mobile toggle --- */
     #mobile-menu-toggle {
-        display: block; /* Show mobile toggle NOW */
-        font-size: 1.6em;
-        left: 10px;
+        display: block !important; /* 修改/確認: 使用 !important 強制顯示 */
+        font-size: 1.6em;         /* 確認 */
+        position: absolute;       /* 添加/確認: 確保有定位 */
+        top: 50%;                 /* 添加/確認: 確保垂直居中 */
+        left: 10px;               /* 確認 */
+        transform: translateY(-50%); /* 添加/確認: 確保精確垂直居中 */
     }
 
     .main-container {
