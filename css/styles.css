@@ -1,10 +1,9 @@
 /* --- 字體定義 --- */
 @font-face {
-    font-family: 'BabelStone Han'; /* 自定義字體名稱 */
-    src: url('../fonts/BabelStoneHan.woff2') format('woff2'); /* 相對路徑指向 WOFF2 */
+    font-family: 'BabelStone Han';
+    src: url('../fonts/BabelStoneHan.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
-    /* font-display: swap; */ /* 可以考慮 */
   }
   
   /* Ghibli 風格調色板和基礎設置 */
@@ -27,7 +26,16 @@
       --shadow-color: rgba(80, 70, 60, 0.1);
       --header-height: 50px;
       --footer-height: 40px;
-      --container-v-margin: 40px; /* 估算值，用於 max-height 計算 */
+      --container-v-margin: 40px;
+      /* --- Ghibli Background Colors for Buttons --- */
+      --ghibli-color-1: #a8d8ea; /* Light Blue */
+      --ghibli-color-2: #d3e0b7; /* Pale Green */
+      --ghibli-color-3: #f9cb9c; /* Light Orange */
+      --ghibli-color-4: #f4c7c3; /* Soft Pink */
+      --ghibli-color-5: #c4b7ea; /* Lavender */
+      --ghibli-color-6: #e6d1a1; /* Sand Yellow */
+      /* --- No Question Text Color --- */
+      --no-question-color: #c0392b; /* Darker Red */
   }
   
   body.dark-mode {
@@ -47,6 +55,15 @@
       --ai-user-bubble: #52694c;
       --ai-ai-bubble: #454a41;
       --shadow-color: rgba(0, 0, 0, 0.2);
+      /* --- Dark Mode Ghibli Colors (adjust as needed) --- */
+      --ghibli-color-1: #5a7e8a;
+      --ghibli-color-2: #6a7857;
+      --ghibli-color-3: #a97b5c;
+      --ghibli-color-4: #9e7370;
+      --ghibli-color-5: #7c6e9a;
+      --ghibli-color-6: #9c8b61;
+      /* --- Dark Mode No Question Color --- */
+      --no-question-color: #e74c3c; /* Brighter Red for contrast */
   }
   
   body {
@@ -120,7 +137,7 @@
       padding: 15px;
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* 40px for .main-container margin-top+bottom */
+      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
       box-shadow: 0 2px 5px var(--shadow-color);
       transition: background-color 0.3s ease, border-color 0.3s ease;
   }
@@ -149,29 +166,72 @@
   .poem-list-container::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
   .poem-list-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
   
-  .side-nav button.nav-button {
+  /* Base Nav Button Style */
+  .nav-button {
       display: block;
       width: 100%;
       padding: 10px 8px;
       text-align: left;
-      background: none;
+      background: none; /* Default no background */
       border: none;
       border-bottom: 1px dashed rgba(128, 128, 128, 0.1);
       font-family: inherit;
       font-size: 1em;
-      color: var(--text-color);
+      color: var(--text-color); /* Default text color */
       border-radius: 5px;
       cursor: pointer;
       line-height: 1.5;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; /* Added box-shadow transition */
   }
-  .side-nav button.nav-button:last-child { border-bottom: none; }
-  .side-nav button.nav-button:hover,
-  .side-nav button.nav-button.active-poem {
+  .nav-button:last-child { border-bottom: none; }
+  
+  /* Hover/Active State (Common) */
+  .nav-button:hover {
       background-color: var(--button-hover-bg);
       color: var(--header-color);
+  }
+  .nav-button.active-poem { /* Active state applies regardless of questions */
+      font-weight: bold;
+      box-shadow: inset 0 0 0 2px var(--accent-color); /* Inset border for active */
+  }
+  
+  /* --- Conditional Button Styling --- */
+  /* Buttons with questions */
+  .nav-button.has-questions {
+      /* Background color is applied via specific color class */
+      color: #333; /* Darker text for better contrast on light colors */
+      font-weight: 500; /* Slightly bolder */
+  }
+  body.dark-mode .nav-button.has-questions {
+      color: #eee; /* Lighter text for dark mode */
+  }
+  .nav-button.has-questions-color-1 { background-color: var(--ghibli-color-1); }
+  .nav-button.has-questions-color-2 { background-color: var(--ghibli-color-2); }
+  .nav-button.has-questions-color-3 { background-color: var(--ghibli-color-3); }
+  .nav-button.has-questions-color-4 { background-color: var(--ghibli-color-4); }
+  .nav-button.has-questions-color-5 { background-color: var(--ghibli-color-5); }
+  .nav-button.has-questions-color-6 { background-color: var(--ghibli-color-6); }
+  /* Hover for colored buttons */
+  .nav-button.has-questions:hover {
+      filter: brightness(1.05); /* Slightly brighten on hover */
+      color: #000; /* Ensure text is readable on hover */
+  }
+  body.dark-mode .nav-button.has-questions:hover {
+      filter: brightness(1.1);
+      color: #fff;
+  }
+  
+  /* Buttons without questions */
+  .nav-button.no-questions {
+      color: var(--no-question-color);
       font-weight: bold;
   }
+  /* Hover for no-question buttons (use default hover) */
+  .nav-button.no-questions:hover {
+      background-color: var(--button-hover-bg);
+      color: var(--header-color); /* Keep hover consistent */
+  }
+  
   
   .scroll-indicator {
       text-align: center;
@@ -192,12 +252,12 @@
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 20px 30px;
-      overflow-y: auto; /* Ensure internal scrolling */
+      overflow-y: auto;
       font-size: 1.15em;
       box-shadow: 0 2px 8px var(--shadow-color);
       transition: background-color 0.3s ease, border-color 0.3s ease;
-      min-width: 0; /* Allow shrinking */
-      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* Enable scrolling */
+      min-width: 0;
+      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
   }
@@ -220,35 +280,43 @@
   #placeholder-text .exam-marker-example {
       font-size: 0.9em;
   }
-  
-  #poem-display-area {
-      text-align: center;
+  #placeholder-text p:last-of-type { /* Style the added instruction */
+      margin-top: 15px;
+      font-style: italic;
+      font-size: 0.95em;
   }
   
-  /* Styles specifically for the main poem text container */
+  
+  #poem-display-area {
+      text-align: left; /* Change overall alignment */
+  }
+  
+  /* Styles for the main poem text container */
   .poem-main-text h1 {
       font-size: 1.8em;
       color: var(--header-color);
-      text-align: center;
+      text-align: center; /* Title still centered */
       margin-bottom: 15px;
       font-weight: bold;
   }
   .poem-main-text .meta {
       font-size: 0.9em;
       color: var(--text-secondary);
-      text-align: center;
+      text-align: center; /* Meta still centered */
       margin-bottom: 25px;
   }
   .poem-main-text p {
-      text-indent: 0;
-      text-align: center;
-      line-height: 1.9;
-      margin: 0 auto 1.5em auto;
-      padding: 8px 0;
-      max-width: 90%;
+      /* --- Update Main Text Style --- */
+      text-align: left; /* Align left like questions */
+      text-indent: 2em; /* Add back traditional indent */
+      line-height: 1.8; /* Adjust line height */
+      margin: 0 0 1.2em 0; /* Bottom margin only */
+      padding: 0; /* Remove padding */
+      max-width: 100%; /* Allow full width */
+      font-weight: normal; /* Ensure normal weight */
   }
   
-  /* Exam Marker Styling (used within poem text and questions) */
+  /* Exam Marker Styling */
   .exam-marker {
      font-size: 0.75em;
      color: var(--accent-color);
@@ -268,14 +336,14 @@
   
   /* --- Exam Questions Styling --- */
   .exam-questions {
-      margin-top: 40px; /* 與正文分開距離 */
+      margin-top: 40px;
       padding-top: 20px;
-      border-top: 1px dashed var(--border-color); /* 分隔線 */
-      text-align: left; /* 題目區域左對齊 */
+      border-top: 1px dashed var(--border-color);
+      text-align: left;
   }
   
   .exam-questions h2 {
-      text-align: center; /* "往年真題" 標題居中 */
+      text-align: center;
       color: var(--header-color);
       font-size: 1.4em;
       margin-bottom: 25px;
@@ -283,21 +351,21 @@
   }
   
   .question-item {
-      margin-bottom: 25px; /* 題目間距 */
+      margin-bottom: 25px;
   }
   
   .question-text {
       font-weight: bold;
       color: var(--text-color);
-      cursor: pointer; /* 明確鼠標手勢 */
+      cursor: pointer;
       line-height: 1.6;
-      margin-bottom: 8px !important; /* 覆蓋 p 的 margin，讓答案緊隨其後 */
-      padding: 5px 0 !important; /* 覆蓋 p 的 padding */
-      text-align: left !important; /* 強制左對齊 */
-      text-indent: 0 !important; /* 移除縮進 */
-      max-width: 100%; /* 允許佔滿寬度 */
+      margin-bottom: 8px !important;
+      padding: 5px 0 !important;
+      text-align: left !important;
+      text-indent: 0 !important;
+      max-width: 100%;
   }
-  .question-text:focus { /* 增加鍵盤聚焦樣式 */
+  .question-text:focus {
        outline: 2px solid var(--accent-color);
        outline-offset: 2px;
        border-radius: 2px;
@@ -312,14 +380,14 @@
   }
   
   .answer {
-      margin-left: 2em; /* 答案縮進 */
+      margin-left: 2em;
       padding: 10px;
-      background-color: rgba(0, 0, 0, 0.03); /* 答案區域淡背景 */
+      background-color: rgba(0, 0, 0, 0.03);
       border-radius: 6px;
       color: var(--text-color);
       line-height: 1.7;
-      text-align: left !important; /* 強制左對齊 */
-      animation: fadeIn 0.3s ease; /* 添加淡入動畫 */
+      text-align: left !important;
+      animation: fadeIn 0.3s ease;
       /* display: none; is handled by JS */
   }
   
@@ -574,25 +642,33 @@
   #mobile-poem-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
   #mobile-poem-list::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
   
-  #mobile-poem-list button.nav-button {
-      display: block;
-      width: 100%;
+  #mobile-poem-list .nav-button { /* Reuse base style */
       padding: 11px 8px;
-      text-align: left;
-      background: none;
-      border: none;
-      border-bottom: 1px dashed var(--border-color);
-      font-family: inherit;
       font-size: 0.95em;
-      color: var(--text-color);
-      border-radius: 4px;
-      cursor: pointer;
-      line-height: 1.5;
-      transition: background-color 0.2s ease, color 0.2s ease;
   }
-  #mobile-poem-list button.nav-button:last-child { border-bottom: none; }
-  #mobile-poem-list button.nav-button:hover { background-color: var(--button-hover-bg); color: var(--header-color); }
-  #mobile-poem-list button.nav-button.active-poem { background-color: var(--accent-color); color: white; font-weight: bold; }
+  #mobile-poem-list .nav-button:last-child { border-bottom: none; }
+  #mobile-poem-list .nav-button:hover { background-color: var(--button-hover-bg); color: var(--header-color); }
+  /* Active style for mobile needs stronger indication */
+  #mobile-poem-list .nav-button.active-poem {
+       background-color: var(--accent-color);
+       color: white; /* White text on accent color */
+       font-weight: bold;
+       box-shadow: none; /* Remove inset shadow for mobile */
+  }
+   /* Ensure mobile conditional styles inherit correctly */
+   #mobile-poem-list .nav-button.has-questions {
+       /* Background is applied by color class */
+       /* Text color adjusted for contrast if needed */
+        color: #333; /* Assuming light mode base */
+   }
+   body.dark-mode #mobile-poem-list .nav-button.has-questions {
+        color: #eee;
+   }
+   #mobile-poem-list .nav-button.no-questions {
+       color: var(--no-question-color);
+       font-weight: bold;
+   }
+  
   
   #mobile-nav-close {
       position: absolute;
@@ -623,7 +699,7 @@
           margin: 8px auto 10px auto;
           gap: 10px;
           flex-grow: 1;
-          overflow: visible; /* Mobile: Let body handle scrolling */
+          overflow: visible;
       }
       .side-nav { display: none; }
   
@@ -635,10 +711,10 @@
           min-height: 300px;
           padding: 15px;
           font-size: 1.05em;
-          max-height: none; /* Mobile: No max-height for content, let body scroll */
-          overflow-y: visible; /* Mobile: Content does not scroll internally */
+          max-height: none;
+          overflow-y: visible;
       }
-      #poem-display-area h1 { font-size: 1.6em; }
+      #poem-display-area h1 { font-size: 1.6em; } /* Adjusted in .poem-main-text h1 */
   }
   
   @media (max-width: 600px) {
@@ -647,16 +723,16 @@
        #mobile-menu-toggle { font-size: 1.5em; }
   
        .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
-       #mobile-poem-list button.nav-button { padding: 9px 5px; font-size: 0.9em; }
+       #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; } /* Adjusted selector */
   
        .main-container { margin: 5px auto 8px auto; gap: 8px; }
        #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
-       #poem-display-area h1 { font-size: 1.4em; }
-       #poem-display-area .meta { font-size: 0.85em; margin-bottom: 15px; }
-       #poem-display-area p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; } /* Main text paragraphs */
-       .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; } /* Question title */
-       .question-item { margin-bottom: 15px; } /* Question item spacing */
-       .answer { margin-left: 0.8em; padding: 8px; } /* Answer style */
+       .poem-main-text h1 { font-size: 1.4em; } /* Adjusted selector */
+       .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; } /* Adjusted selector */
+       .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; } /* Adjusted selector */
+       .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
+       .question-item { margin-bottom: 15px; }
+       .answer { margin-left: 0.8em; padding: 8px; }
   
        #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
        #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}

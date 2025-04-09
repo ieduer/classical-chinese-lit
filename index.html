@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高考默写</title>
+    <!-- Add Favicon -->
+    <link rel="icon" href="https://raw.githubusercontent.com/gptv/suen/main/images/Avatar-small.jpeg" type="image/jpeg">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Rest of the body remains the same -->
     <header>
-        <!-- Add mobile menu button -->
         <button id="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">☰</button>
         <h1 id="main-title">高考默写</h1>
         <button id="dark-mode-toggle" title="切換模式">🌗</button>
     </header>
 
-    <!-- Add Mobile Navigation Overlay -->
     <div id="mobile-nav-overlay" class="mobile-nav" aria-hidden="true">
         <div class="mobile-nav-content">
             <button id="mobile-nav-close" aria-label="Close Menu">×</button>
@@ -29,7 +30,6 @@
     </div>
 
     <div class="main-container">
-        <!-- Left Nav (WenYanWen) - Structure remains -->
         <nav id="left-nav" class="side-nav">
             <h2>文言文</h2>
             <div class="scroll-indicator top" aria-hidden="true">▲</div>
@@ -39,20 +39,24 @@
             <div class="scroll-indicator bottom" aria-hidden="true">▼</div>
         </nav>
 
-        <!-- Center Content -->
         <main id="center-content">
             <div id="placeholder-text">
-                <h2>歡迎來到 高考默寫</h2>
+                <h2>歡迎來到 高考默写</h2>
                 <p>請從左右兩側的目錄中選擇一篇詩文開始閱讀。</p>
                 <p>本站點收錄了常見的古典詩文篇目，旨在提供一個簡潔、舒適的閱讀和學習環境。</p>
                 <p>標有 <span class="exam-marker-example">[京YYYY]</span> 或 <span class="exam-marker-example">[QYYYY]</span> 標記的段落表示曾在北京或全國高考默寫中出現。</p>
+                <p>帶有彩色背景的目錄項表示該篇目包含往年真題。</p>
             </div>
             <article id="poem-display-area" style="display: none;">
-                <!-- Poem content here -->
+                <div class="poem-main-text">
+                    <!-- Main poem text will be rendered here -->
+                </div>
+                <div class="exam-questions">
+                     <!-- Exam questions will be rendered here -->
+                </div>
             </article>
         </main>
 
-        <!-- Right Nav (ShiCiQu) - Structure remains -->
         <nav id="right-nav" class="side-nav">
             <h2>诗词曲</h2>
             <div class="scroll-indicator top" aria-hidden="true">▲</div>
@@ -63,7 +67,6 @@
         </nav>
     </div>
 
-    <!-- AI Interface - Structure remains -->
     <aside id="ai-chat-interface" style="display: none;">
         <button id="ai-close-btn" title="關閉">✕</button>
         <h3>AI 助手</h3>
@@ -75,13 +78,11 @@
     </aside>
     <button id="open-ai-btn" title="打開 AI 助手">💬</button>
 
-    <!-- Update Footer -->
     <footer>
-        <p>© 2025 <a href="https://bdfz.net/" target="_blank" rel="noopener noreferrer">SUEN</a></p>
+        <p>© 2025 <a href="https://bdfz.net/posts/rag/" target="_blank" rel="noopener noreferrer">SUEN</a></p>
     </footer>
 
     <script src="js/script.js" defer></script>
-    <!-- Add Clarity Script -->
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
