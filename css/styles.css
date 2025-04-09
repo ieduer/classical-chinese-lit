@@ -38,34 +38,36 @@ body.dark-mode {
 }
 
 body {
-    font-family: 'Noto Serif SC', 'ZCOOL XiaoWei', serif; /* 優先使用 Noto Serif SC, 備用小薇體 */
+    font-family: 'Noto Serif SC', 'ZCOOL XiaoWei', serif;
     line-height: 1.7;
     margin: 0;
     padding: 0;
-    background: var(--bg-color) url('bg.webp') no-repeat center center fixed; /* 添加背景圖 */
-    background-size: cover; /* 覆蓋整個視口 */
+    /* --- 修正背景圖路徑 --- */
+    background: var(--bg-color) url('../bg.webp') no-repeat center center fixed;
+    background-size: cover;
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
-    min-height: 100vh;
+    min-height: 100vh; /* 確保 body 至少和視口一樣高 */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* 讓 header, main, footer 垂直排列 */
 }
 
 header {
     display: flex;
-    justify-content: center; /* 水平居中標題 */
+    justify-content: center;
     align-items: center;
     padding: 15px 20px;
-    background-color: rgba(255, 255, 255, 0.1); /* 輕微模糊背景效果 */
+    background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
-    position: relative; /* 為了定位切換按鈕 */
+    position: relative;
     border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0; /* 防止 header 在 flex 佈局中縮小 */
 }
 
 #main-title {
     margin: 0;
     color: var(--header-color);
-    font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', sans-serif; /* 標題使用不同字體 */
+    font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', sans-serif;
     font-size: 1.8em;
     font-weight: 700;
     text-shadow: 1px 1px 2px var(--shadow-color);
@@ -73,40 +75,41 @@ header {
 
 #dark-mode-toggle {
     position: absolute;
-    right: 30px; /* 放在右邊 */
+    right: 30px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
-    font-size: 1.8em; /* 圖標大小 */
+    font-size: 1.8em;
     cursor: pointer;
     padding: 0 5px;
-    color: var(--text-color); /* 隨主題變化 */
+    color: var(--text-color);
 }
 
 .main-container {
     display: flex;
-    flex-grow: 1; /* 佔滿剩餘垂直空間 */
-    max-width: 1600px; /* 可以適當加寬 */
+    flex-grow: 1; /* 讓主內容區域填滿 header 和 footer 之間的空間 */
+    max-width: 1600px;
     width: 95%;
-    margin: 20px auto;
-    gap: 20px; /* 欄間距 */
+    margin: 20px auto; /* 上下邊距 */
+    gap: 20px;
     padding: 0 10px;
+    /* overflow: hidden; */ /* 移除或注释掉，避免内部元素被截断 */
 }
 
 /* 左右導航欄樣式 (桌面) */
 .side-nav {
-    width: 23%; /* 調整寬度 */
+    width: 23%;
     min-width: 220px;
     background-color: var(--nav-bg);
     border: 1px solid var(--border-color);
-    border-radius: 12px; /* 更圓潤的邊角 */
+    border-radius: 12px;
     padding: 15px;
     display: flex; /* 默認顯示 */
     flex-direction: column;
-    max-height: calc(100vh - 120px); /* 限制最大高度，留下 header 和 footer 空間 */
+    max-height: calc(100vh - 120px); /* 保留側邊欄最大高度，讓其內部滾動 */
     box-shadow: 0 2px 5px var(--shadow-color);
-    transition: background-color 0.3s ease, border-color 0.3s ease, display 0s ease 0.3s; /* 添加 display 過渡延遲 */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .side-nav h2 {
@@ -116,120 +119,101 @@ header {
     color: var(--header-color);
     font-family: 'Noto Sans SC', sans-serif;
     font-size: 1.3em;
+    flex-shrink: 0; /* 防止標題被壓縮 */
 }
 
 .poem-list-container {
-    flex-grow: 1; /* 佔滿導航欄剩餘空間 */
-    overflow-y: auto; /* 內容超出時滾動 */
+    flex-grow: 1;
+    overflow-y: auto;
     list-style: none;
-    padding: 0 5px 0 0; /* 右側留空給滾動條 */
+    padding: 0 5px 0 0;
     margin: 0;
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
-/* Webkit 瀏覽器滾動條樣式 */
-.poem-list-container::-webkit-scrollbar {
-    width: 8px;
-}
-.poem-list-container::-webkit-scrollbar-track {
-    background: var(--scrollbar-track);
-    border-radius: 4px;
-}
-.poem-list-container::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-thumb);
-    border-radius: 4px;
-    border: 2px solid var(--scrollbar-track); /* 創造邊距效果 */
-}
+.poem-list-container::-webkit-scrollbar { width: 8px; }
+.poem-list-container::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+.poem-list-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
 
 .side-nav button.nav-button {
     display: block;
     width: 100%;
-    padding: 10px 8px; /* 增加內邊距 */
+    padding: 10px 8px;
     text-align: left;
     background: none;
     border: none;
-    border-bottom: 1px dashed rgba(128, 128, 128, 0.1); /* 非常淡的分隔線 */
+    border-bottom: 1px dashed rgba(128, 128, 128, 0.1);
     font-family: inherit;
-    font-size: 1em; /* 目錄字號 */
+    font-size: 1em;
     color: var(--text-color);
     border-radius: 5px;
     cursor: pointer;
     line-height: 1.5;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
-.side-nav button.nav-button:last-child {
-    border-bottom: none;
-}
-
+.side-nav button.nav-button:last-child { border-bottom: none; }
 .side-nav button.nav-button:hover,
 .side-nav button.nav-button.active-poem {
     background-color: var(--button-hover-bg);
-    color: var(--header-color); /* 選中時用標題色 */
+    color: var(--header-color);
     font-weight: bold;
 }
 
-/* 滾動指示器 */
 .scroll-indicator {
     text-align: center;
-    font-size: 1em; /* 稍微調大 */
+    font-size: 1em;
     color: var(--text-secondary);
-    opacity: 0; /* 默認隱藏 */
-    height: 0; /* 默認不佔空間 */
+    opacity: 0;
+    height: 0;
     overflow: hidden;
     transition: opacity 0.3s ease, height 0.3s ease;
+    flex-shrink: 0; /* 防止指示器被壓縮 */
 }
-.scroll-indicator.visible {
-    opacity: 0.6; /* 可見時的透明度 */
-    height: 1.2em; /* 可見時的高度 */
-}
+.scroll-indicator.visible { opacity: 0.6; height: 1.2em; }
 
 /* 中間內容區 */
 #center-content {
-    width: 54%; /* 調整寬度 */
+    width: 54%;
     background-color: var(--content-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 25px 35px; /* 增加內邊距 */
-    overflow-y: auto; /* 如果內容太長也允許滾動 */
-    font-size: 1.15em; /* 整體字號加大 */
+    padding: 25px 35px;
+    overflow-y: auto; /* 如果內容超長，允許內部滾動 */
+    font-size: 1.15em;
     box-shadow: 0 2px 8px var(--shadow-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    max-height: calc(100vh - 120px); /* 與導航欄同高 */
+    /* --- 移除 max-height 限制 --- */
+    /* max-height: calc(100vh - 120px); */
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
 }
 
-/* Webkit 瀏覽器滾動條樣式 for center */
-#center-content::-webkit-scrollbar {
-    width: 8px;
-}
-#center-content::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.05); /* 內容區滾動條背景淡一些 */
-    border-radius: 4px;
-}
-#center-content::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-thumb);
-    border-radius: 4px;
-    border: 2px solid var(--content-bg);
-}
+#center-content::-webkit-scrollbar { width: 8px; }
+#center-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
+#center-content::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--content-bg); }
 
 #placeholder-text {
     text-align: center;
     color: var(--text-secondary);
     padding-top: 50px;
+    min-height: 200px; /* 給 placeholder 一個最小高度，避免太短 */
 }
 #placeholder-text h2 {
      color: var(--header-color);
      font-size: 1.5em;
      margin-bottom: 20px;
 }
-#placeholder-text .exam-marker-example { /* Style example in placeholder */
-    font-size: 0.9em; /* Match surrounding text size better */
+#placeholder-text .exam-marker-example {
+    font-size: 0.9em;
+}
+
+#poem-display-area {
+    text-align: center; /* Center inline-block paragraphs */
 }
 
 #poem-display-area h1 {
-    font-size: 2em; /* 詩文標題更大 */
+    font-size: 2em;
     color: var(--header-color);
     text-align: center;
     margin-bottom: 15px;
@@ -237,27 +221,21 @@ header {
 }
 
 #poem-display-area .meta {
-    font-size: 0.95em; /* 作者信息字號 */
+    font-size: 0.95em;
     color: var(--text-secondary);
     text-align: center;
     margin-bottom: 30px;
 }
 
-/* Centering Poem Content Paragraphs */
-#poem-display-area {
-    text-align: center; /* Center the container for inline-block paragraphs */
-}
 #poem-display-area p {
-    text-indent: 0; /* Remove indent */
-    text-align: center; /* Center text within the paragraph */
-    /* If centering looks odd, try: display: inline-block; text-align: left; */
-    line-height: 2; /* Increased line height */
-    margin: 0 auto 1.8em auto; /* Center block and add bottom margin */
+    text-indent: 0;
+    text-align: center;
+    line-height: 2;
+    margin: 0 auto 1.8em auto;
     padding: 8px 0;
-    max-width: 90%; /* Prevent lines from becoming too wide */
+    max-width: 90%;
 }
 
-/* Exam Marker Styling */
 .exam-marker {
    font-size: 0.75em;
    color: var(--accent-color);
@@ -356,7 +334,6 @@ body.dark-mode .exam-marker {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--ai-bg);
 }
-/* Webkit AI messages scrollbar */
 #ai-messages::-webkit-scrollbar { width: 6px; }
 #ai-messages::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
 #ai-messages::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
@@ -437,30 +414,22 @@ body.dark-mode .exam-marker {
 
 footer {
     text-align: center;
-    margin-top: auto;
+    /* margin-top: auto; 由 body 的 flex 佈局自動推到底部 */
     padding: 15px;
     color: var(--text-secondary);
     font-size: 0.9em;
     background-color: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(2px);
     border-top: 1px solid var(--border-color);
+    flex-shrink: 0; /* 防止 footer 在 flex 佈局中縮小 */
 }
-footer a { /* Style footer link */
-    color: var(--accent-color);
-    text-decoration: none;
-}
-footer a:hover {
-    text-decoration: underline;
-}
-body.dark-mode footer a { /* Dark mode footer link */
-    color: #a8c0a0;
-}
-
+footer a { color: var(--accent-color); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+body.dark-mode footer a { color: #a8c0a0; }
 
 /* --- Mobile Navigation Styles --- */
-/* Mobile Navigation Trigger Button */
 #mobile-menu-toggle {
-    display: none; /* Hidden on desktop */
+    display: none;
     background: none;
     border: none;
     font-size: 1.8em;
@@ -472,34 +441,32 @@ body.dark-mode footer a { /* Dark mode footer link */
     transform: translateY(-50%);
     padding: 5px;
     line-height: 1;
-    z-index: 1101; /* Ensure button is above overlay */
+    z-index: 1101;
 }
 
-/* Mobile Navigation Overlay */
 .mobile-nav {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    background-color: rgba(0, 0, 0, 0.7);
     z-index: 1100;
     opacity: 0;
     transition: opacity 0.3s ease;
     backdrop-filter: blur(5px);
 }
 .mobile-nav.visible {
-    display: block; /* Make it visible */
+    display: block;
     opacity: 1;
 }
 
-/* Mobile Navigation Content Box */
 .mobile-nav-content {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.95); /* Start slightly smaller */
+    transform: translate(-50%, -50%) scale(0.95);
     background-color: var(--nav-bg);
     padding: 40px 20px 20px 20px;
     border-radius: 10px;
@@ -510,13 +477,12 @@ body.dark-mode footer a { /* Dark mode footer link */
     flex-direction: column;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     opacity: 0;
-    transition: opacity 0.2s 0.1s ease, transform 0.2s 0.1s ease; /* Delay transition slightly */
+    transition: opacity 0.2s 0.1s ease, transform 0.2s 0.1s ease;
 }
 .mobile-nav.visible .mobile-nav-content {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1); /* Scale up to full size */
+    transform: translate(-50%, -50%) scale(1);
 }
-
 
 .mobile-nav-content h2 {
     text-align: center;
@@ -539,7 +505,6 @@ body.dark-mode footer a { /* Dark mode footer link */
 #mobile-poem-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
 #mobile-poem-list::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
 
-/* Mobile list button styles (shared with desktop but potentially adjusted) */
 #mobile-poem-list button.nav-button {
     display: block;
     width: 100%;
@@ -564,7 +529,7 @@ body.dark-mode footer a { /* Dark mode footer link */
     color: var(--header-color);
 }
 #mobile-poem-list button.nav-button.active-poem {
-     background-color: var(--accent-color); /* Stronger highlight for mobile */
+     background-color: var(--accent-color);
      color: white;
      font-weight: bold;
 }
@@ -585,27 +550,27 @@ body.dark-mode footer a { /* Dark mode footer link */
     color: var(--text-color);
 }
 
-
 /* --- Responsive Design Adjustments --- */
-/* Tablet and Smaller Desktop */
 @media (max-width: 1024px) {
     .main-container {
-        flex-direction: column; /* Stack elements vertically */
+        flex-direction: column;
         width: 98%;
         gap: 15px;
-        margin: 10px auto;
+        margin: 10px auto 15px auto;
+        flex-grow: 1;
     }
     .side-nav {
         display: none; /* Hide desktop sidebars */
     }
     #center-content {
-        width: 100%; /* Content takes full width */
-        order: 0; /* Ensure content is first or as desired */
-        margin: 0 auto 15px auto; /* Center and add bottom margin */
-        max-height: none; /* Remove height limit on mobile */
+        width: 100%;
+        order: 0;
+        margin: 0 auto 15px auto;
+        flex-grow: 1;
+        min-height: 300px;
     }
     #mobile-menu-toggle {
-        display: block; /* Show mobile menu button */
+        display: block;
     }
     #main-title { font-size: 1.5em; }
     #dark-mode-toggle { font-size: 1.5em; right: 15px; }
@@ -613,8 +578,7 @@ body.dark-mode footer a { /* Dark mode footer link */
     #center-content { padding: 15px 20px; font-size: 1.1em; }
 }
 
-/* Mobile Phones */
- @media (max-width: 600px) {
+@media (max-width: 600px) {
      #main-title { font-size: 1.3em; }
      #dark-mode-toggle { font-size: 1.6em; right: 10px; }
      #mobile-menu-toggle { font-size: 1.6em; left: 15px; }
@@ -622,10 +586,11 @@ body.dark-mode footer a { /* Dark mode footer link */
      .mobile-nav-content { width: 95%; padding: 30px 15px 15px 15px; }
      #mobile-poem-list button.nav-button { padding: 10px 5px; font-size: 0.95em; }
 
-     #center-content { padding: 15px; font-size: 1.05em; }
+     .main-container { margin: 5px auto 10px auto; gap: 10px; }
+     #center-content { padding: 15px; font-size: 1.05em; min-height: 200px; }
      #poem-display-area h1 { font-size: 1.5em; }
      #poem-display-area .meta { font-size: 0.9em; margin-bottom: 20px; }
-     #poem-display-area p { line-height: 1.9; margin-bottom: 1.5em; font-size: 1.1em; max-width: 95%; } /* Adjust font size and max-width */
+     #poem-display-area p { line-height: 1.9; margin-bottom: 1.5em; font-size: 1.1em; max-width: 98%; }
 
      #open-ai-btn { width: 50px; height: 50px; font-size: 1.8em; bottom: 15px; right: 15px; }
      #ai-chat-interface { width: calc(100% - 30px); bottom: 70px; right: 15px; max-height: 60vh;}
