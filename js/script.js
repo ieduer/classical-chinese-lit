@@ -69,14 +69,26 @@ async function loadPoems() {
     }
 }
 
+/**
+ * Render navigation items into a specific list element.
+ * @param {Array} data - Array of poem objects to render.
+ * @param {HTMLElement} listElement - The UL element to populate.
+ */
 function renderNavigation(data, listElement) {
-    if (!listElement) return;
-    listElement.innerHTML = '';
+    if (!listElement) {
+        console.warn("Target list element not found for rendering navigation.");
+        return;
+    }
+    listElement.innerHTML = ''; // Clear existing items
 
     if (data.length === 0) {
         listElement.innerHTML = '<li>暫無篇目</li>';
         return;
     }
+
+    // Define the number of Ghibli colors available
+    const numGhibliColors = 6; // Matches CSS variables --ghibli-color-1 to --ghibli-color-6
+    let colorIndex = 0; // Initialize color index
 
     data.forEach(poem => {
         const listItem = document.createElement('li');
@@ -85,9 +97,23 @@ function renderNavigation(data, listElement) {
         button.dataset.poemOrder = poem.order;
         button.classList.add('nav-button');
         button.title = `${poem.title} - ${poem.author} (${poem.dynasty})`;
+
+        // --- Check for questions and add appropriate class ---
+        const hasQuestions = poem.question || poem.question1; // Check both formats
+        if (hasQuestions) {
+            button.classList.add('has-questions');
+            // Cycle through Ghibli colors
+            colorIndex = (colorIndex % numGhibliColors) + 1; // Cycle 1 to 6
+            button.classList.add(`has-questions-color-${colorIndex}`);
+        } else {
+            button.classList.add('no-questions');
+        }
+        // --- End of modification ---
+
         listItem.appendChild(button);
         listElement.appendChild(listItem);
     });
+    console.log(`已渲染導航列表: ${listElement.id || 'Mobile List'}`);
 }
 
 function setupNavigationListeners() {
