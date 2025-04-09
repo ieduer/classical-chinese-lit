@@ -98,7 +98,7 @@
   #main-title {
       margin: 0;
       color: var(--header-color);
-      font-family: 'ZCOOL XiaoWei', 'BabelStone Han', 'Noto Sans SC', sans-serif;
+      font-family: 'Noto Sans SC', 'BabelStone Han', sans-serif;
       font-size: 1.6em;
       font-weight: 700;
       text-shadow: 1px 1px 2px var(--shadow-color);
