@@ -1,38 +1,33 @@
 /* --- 字體定義 --- */
 @font-face {
     font-family: 'BabelStone Han'; /* 自定義字體名稱 */
-    /* --- 優先使用 WOFF2 --- */
     src: url('../fonts/BabelStoneHan.woff2') format('woff2'); /* 相對路徑指向 WOFF2 */
-    /* 如果你想保留 TTF 作為後備，可以像這樣添加，但如果只有 WOFF2 就只寫 WOFF2 */
-    /* src: url('../fonts/BabelStoneHan.woff2') format('woff2'),
-           url('../fonts/BabelStoneHan.ttf') format('truetype'); */
     font-weight: normal;
     font-style: normal;
-    /* unicode-range: U+2CEB0-2CEA1, U+2A700-2B73F, U+2B740-2B81D, U+2B820-2CEA1, U+2CEB0-2EBE0, U+30000-3134F, U+31350-323AF; */ /* 嘗試限制範圍，可能不完整 */
-    /* font-display: swap; */ /* 可以考慮添加，讓文字先用後備字體顯示 */
+    /* font-display: swap; */ /* 可以考慮 */
   }
   
   /* Ghibli 風格調色板和基礎設置 */
   :root {
       /* Light Mode */
-      --bg-color: #f4f1e9; /* 柔和米白 */
-      --content-bg: rgba(255, 255, 255, 0.88); /* 帶透明度的內容背景 */
-      --nav-bg: rgba(230, 235, 224, 0.85); /* 導航背景，略帶綠色調 */
-      --text-color: #4d453e; /* 主要文字 - 深棕色 */
-      --text-secondary: #7a726a; /* 次要文字 - 灰棕色 */
-      --header-color: #5c6e58; /* 標題顏色 - 柔和綠 */
-      --accent-color: #8db580; /* 強調色 - 較亮的綠色 */
-      --border-color: #d3c0a4; /* 邊框色 - 沙色 */
-      --button-hover-bg: #d8e0cc; /* 按鈕懸停背景 */
+      --bg-color: #f4f1e9;
+      --content-bg: rgba(255, 255, 255, 0.88);
+      --nav-bg: rgba(230, 235, 224, 0.85);
+      --text-color: #4d453e;
+      --text-secondary: #7a726a;
+      --header-color: #5c6e58;
+      --accent-color: #8db580;
+      --border-color: #d3c0a4;
+      --button-hover-bg: #d8e0cc;
       --scrollbar-thumb: #b0a89a;
       --scrollbar-track: rgba(230, 235, 224, 0.5);
-      --ai-bg: rgba(250, 250, 245, 0.95); /* AI 背景 */
-      --ai-user-bubble: #cde2c6; /* 用戶氣泡 - 淡綠 */
-      --ai-ai-bubble: #e8e8e0; /* AI 氣泡 - 淺灰 */
+      --ai-bg: rgba(250, 250, 245, 0.95);
+      --ai-user-bubble: #cde2c6;
+      --ai-ai-bubble: #e8e8e0;
       --shadow-color: rgba(80, 70, 60, 0.1);
-      --header-height: 50px; /* 定義 header 大致高度變量 */
-      --footer-height: 40px; /* 定義 footer 大致高度變量 */
-      --container-v-margin: 40px; /* main-container 上下總 margin */
+      --header-height: 50px;
+      --footer-height: 40px;
+      --container-v-margin: 40px; /* 估算值，用於 max-height 計算 */
   }
   
   body.dark-mode {
@@ -55,8 +50,7 @@
   }
   
   body {
-      /* --- 更新 font-family --- */
-      font-family: 'BabelStone Han', 'Noto Serif SC', 'ZCOOL XiaoWei', serif; /* 將 BabelStone Han 放在最前面 */
+      font-family: 'BabelStone Han', 'Noto Serif SC', 'ZCOOL XiaoWei', serif;
       line-height: 1.7;
       margin: 0;
       padding: 0;
@@ -86,7 +80,6 @@
   #main-title {
       margin: 0;
       color: var(--header-color);
-      /* --- 標題也可以使用 BabelStone Han 作為後備 --- */
       font-family: 'ZCOOL XiaoWei', 'BabelStone Han', 'Noto Sans SC', sans-serif;
       font-size: 1.6em;
       font-weight: 700;
@@ -127,7 +120,7 @@
       padding: 15px;
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
+      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* 40px for .main-container margin-top+bottom */
       box-shadow: 0 2px 5px var(--shadow-color);
       transition: background-color 0.3s ease, border-color 0.3s ease;
   }
@@ -199,12 +192,12 @@
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 20px 30px;
-      overflow-y: auto;
+      overflow-y: auto; /* Ensure internal scrolling */
       font-size: 1.15em;
       box-shadow: 0 2px 8px var(--shadow-color);
       transition: background-color 0.3s ease, border-color 0.3s ease;
-      min-width: 0;
-      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
+      min-width: 0; /* Allow shrinking */
+      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* Enable scrolling */
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
   }
@@ -232,22 +225,21 @@
       text-align: center;
   }
   
-  #poem-display-area h1 {
+  /* Styles specifically for the main poem text container */
+  .poem-main-text h1 {
       font-size: 1.8em;
       color: var(--header-color);
       text-align: center;
       margin-bottom: 15px;
       font-weight: bold;
   }
-  
-  #poem-display-area .meta {
+  .poem-main-text .meta {
       font-size: 0.9em;
       color: var(--text-secondary);
       text-align: center;
       margin-bottom: 25px;
   }
-  
-  #poem-display-area p {
+  .poem-main-text p {
       text-indent: 0;
       text-align: center;
       line-height: 1.9;
@@ -256,6 +248,7 @@
       max-width: 90%;
   }
   
+  /* Exam Marker Styling (used within poem text and questions) */
   .exam-marker {
      font-size: 0.75em;
      color: var(--accent-color);
@@ -271,6 +264,72 @@
   body.dark-mode .exam-marker {
       color: #a8c0a0;
       background-color: rgba(168, 192, 160, 0.2);
+  }
+  
+  /* --- Exam Questions Styling --- */
+  .exam-questions {
+      margin-top: 40px; /* 與正文分開距離 */
+      padding-top: 20px;
+      border-top: 1px dashed var(--border-color); /* 分隔線 */
+      text-align: left; /* 題目區域左對齊 */
+  }
+  
+  .exam-questions h2 {
+      text-align: center; /* "往年真題" 標題居中 */
+      color: var(--header-color);
+      font-size: 1.4em;
+      margin-bottom: 25px;
+      font-family: 'Noto Sans SC', sans-serif;
+  }
+  
+  .question-item {
+      margin-bottom: 25px; /* 題目間距 */
+  }
+  
+  .question-text {
+      font-weight: bold;
+      color: var(--text-color);
+      cursor: pointer; /* 明確鼠標手勢 */
+      line-height: 1.6;
+      margin-bottom: 8px !important; /* 覆蓋 p 的 margin，讓答案緊隨其後 */
+      padding: 5px 0 !important; /* 覆蓋 p 的 padding */
+      text-align: left !important; /* 強制左對齊 */
+      text-indent: 0 !important; /* 移除縮進 */
+      max-width: 100%; /* 允許佔滿寬度 */
+  }
+  .question-text:focus { /* 增加鍵盤聚焦樣式 */
+       outline: 2px solid var(--accent-color);
+       outline-offset: 2px;
+       border-radius: 2px;
+  }
+  
+  .question-year {
+      font-size: 0.85em;
+      color: var(--text-secondary);
+      font-weight: normal;
+      margin-left: 8px;
+      white-space: nowrap;
+  }
+  
+  .answer {
+      margin-left: 2em; /* 答案縮進 */
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.03); /* 答案區域淡背景 */
+      border-radius: 6px;
+      color: var(--text-color);
+      line-height: 1.7;
+      text-align: left !important; /* 強制左對齊 */
+      animation: fadeIn 0.3s ease; /* 添加淡入動畫 */
+      /* display: none; is handled by JS */
+  }
+  
+  body.dark-mode .answer {
+      background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   
   /* AI 聊天界面樣式 */
@@ -549,7 +608,6 @@
   }
   #mobile-nav-close:hover { color: var(--text-color); }
   
-  
   /* --- Responsive Design Adjustments --- */
   @media (max-width: 1024px) {
       header { padding: 6px 20px; height: calc(var(--header-height) - 4px); }
@@ -595,7 +653,10 @@
        #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
        #poem-display-area h1 { font-size: 1.4em; }
        #poem-display-area .meta { font-size: 0.85em; margin-bottom: 15px; }
-       #poem-display-area p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; }
+       #poem-display-area p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; } /* Main text paragraphs */
+       .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; } /* Question title */
+       .question-item { margin-bottom: 15px; } /* Question item spacing */
+       .answer { margin-left: 0.8em; padding: 8px; } /* Answer style */
   
        #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
        #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}
