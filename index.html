@@ -5,20 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高考默寫</title>
     <link rel="stylesheet" href="css/styles.css">
-    <!-- 可以考慮引入一個 Ghibli 風格的字體，或依賴系統字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-
 </head>
 <body>
     <header>
+        <!-- Add mobile menu button -->
+        <button id="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">☰</button>
         <h1 id="main-title">高考默寫</h1>
         <button id="dark-mode-toggle" title="切換模式">🌗</button>
     </header>
 
+    <!-- Add Mobile Navigation Overlay -->
+    <div id="mobile-nav-overlay" class="mobile-nav" aria-hidden="true">
+        <div class="mobile-nav-content">
+            <button id="mobile-nav-close" aria-label="Close Menu">×</button>
+            <h2>目錄</h2>
+            <ul id="mobile-poem-list">
+                <!-- Mobile list will be populated by JS -->
+            </ul>
+        </div>
+    </div>
+
     <div class="main-container">
-        <!-- 左側導航: 文言文 -->
+        <!-- Left Nav (WenYanWen) - Structure remains -->
         <nav id="left-nav" class="side-nav">
             <h2>文言文</h2>
             <div class="scroll-indicator top" aria-hidden="true">▲</div>
@@ -28,31 +39,31 @@
             <div class="scroll-indicator bottom" aria-hidden="true">▼</div>
         </nav>
 
-        <!-- 中間主內容區 -->
+        <!-- Center Content -->
         <main id="center-content">
             <div id="placeholder-text">
                 <h2>歡迎來到 高考默寫</h2>
                 <p>請從左右兩側的目錄中選擇一篇詩文開始閱讀。</p>
                 <p>本站點收錄了常見的古典詩文篇目，旨在提供一個簡潔、舒適的閱讀和學習環境。</p>
-                <!-- 你可以在此處添加更多說明文字 -->
+                <p>標有 <span class="exam-marker-example">[京YYYY]</span> 或 <span class="exam-marker-example">[QYYYY]</span> 標記的段落表示曾在北京或全國高考默寫中出現。</p>
             </div>
             <article id="poem-display-area" style="display: none;">
-                <!-- 選中的詩文將顯示在此 -->
+                <!-- Poem content here -->
             </article>
         </main>
 
-        <!-- 右側導航: 诗词曲 -->
+        <!-- Right Nav (ShiCiQu) - Structure remains -->
         <nav id="right-nav" class="side-nav">
             <h2>诗词曲</h2>
-             <div class="scroll-indicator top" aria-hidden="true">▲</div>
+            <div class="scroll-indicator top" aria-hidden="true">▲</div>
             <ul id="shiciqu-list" class="poem-list-container">
                 <li>載入中...</li>
             </ul>
-             <div class="scroll-indicator bottom" aria-hidden="true">▼</div>
+            <div class="scroll-indicator bottom" aria-hidden="true">▼</div>
         </nav>
     </div>
 
-    <!-- AI 聊天界面區域 (初始隱藏) -->
+    <!-- AI Interface - Structure remains -->
     <aside id="ai-chat-interface" style="display: none;">
         <button id="ai-close-btn" title="關閉">✕</button>
         <h3>AI 助手</h3>
@@ -62,13 +73,21 @@
             <button id="ai-send-btn">發送</button>
         </div>
     </aside>
-    <!-- 可以添加一個永久顯示的按鈕來觸發 AI 窗口 -->
-     <button id="open-ai-btn" title="打開 AI 助手">💬</button>
+    <button id="open-ai-btn" title="打開 AI 助手">💬</button>
 
+    <!-- Update Footer -->
     <footer>
-        <p>Ghibli Style Classical Lit</p>
+        <p>© 2025 <a href="https://bdfz.net/" target="_blank" rel="noopener noreferrer">SUEN</a></p>
     </footer>
 
     <script src="js/script.js" defer></script>
+    <!-- Add Clarity Script -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "r18imbklh8");
+    </script>
 </body>
 </html>

@@ -470,4 +470,197 @@ footer {
 
      #open-ai-btn { width: 50px; height: 50px; font-size: 1.8em; bottom: 15px; right: 15px; }
      #ai-chat-interface { width: calc(100% - 30px); /* 幾乎佔滿寬度 */ bottom: 70px; right: 15px; max-height: 60vh;}
+
+
+     /* --- Additions/Modifications for Phase 3 --- */
+
+/* Mobile Navigation Trigger */
+#mobile-menu-toggle {
+    display: none; /* Hidden on desktop */
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    color: var(--text-color);
+    cursor: pointer;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px;
+    line-height: 1;
+}
+
+/* Mobile Navigation Overlay */
+.mobile-nav {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+    z-index: 1100;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+.mobile-nav.visible {
+    display: block;
+    opacity: 1;
+}
+
+/* Mobile Navigation Content Box */
+.mobile-nav-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--nav-bg);
+    padding: 40px 20px 20px 20px; /* More top padding for close button */
+    border-radius: 10px;
+    max-height: 85vh; /* Limit height */
+    width: 90%; /* Responsive width */
+    max-width: 450px; /* Max width */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.mobile-nav-content h2 {
+    text-align: center;
+    color: var(--header-color);
+    margin: 0 0 15px 0;
+    font-size: 1.4em;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+#mobile-poem-list {
+    flex-grow: 1; /* Take remaining space */
+    overflow-y: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--nav-bg);
+}
+#mobile-poem-list::-webkit-scrollbar { width: 6px; }
+#mobile-poem-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
+#mobile-poem-list::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
+
+/* Reusing nav-button style for mobile list items */
+#mobile-poem-list button.nav-button {
+    display: block;
+    width: 100%;
+    padding: 12px 8px; /* Larger tap target */
+    text-align: left;
+    background: none;
+    border: none;
+    border-bottom: 1px dashed var(--border-color);
+    font-family: inherit;
+    font-size: 1em;
+    color: var(--text-color);
+    border-radius: 4px;
+    cursor: pointer;
+    line-height: 1.5;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+#mobile-poem-list button.nav-button:last-child {
+    border-bottom: none;
+}
+#mobile-poem-list button.nav-button:hover,
+#mobile-poem-list button.nav-button.active-poem {
+    background-color: var(--button-hover-bg);
+    color: var(--header-color);
+    font-weight: bold;
+}
+#mobile-poem-list button.nav-button.active-poem {
+     background-color: var(--accent-color); /* Stronger highlight */
+     color: white;
+}
+
+#mobile-nav-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: var(--text-secondary);
+    cursor: pointer;
+    line-height: 1;
+    padding: 5px;
+}
+#mobile-nav-close:hover {
+    color: var(--text-color);
+}
+
+/* Centering Poem Content */
+#poem-display-area {
+    text-align: center; /* Center container content */
+}
+#poem-display-area h1,
+#poem-display-area .meta {
+    text-align: center; /* Explicitly center title and meta */
+}
+#poem-display-area p {
+    text-indent: 0; /* Remove indent for centering */
+    text-align: center; /* Center the text lines themselves */
+    /* Consider text-align: left; display: inline-block; if center looks bad for prose */
+    line-height: 2; /* Increase line height further for readability */
+    margin-bottom: 1.8em; /* Increase paragraph spacing */
+}
+
+/* Exam Marker Styling */
+ .exam-marker, .exam-marker-example { /* Style both actual markers and example */
+    font-size: 0.75em;
+    color: var(--accent-color);
+    background-color: rgba(141, 181, 128, 0.15);
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 6px;
+    white-space: nowrap;
+    font-family: 'Noto Sans SC', sans-serif;
+    vertical-align: baseline; /* Align with text */
+    display: inline-block; /* Ensure background applies correctly */
+}
+ body.dark-mode .exam-marker {
+     color: #a8c0a0; /* Lighter accent in dark mode */
+     background-color: rgba(168, 192, 160, 0.2);
+ }
+
+
+/* Update Media Query for Mobile Navigation */
+@media (max-width: 1024px) {
+    .side-nav {
+        display: none; /* Hide desktop sidebars */
+    }
+    #center-content {
+        width: 100%; /* Content takes full width */
+        order: 0; /* Reset flex order if needed */
+        margin: 15px auto;
+    }
+    #mobile-menu-toggle {
+        display: block; /* Show mobile menu button */
+    }
+    /* Adjust dark mode toggle position if needed */
+    #dark-mode-toggle {
+        right: 15px;
+    }
+     /* Ensure footer link is readable */
+    footer a {
+        color: var(--accent-color);
+    }
+     body.dark-mode footer a {
+         color: #a8c0a0;
+    }
+}
+
+ @media (max-width: 600px) {
+     #mobile-menu-toggle { font-size: 1.6em; left: 15px; }
+     #dark-mode-toggle { font-size: 1.6em; right: 10px; }
+     .mobile-nav-content { width: 95%; padding: 30px 15px 15px 15px; }
+     #mobile-poem-list button.nav-button { padding: 10px 5px; font-size: 0.95em; }
+     #poem-display-area p { line-height: 1.9; margin-bottom: 1.5em; font-size: 1.1em; } /* Adjust font size */
+ }
+ 
  }
