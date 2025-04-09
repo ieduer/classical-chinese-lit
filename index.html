@@ -1,0 +1,41 @@
+</head>
+<body>
+    <header>
+        <h1>古典詩文集</h1>
+    </header>
+
+    <div class="container">
+        <nav id="navigation">
+            <h2>目錄</h2>
+            <ul id="poem-list">
+                <!-- 詩文列表將由 JS 動態載入 -->
+                <li>載入中...</li>
+            </ul>
+        </nav>
+
+        <main id="content-area">
+            <article id="poem-content">
+                <!-- 選中的詩文將顯示在此 -->
+                <p>請從左側目錄選擇一篇詩文閱讀。</p>
+            </article>
+        </main>
+
+        <!-- AI 聊天界面區域 (目前隱藏) -->
+        <aside id="ai-chat-interface" style="display: none;">
+            <h3>AI 助手</h3>
+            <div id="ai-messages"></div>
+            <input type="text" id="ai-input" placeholder="與 AI 對話...">
+            <button id="ai-send-btn">發送</button>
+            <button id="ai-close-btn">關閉</button>
+        </aside>
+    </div>
+
+    <footer>
+        <p>靜心閱讀</p>
+    </footer>
+
+    <script src="js/script.js" defer></script>
+    <!-- <script src="js/ai_interface.js" defer></script> -->
+</body>
+</html>
+```

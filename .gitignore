@@ -1,0 +1,13 @@
+```
+# macOS system files
+.DS_Store
+# Node modules (if using npm/yarn for local dev tools like live-server)
+  node_modules/
+
+  # IDE/Editor specific files
+  .vscode/
+  .idea/
+
+  # Environment variables (if any used later, e.g., for local testing)
+  .env
+```
