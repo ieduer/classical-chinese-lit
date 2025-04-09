@@ -16,24 +16,27 @@
     --ai-user-bubble: #cde2c6; /* 用戶氣泡 - 淡綠 */
     --ai-ai-bubble: #e8e8e0; /* AI 氣泡 - 淺灰 */
     --shadow-color: rgba(80, 70, 60, 0.1);
+    --header-height: 50px; /* 定義 header 大致高度變量 */
+    --footer-height: 40px; /* 定義 footer 大致高度變量 */
+    --container-v-margin: 40px; /* main-container 上下總 margin */
 }
 
 body.dark-mode {
     /* Dark Mode */
-    --bg-color: #3a3f37; /* 深綠灰背景 */
-    --content-bg: rgba(40, 45, 38, 0.9); /* 深色內容背景 */
-    --nav-bg: rgba(55, 60, 52, 0.88); /* 深色導航背景 */
-    --text-color: #d8d2c9; /* 主要文字 - 淺米色 */
-    --text-secondary: #a0988f; /* 次要文字 - 灰白色 */
-    --header-color: #a8c0a0; /* 標題顏色 - 亮綠灰 */
-    --accent-color: #709464; /* 強調色 - 柔和綠 */
-    --border-color: #5e564a; /* 邊框色 - 深灰棕 */
-    --button-hover-bg: #4a5244; /* 按鈕懸停背景 */
+    --bg-color: #3a3f37;
+    --content-bg: rgba(40, 45, 38, 0.9);
+    --nav-bg: rgba(55, 60, 52, 0.88);
+    --text-color: #d8d2c9;
+    --text-secondary: #a0988f;
+    --header-color: #a8c0a0;
+    --accent-color: #709464;
+    --border-color: #5e564a;
+    --button-hover-bg: #4a5244;
     --scrollbar-thumb: #787168;
     --scrollbar-track: rgba(55, 60, 52, 0.5);
-    --ai-bg: rgba(30, 35, 28, 0.95); /* AI 背景 */
-    --ai-user-bubble: #52694c; /* 用戶氣泡 - 暗綠 */
-    --ai-ai-bubble: #454a41; /* AI 氣泡 - 深灰 */
+    --ai-bg: rgba(30, 35, 28, 0.95);
+    --ai-user-bubble: #52694c;
+    --ai-ai-bubble: #454a41;
     --shadow-color: rgba(0, 0, 0, 0.2);
 }
 
@@ -42,33 +45,36 @@ body {
     line-height: 1.7;
     margin: 0;
     padding: 0;
-    /* --- 修正背景圖路徑 --- */
     background: var(--bg-color) url('../bg.webp') no-repeat center center fixed;
     background-size: cover;
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
-    min-height: 100vh; /* 確保 body 至少和視口一樣高 */
+    min-height: 100vh;
     display: flex;
-    flex-direction: column; /* 讓 header, main, footer 垂直排列 */
+    flex-direction: column;
+    /* overflow-y: auto; */ /* 讓瀏覽器自然處理滾動 */
 }
 
 header {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 15px 20px;
+    /* --- 減少 header 高度 --- */
+    padding: 8px 20px; /* 減少垂直 padding */
     background-color: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(5px);
     position: relative;
     border-bottom: 1px solid var(--border-color);
-    flex-shrink: 0; /* 防止 header 在 flex 佈局中縮小 */
+    flex-shrink: 0;
+    height: var(--header-height); /* 使用變量控制高度 */
+    box-sizing: border-box; /* 確保 padding 包含在高度內 */
 }
 
 #main-title {
     margin: 0;
     color: var(--header-color);
     font-family: 'ZCOOL XiaoWei', 'Noto Sans SC', sans-serif;
-    font-size: 1.8em;
+    font-size: 1.6em; /* 稍微減小標題字號配合高度 */
     font-weight: 700;
     text-shadow: 1px 1px 2px var(--shadow-color);
 }
@@ -80,7 +86,7 @@ header {
     transform: translateY(-50%);
     background: none;
     border: none;
-    font-size: 1.8em;
+    font-size: 1.6em; /* 稍微減小圖標 */
     cursor: pointer;
     padding: 0 5px;
     color: var(--text-color);
@@ -88,13 +94,15 @@ header {
 
 .main-container {
     display: flex;
-    flex-grow: 1; /* 讓主內容區域填滿 header 和 footer 之間的空間 */
+    flex-grow: 1;
     max-width: 1600px;
     width: 95%;
-    margin: 20px auto; /* 上下邊距 */
+    margin: 15px auto; /* 減少垂直 margin */
     gap: 20px;
     padding: 0 10px;
-    /* overflow: hidden; */ /* 移除或注释掉，避免内部元素被截断 */
+    /* --- 重要：讓容器能處理溢出 --- */
+    overflow: hidden; /* 防止子元素溢出影響佈局，滾動交給子元素 */
+    /* 高度由 flex-grow 決定 */
 }
 
 /* 左右導航欄樣式 (桌面) */
@@ -105,9 +113,11 @@ header {
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 15px;
-    display: flex; /* 默認顯示 */
+    display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 120px); /* 保留側邊欄最大高度，讓其內部滾動 */
+    /* --- 使用 calc 結合變量確保不超出視口減去 header/footer/margin --- */
+    /* 稍微保守一點，減去多一點 */
+    max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* 減去 header, footer 和上下 margin */
     box-shadow: 0 2px 5px var(--shadow-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -119,7 +129,7 @@ header {
     color: var(--header-color);
     font-family: 'Noto Sans SC', sans-serif;
     font-size: 1.3em;
-    flex-shrink: 0; /* 防止標題被壓縮 */
+    flex-shrink: 0;
 }
 
 .poem-list-container {
@@ -168,7 +178,7 @@ header {
     height: 0;
     overflow: hidden;
     transition: opacity 0.3s ease, height 0.3s ease;
-    flex-shrink: 0; /* 防止指示器被壓縮 */
+    flex-shrink: 0;
 }
 .scroll-indicator.visible { opacity: 0.6; height: 1.2em; }
 
@@ -178,13 +188,15 @@ header {
     background-color: var(--content-bg);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 25px 35px;
-    overflow-y: auto; /* 如果內容超長，允許內部滾動 */
+    padding: 20px 30px; /* 稍微減少 padding */
+    overflow-y: auto; /* 確保內容超出時內部滾動 */
     font-size: 1.15em;
     box-shadow: 0 2px 8px var(--shadow-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    /* --- 移除 max-height 限制 --- */
-    /* max-height: calc(100vh - 120px); */
+    /* --- 添加 min-width: 0 解決 flex 收縮問題 --- */
+    min-width: 0;
+    /* --- 重新添加 max-height 確保滾動 --- */
+    max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* 同 side-nav */
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
 }
@@ -197,7 +209,7 @@ header {
     text-align: center;
     color: var(--text-secondary);
     padding-top: 50px;
-    min-height: 200px; /* 給 placeholder 一個最小高度，避免太短 */
+    min-height: 200px;
 }
 #placeholder-text h2 {
      color: var(--header-color);
@@ -209,11 +221,11 @@ header {
 }
 
 #poem-display-area {
-    text-align: center; /* Center inline-block paragraphs */
+    text-align: center;
 }
 
 #poem-display-area h1 {
-    font-size: 2em;
+    font-size: 1.8em; /* 稍微減小 */
     color: var(--header-color);
     text-align: center;
     margin-bottom: 15px;
@@ -221,17 +233,17 @@ header {
 }
 
 #poem-display-area .meta {
-    font-size: 0.95em;
+    font-size: 0.9em; /* 稍微減小 */
     color: var(--text-secondary);
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 25px; /* 稍微減小 */
 }
 
 #poem-display-area p {
     text-indent: 0;
     text-align: center;
-    line-height: 2;
-    margin: 0 auto 1.8em auto;
+    line-height: 1.9; /* 稍微減小 */
+    margin: 0 auto 1.5em auto; /* 稍微減小 */
     padding: 8px 0;
     max-width: 90%;
 }
@@ -256,15 +268,15 @@ body.dark-mode .exam-marker {
 /* AI 聊天界面樣式 */
 #open-ai-btn {
      position: fixed;
-     bottom: 20px;
-     right: 20px;
-     font-size: 2em;
+     bottom: 15px; /* 稍微上移 */
+     right: 15px; /* 稍微內移 */
+     font-size: 1.8em; /* 稍微減小 */
      background-color: var(--accent-color);
      color: white;
      border: none;
      border-radius: 50%;
-     width: 55px;
-     height: 55px;
+     width: 50px; /* 稍微減小 */
+     height: 50px; /* 稍微減小 */
      display: flex;
      justify-content: center;
      align-items: center;
@@ -279,16 +291,16 @@ body.dark-mode .exam-marker {
 
 #ai-chat-interface {
     position: fixed;
-    bottom: 80px;
-    right: 20px;
-    width: 320px;
-    max-height: 450px;
+    bottom: 75px; /* 配合按鈕位置調整 */
+    right: 15px; /* 配合按鈕位置調整 */
+    width: 310px; /* 稍微減小 */
+    max-height: 400px; /* 稍微減小 */
     background-color: var(--ai-bg);
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 15px var(--shadow-color);
     border-radius: 12px;
-    padding: 15px;
-    display: none; /* Initially hidden */
+    padding: 12px; /* 稍微減小 */
+    display: none;
     flex-direction: column;
     z-index: 1000;
     opacity: 0;
@@ -297,7 +309,7 @@ body.dark-mode .exam-marker {
     transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
  #ai-chat-interface.visible {
-    display: flex; /* Make visible */
+    display: flex;
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
@@ -305,31 +317,30 @@ body.dark-mode .exam-marker {
 
 #ai-close-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px; /* 稍微調整 */
+    right: 8px; /* 稍微調整 */
     background: none;
     border: none;
-    font-size: 1.4em;
+    font-size: 1.3em; /* 稍微減小 */
     cursor: pointer;
     color: var(--text-secondary);
     padding: 0;
     line-height: 1;
 }
-#ai-close-btn:hover {
-    color: var(--text-color);
-}
+#ai-close-btn:hover { color: var(--text-color); }
 
 #ai-chat-interface h3 {
     text-align: center;
-    margin: 0 0 15px 0;
+    margin: 0 0 12px 0; /* 稍微減小 */
     color: var(--header-color);
     font-family: 'Noto Sans SC', sans-serif;
+    font-size: 1.1em; /* 稍微減小 */
 }
 
 #ai-messages {
     flex-grow: 1;
     overflow-y: auto;
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* 稍微減小 */
     padding-right: 5px;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--ai-bg);
@@ -339,14 +350,14 @@ body.dark-mode .exam-marker {
 #ai-messages::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
 
 #ai-messages .message {
-    padding: 8px 12px;
-    margin-bottom: 10px;
-    border-radius: 18px;
+    padding: 7px 11px; /* 稍微減小 */
+    margin-bottom: 8px;
+    border-radius: 16px; /* 稍微減小 */
     max-width: 90%;
     word-wrap: break-word;
-    line-height: 1.5;
-    font-size: 0.95em;
-    box-shadow: 0 1px 2px var(--shadow-color);
+    line-height: 1.45; /* 稍微減小 */
+    font-size: 0.9em; /* 稍微減小 */
+    box-shadow: 0 1px 1px var(--shadow-color); /* 稍微減小 */
 }
 
 #ai-messages .user {
@@ -355,9 +366,7 @@ body.dark-mode .exam-marker {
     margin-left: auto;
     border-bottom-right-radius: 5px;
 }
- body.dark-mode #ai-messages .user {
-     color: var(--text-color);
- }
+ body.dark-mode #ai-messages .user { color: var(--text-color); }
 
 #ai-messages .ai {
     background-color: var(--ai-ai-bubble);
@@ -372,24 +381,24 @@ body.dark-mode .exam-marker {
     color: var(--text-secondary);
     text-align: center;
     background: none;
-    font-size: 0.9em;
+    font-size: 0.85em; /* 稍微減小 */
     box-shadow: none;
 }
 
 .ai-input-area {
     display: flex;
-    gap: 8px;
+    gap: 6px; /* 稍微減小 */
     margin-top: 5px;
 }
 
 #ai-input {
     flex-grow: 1;
-    padding: 10px;
+    padding: 8px; /* 稍微減小 */
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 6px; /* 稍微減小 */
     background-color: var(--content-bg);
     color: var(--text-color);
-    font-size: 0.95em;
+    font-size: 0.9em; /* 稍微減小 */
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 #ai-input:focus {
@@ -399,29 +408,29 @@ body.dark-mode .exam-marker {
 }
 
 #ai-send-btn {
-    padding: 8px 15px;
+    padding: 6px 12px; /* 稍微減小 */
     cursor: pointer;
     background-color: var(--accent-color);
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 0.95em;
+    border-radius: 6px; /* 稍微減小 */
+    font-size: 0.9em; /* 稍微減小 */
     transition: background-color 0.2s ease;
 }
-#ai-send-btn:hover {
-    background-color: var(--header-color);
-}
+#ai-send-btn:hover { background-color: var(--header-color); }
 
 footer {
     text-align: center;
-    /* margin-top: auto; 由 body 的 flex 佈局自動推到底部 */
-    padding: 15px;
+    /* --- 減少 footer 高度 --- */
+    padding: 8px; /* 顯著減少 padding */
     color: var(--text-secondary);
-    font-size: 0.9em;
+    font-size: 0.85em; /* 稍微減小 */
     background-color: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(2px);
     border-top: 1px solid var(--border-color);
-    flex-shrink: 0; /* 防止 footer 在 flex 佈局中縮小 */
+    flex-shrink: 0;
+    height: var(--footer-height); /* 使用變量控制 */
+    box-sizing: border-box;
 }
 footer a { color: var(--accent-color); text-decoration: none; }
 footer a:hover { text-decoration: underline; }
@@ -432,11 +441,11 @@ body.dark-mode footer a { color: #a8c0a0; }
     display: none;
     background: none;
     border: none;
-    font-size: 1.8em;
+    font-size: 1.8em; /* 移動端圖標大小不變 */
     color: var(--text-color);
     cursor: pointer;
     position: absolute;
-    left: 20px;
+    left: 15px; /* 稍微內移 */
     top: 50%;
     transform: translateY(-50%);
     padding: 5px;
@@ -457,10 +466,7 @@ body.dark-mode footer a { color: #a8c0a0; }
     transition: opacity 0.3s ease;
     backdrop-filter: blur(5px);
 }
-.mobile-nav.visible {
-    display: block;
-    opacity: 1;
-}
+.mobile-nav.visible { display: block; opacity: 1; }
 
 .mobile-nav-content {
     position: absolute;
@@ -468,7 +474,7 @@ body.dark-mode footer a { color: #a8c0a0; }
     left: 50%;
     transform: translate(-50%, -50%) scale(0.95);
     background-color: var(--nav-bg);
-    padding: 40px 20px 20px 20px;
+    padding: 35px 15px 15px 15px; /* 稍微調整 */
     border-radius: 10px;
     max-height: 85vh;
     width: 90%;
@@ -479,16 +485,13 @@ body.dark-mode footer a { color: #a8c0a0; }
     opacity: 0;
     transition: opacity 0.2s 0.1s ease, transform 0.2s 0.1s ease;
 }
-.mobile-nav.visible .mobile-nav-content {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-}
+.mobile-nav.visible .mobile-nav-content { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
 .mobile-nav-content h2 {
     text-align: center;
     color: var(--header-color);
-    margin: 0 0 15px 0;
-    font-size: 1.4em;
+    margin: 0 0 12px 0; /* 稍微減小 */
+    font-size: 1.3em; /* 稍微減小 */
     flex-shrink: 0;
 }
 
@@ -508,90 +511,86 @@ body.dark-mode footer a { color: #a8c0a0; }
 #mobile-poem-list button.nav-button {
     display: block;
     width: 100%;
-    padding: 12px 8px;
+    padding: 11px 8px; /* 稍微調整 */
     text-align: left;
     background: none;
     border: none;
     border-bottom: 1px dashed var(--border-color);
     font-family: inherit;
-    font-size: 1em;
+    font-size: 0.95em; /* 稍微減小 */
     color: var(--text-color);
     border-radius: 4px;
     cursor: pointer;
     line-height: 1.5;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
-#mobile-poem-list button.nav-button:last-child {
-    border-bottom: none;
-}
-#mobile-poem-list button.nav-button:hover {
-    background-color: var(--button-hover-bg);
-    color: var(--header-color);
-}
-#mobile-poem-list button.nav-button.active-poem {
-     background-color: var(--accent-color);
-     color: white;
-     font-weight: bold;
-}
+#mobile-poem-list button.nav-button:last-child { border-bottom: none; }
+#mobile-poem-list button.nav-button:hover { background-color: var(--button-hover-bg); color: var(--header-color); }
+#mobile-poem-list button.nav-button.active-poem { background-color: var(--accent-color); color: white; font-weight: bold; }
 
 #mobile-nav-close {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px; /* 稍微調整 */
+    right: 8px; /* 稍微調整 */
     background: none;
     border: none;
-    font-size: 2em;
+    font-size: 1.8em; /* 稍微減小 */
     color: var(--text-secondary);
     cursor: pointer;
     line-height: 1;
     padding: 5px;
 }
-#mobile-nav-close:hover {
-    color: var(--text-color);
-}
+#mobile-nav-close:hover { color: var(--text-color); }
+
 
 /* --- Responsive Design Adjustments --- */
 @media (max-width: 1024px) {
+    header { padding: 6px 20px; height: calc(var(--header-height) - 4px); } /* 響應式調整 header 高度 */
+    footer { padding: 6px; height: calc(var(--footer-height) - 4px); } /* 響應式調整 footer 高度 */
+    #main-title { font-size: 1.4em; } /* 進一步減小 */
+    #dark-mode-toggle { font-size: 1.4em; right: 10px; } /* 進一步減小/調整 */
+    #mobile-menu-toggle { font-size: 1.6em; left: 10px; } /* 進一步調整 */
+
     .main-container {
         flex-direction: column;
-        width: 98%;
-        gap: 15px;
-        margin: 10px auto 15px auto;
+        width: 100%; /* 佔滿寬度 */
+        padding: 0 5px; /* 減少左右 padding */
+        margin: 8px auto 10px auto; /* 減少垂直 margin */
+        gap: 10px; /* 減少間隔 */
         flex-grow: 1;
+        overflow: visible; /* 移動端讓 body 滾動 */
     }
-    .side-nav {
-        display: none; /* Hide desktop sidebars */
-    }
+    .side-nav { display: none; }
+
     #center-content {
-        width: 100%;
+        width: auto; /* 由父容器控制寬度 */
         order: 0;
-        margin: 0 auto 15px auto;
-        flex-grow: 1;
+        margin: 0; /* 移除 margin */
+        flex-grow: 1; /* 讓內容區填充空間 */
         min-height: 300px;
+        padding: 15px; /* 統一內邊距 */
+        font-size: 1.05em; /* 調整字號 */
+        max-height: none; /* 移動端不限制內容區高度，允許 body 滾動 */
+        overflow-y: visible; /* 內部不滾動 */
     }
-    #mobile-menu-toggle {
-        display: block;
-    }
-    #main-title { font-size: 1.5em; }
-    #dark-mode-toggle { font-size: 1.5em; right: 15px; }
-    #poem-display-area h1 { font-size: 1.7em; }
-    #center-content { padding: 15px 20px; font-size: 1.1em; }
+    #poem-display-area h1 { font-size: 1.6em; }
 }
 
 @media (max-width: 600px) {
-     #main-title { font-size: 1.3em; }
-     #dark-mode-toggle { font-size: 1.6em; right: 10px; }
-     #mobile-menu-toggle { font-size: 1.6em; left: 15px; }
+     #main-title { font-size: 1.2em; }
+     #dark-mode-toggle { font-size: 1.4em; }
+     #mobile-menu-toggle { font-size: 1.5em; }
 
-     .mobile-nav-content { width: 95%; padding: 30px 15px 15px 15px; }
-     #mobile-poem-list button.nav-button { padding: 10px 5px; font-size: 0.95em; }
+     .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
+     #mobile-poem-list button.nav-button { padding: 9px 5px; font-size: 0.9em; }
 
-     .main-container { margin: 5px auto 10px auto; gap: 10px; }
-     #center-content { padding: 15px; font-size: 1.05em; min-height: 200px; }
-     #poem-display-area h1 { font-size: 1.5em; }
-     #poem-display-area .meta { font-size: 0.9em; margin-bottom: 20px; }
-     #poem-display-area p { line-height: 1.9; margin-bottom: 1.5em; font-size: 1.1em; max-width: 98%; }
+     .main-container { margin: 5px auto 8px auto; gap: 8px; }
+     #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
+     #poem-display-area h1 { font-size: 1.4em; }
+     #poem-display-area .meta { font-size: 0.85em; margin-bottom: 15px; }
+     #poem-display-area p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; } /* 佔滿寬度 */
 
-     #open-ai-btn { width: 50px; height: 50px; font-size: 1.8em; bottom: 15px; right: 15px; }
-     #ai-chat-interface { width: calc(100% - 30px); bottom: 70px; right: 15px; max-height: 60vh;}
- }
+     #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
+     #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}
+     footer { font-size: 0.8em; }
+}
