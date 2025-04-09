@@ -85,7 +85,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 8px 8px 40px 8px 40px;
+      padding: 8px 40px 40px 8px;
       overflow: visible; 
       background-color: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
@@ -809,12 +809,15 @@
 
     /* --- Step 4.2: Ensure complete styles for mobile toggle --- */
     #mobile-menu-toggle {
-        display: block !important; /* 修改/確認: 使用 !important 強制顯示 */
-        font-size: 1.6em;         /* 確認 */
-        position: absolute;       /* 添加/確認: 確保有定位 */
-        top: 50%;                 /* 添加/確認: 確保垂直居中 */
-        left: 10px;               /* 確認 */
-        transform: translateY(-50%); /* 添加/確認: 確保精確垂直居中 */
+        display: block !important; /* 使用 !important 強制顯示 */
+        visibility: visible !important; /* 確保可見性 */
+        opacity: 1 !important; /* 确保不透明 */
+        font-size: 1.6em;
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        z-index: 1101; /* 保持原有的z-index值 */
     }
 
     .main-container {
