@@ -642,22 +642,23 @@
     footer a:hover { text-decoration: underline; }
     body.dark-mode footer a { color: #a8c0a0; }
     
-    /* --- Mobile Navigation Styles --- */
-    #mobile-menu-toggle {
-        display: none;
-        background: none;
-        border: none;
-        font-size: 1.8em;
-        color: var(--text-color);
-        cursor: pointer;
+/* --- Mobile Navigation Styles (Global - Initial State) --- */
+#mobile-menu-toggle {
+    display: none; /* Default hidden */
+    background: none;
+    border: none;
+    font-size: 1.8em; /* Base size */
+    color: var(--text-color);
+    cursor: pointer;
     padding: 5px;
     line-height: 1;
-    z-index: 2000; /* 確保層級高 */
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 15px;
-    }
+    z-index: 1101; /* Keep high z-index */
+    /* Remove positioning from global scope */
+    /* position: absolute; */
+    /* left: 15px; */
+    /* top: 50%; */
+    /* transform: translateY(-50%); */
+}
     
     .mobile-nav {
         display: none;
@@ -797,27 +798,28 @@
 
 /* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
 @media (max-width: 800px) {
-    /* --- Step 4.1: Adjust Header Padding --- */
+    /* Adjust Header Padding */
     header {
-        padding: 6px 15px; /* 修改此行: 減少左右 padding */
+        padding: 6px 15px;
         height: calc(var(--header-height) - 4px);
     }
     footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
     #main-title { font-size: 1.4em; }
     #dark-mode-toggle { font-size: 1.4em; right: 10px; }
 
-    /* --- Step 4.2: Ensure complete styles for mobile toggle --- */
+    /* --- Ensure complete styles for mobile toggle (Only ONCE) --- */
     #mobile-menu-toggle {
-        display: block; /* 修改/確認: 使用 !important 強制顯示 */
-        font-size: 1.6em;         /* 確認 */
-        position: absolute;       /* 添加/確認: 確保有定位 */
-        top: 50%;                 /* 添加/確認: 確保垂直居中 */
-        left: 10px;               /* 確認 */
-        transform: translateY(-50%); /* 添加/確認: 確保精確垂直居中 */
+        display: block; /* Show the button (try without !important first) */
+        font-size: 1.6em;
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
     }
+    /* --- Removed the duplicate block --- */
 
     .main-container {
-        flex-direction: column; /* Stack elements */
+        flex-direction: column;
         width: 100%;
         padding: 0 5px;
         margin: 8px auto 10px auto;
@@ -825,11 +827,11 @@
         overflow: visible;
     }
     .side-nav {
-        display: none; /* Hide sidebars NOW */
+        display: none; /* Hide sidebars */
     }
 
     #center-content {
-        width: auto; /* Full width in column */
+        width: auto;
         order: 0;
         margin: 0;
         flex-grow: 1;
