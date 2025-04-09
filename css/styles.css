@@ -793,7 +793,6 @@
     /* Adjust other elements like header/footer/AI if needed for this range */
     #main-title { font-size: 1.5em; }
     #dark-mode-toggle { font-size: 1.5em; right: 15px; }
-    #mobile-menu-toggle { display: none; } /* Keep mobile toggle hidden here */
 }
 
 /* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
@@ -809,7 +808,7 @@
 
     /* --- Step 4.2: Ensure complete styles for mobile toggle --- */
     #mobile-menu-toggle {
-        display: block !important; /* 修改/確認: 使用 !important 強制顯示 */
+        display: block; /* 修改/確認: 使用 !important 強制顯示 */
         font-size: 1.6em;         /* 確認 */
         position: absolute;       /* 添加/確認: 確保有定位 */
         top: 50%;                 /* 添加/確認: 確保垂直居中 */
