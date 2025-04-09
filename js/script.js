@@ -23,7 +23,7 @@ const bodyElement = document.body;
 const aiInterface = document.getElementById('ai-chat-interface');
 const aiCloseBtn = document.getElementById('ai-close-btn');
 const aiSendBtn = document.getElementById('ai-send-btn');
-const aiInputElement = document.getElementById('ai-input'); // Should be textarea now
+const aiInputElement = document.getElementById('ai-input'); // Textarea element
 const aiMessagesElement = document.getElementById('ai-messages');
 const openAiBtn = document.getElementById('open-ai-btn');
 
@@ -34,7 +34,7 @@ async function loadPoems() {
         const response = await fetch('data/poems.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         poemsData = await response.json();
-        console.log("詩文數據已成功載入:", poemsData.length, "篇");
+        //console.log("詩文數據已成功載入:", poemsData.length, "篇"); // Reduce console noise
 
         poemsData.sort((a, b) => a.order - b.order);
 
@@ -49,7 +49,7 @@ async function loadPoems() {
                 shiciquData.push(poem);
             }
         });
-        console.log(`分類完成 - 文言文: ${wenyanwenData.length}, 诗词曲: ${shiciquData.length}`);
+        //console.log(`分類完成 - 文言文: ${wenyanwenData.length}, 诗词曲: ${shiciquData.length}`);
 
         renderNavigation(wenyanwenData, wenyanwenListElement);
         renderNavigation(shiciquData, shiciquListElement);
@@ -77,16 +77,10 @@ async function loadPoems() {
  * @param {HTMLElement} listElement - The UL element to populate.
  */
 function renderNavigation(data, listElement) {
-    if (!listElement) {
-        console.warn("Target list element not found for rendering navigation.");
-        return;
-    }
-    listElement.innerHTML = ''; // Clear existing items
+    if (!listElement) return;
+    listElement.innerHTML = '';
 
-    if (data.length === 0) {
-        listElement.innerHTML = '<li>暫無篇目</li>';
-        return;
-    }
+    if (data.length === 0) { listElement.innerHTML = '<li>暫無篇目</li>'; return; }
 
     const numGhibliColors = 6;
     let colorIndex = 0;
@@ -99,11 +93,9 @@ function renderNavigation(data, listElement) {
         button.classList.add('nav-button');
         button.title = `${poem.title} - ${poem.author} (${poem.dynasty})`;
 
-        // Check for questions and add appropriate class
         const hasQuestions = poem.question || poem.question1;
         if (hasQuestions) {
             button.classList.add('has-questions');
-            // Cycle through Ghibli colors
             colorIndex = (colorIndex % numGhibliColors) + 1;
             button.classList.add(`has-questions-color-${colorIndex}`);
         } else {
@@ -113,9 +105,8 @@ function renderNavigation(data, listElement) {
         listItem.appendChild(button);
         listElement.appendChild(listItem);
     });
-    console.log(`已渲染導航列表: ${listElement.id || 'Mobile List'}`);
+   // console.log(`已渲染導航列表: ${listElement.id || 'Mobile List'}`);
 }
-
 
 function setupNavigationListeners() {
     const navContainers = [
@@ -123,35 +114,21 @@ function setupNavigationListeners() {
         document.getElementById('right-nav'),
         mobilePoemList
     ];
-
     const handleClick = (event) => {
         const button = event.target.closest('button.nav-button[data-poem-order]');
         if (button) {
             const order = parseInt(button.dataset.poemOrder, 10);
             const selectedPoem = allPoemsMap.get(order);
-
             if (selectedPoem) {
                 displayPoemContent(selectedPoem);
-
-                document.querySelectorAll('button.nav-button').forEach(btn => {
-                    btn.classList.remove('active-poem');
-                });
+                document.querySelectorAll('button.nav-button').forEach(btn => btn.classList.remove('active-poem'));
                 document.querySelectorAll(`button.nav-button[data-poem-order="${order}"]`).forEach(b => b.classList.add('active-poem'));
-
-                if (mobileNavOverlay && mobileNavOverlay.classList.contains('visible')) {
-                    closeMobileNav();
-                }
-                console.log(`已選擇詩文 (Order ${order}): ${selectedPoem.title}`);
-            } else {
-                console.warn(`未在 Map 中找到 order 為 ${order} 的詩文。`);
+                if (mobileNavOverlay?.classList.contains('visible')) closeMobileNav();
+                //console.log(`已選擇詩文 (Order ${order}): ${selectedPoem.title}`);
             }
         }
     };
-
-    navContainers.forEach(container => {
-        if (container) container.addEventListener('click', handleClick);
-    });
-    console.log("導航監聽器已設置。");
+    navContainers.forEach(container => { if (container) container.addEventListener('click', handleClick); });
 }
 
 function setupMobileNavToggle() {
@@ -163,9 +140,7 @@ function setupMobileNavToggle() {
         mobileNavClose.focus();
     });
     mobileNavClose.addEventListener('click', closeMobileNav);
-    mobileNavOverlay.addEventListener('click', (event) => {
-        if (event.target === mobileNavOverlay) closeMobileNav();
-    });
+    mobileNavOverlay.addEventListener('click', (event) => { if (event.target === mobileNavOverlay) closeMobileNav(); });
 }
 
 function closeMobileNav() {
@@ -175,190 +150,122 @@ function closeMobileNav() {
     mobileNavOverlay.setAttribute('aria-hidden', 'true');
 }
 
-/**
- * Display poem content and optionally exam questions.
- * @param {object} poem - The poem object.
- */
 function displayPoemContent(poem) {
-    if (!poemDisplayArea || !placeholderTextElement || !centerContentElement) return;
+     if (!poemDisplayArea || !placeholderTextElement || !centerContentElement) return;
 
-    placeholderTextElement.style.display = 'none';
-    poemDisplayArea.innerHTML = ''; // Clear previous content
+     placeholderTextElement.style.display = 'none';
+     poemDisplayArea.innerHTML = '';
 
-    // Ensure containers exist even if empty later
-    const poemTextContainer = document.createElement('div');
-    poemTextContainer.classList.add('poem-main-text');
-    poemDisplayArea.appendChild(poemTextContainer);
+     const poemTextContainer = document.createElement('div');
+     poemTextContainer.classList.add('poem-main-text');
+     poemDisplayArea.appendChild(poemTextContainer);
 
-    const questionsContainer = document.createElement('div'); // Create questions container early
-    questionsContainer.classList.add('exam-questions');
-    // Don't append questionsContainer yet, only if questions exist
+     const questionsContainer = document.createElement('div');
+     questionsContainer.classList.add('exam-questions');
 
-    // 1. Render Main Poem Text
-    const titleElement = document.createElement('h1');
-    titleElement.textContent = poem.title;
-    poemTextContainer.appendChild(titleElement);
+     // Render Main Text
+     const titleElement = document.createElement('h1');
+     titleElement.textContent = poem.title;
+     poemTextContainer.appendChild(titleElement);
+     const metaElement = document.createElement('p');
+     metaElement.classList.add('meta');
+     metaElement.textContent = `${poem.author} (${poem.dynasty})`;
+     poemTextContainer.appendChild(metaElement);
+     poem.paragraphs.forEach((paragraphText) => {
+         const p = document.createElement('p');
+         p.innerHTML = paragraphText.replace(/(\[([京Q])(\d{4})\])/g, '<span class="exam-marker" title="高考 $3 年">$1</span>');
+         poemTextContainer.appendChild(p);
+     });
 
-    const metaElement = document.createElement('p');
-    metaElement.classList.add('meta');
-    metaElement.textContent = `${poem.author} (${poem.dynasty})`;
-    poemTextContainer.appendChild(metaElement);
+     // Collect and Render Questions
+     const questions = [];
+     if (poem.question) questions.push({ q: poem.question, a: poem.reference_answer || '暂无答案', y: poem.year || '年份未知' });
+     let i = 1;
+     while (poem['question' + i]) {
+         questions.push({ q: poem['question' + i], a: poem['reference_answer' + i] || '暂无答案', y: poem['year' + i] || '年份未知' });
+         i++;
+     }
+     if (questions.length > 0) {
+         const h2 = document.createElement('h2');
+         h2.textContent = '往年真题';
+         questionsContainer.appendChild(h2);
+         questions.forEach((item, index) => {
+             const qItem = document.createElement('div');
+             qItem.className = 'question-item';
+             const qText = document.createElement('p');
+             qText.className = 'question-text';
+             qText.innerHTML = `${index + 1}. ${item.q.replace(/\s+/g, ' ').trim()} <span class="question-year">(${item.y})</span>`;
+             qText.tabIndex = 0; qText.setAttribute('role', 'button'); qText.setAttribute('aria-expanded', 'false');
+             const aDiv = document.createElement('div');
+             aDiv.className = 'answer'; aDiv.textContent = item.a; aDiv.style.display = 'none';
+             qItem.append(qText, aDiv);
+             questionsContainer.appendChild(qItem);
+         });
+         poemDisplayArea.appendChild(questionsContainer);
+         //console.log(`渲染了 ${questions.length} 道題目。`);
+     }
 
-    poem.paragraphs.forEach((paragraphText) => {
-        const paragraphElement = document.createElement('p');
-        const processedText = paragraphText.replace(
-            /(\[([京Q])(\d{4})\])/g,
-            '<span class="exam-marker" title="高考 $3 年">$1</span>'
-        );
-        paragraphElement.innerHTML = processedText;
-        poemTextContainer.appendChild(paragraphElement);
-    });
-
-
-    // 2. Collect and Render Questions
-    const questions = [];
-    if (poem.question) {
-        questions.push({ q: poem.question, a: poem.reference_answer || '暂无答案', y: poem.year || '年份未知' });
-    }
-    let i = 1;
-    while (poem['question' + i]) {
-        questions.push({ q: poem['question' + i], a: poem['reference_answer' + i] || '暂无答案', y: poem['year' + i] || '年份未知' });
-        i++;
-    }
-
-    if (questions.length > 0) {
-        const questionsTitle = document.createElement('h2');
-        questionsTitle.textContent = '往年真题';
-        questionsContainer.appendChild(questionsTitle); // Add title to container
-
-        questions.forEach((item, index) => {
-            const questionItem = document.createElement('div');
-            questionItem.classList.add('question-item');
-
-            const questionText = document.createElement('p');
-            questionText.classList.add('question-text');
-            const cleanQuestion = item.q.replace(/\s+/g, ' ').trim();
-            questionText.innerHTML = `${index + 1}. ${cleanQuestion} <span class="question-year">(${item.y})</span>`;
-            questionText.setAttribute('role', 'button');
-            questionText.setAttribute('aria-expanded', 'false');
-            questionText.tabIndex = 0;
-
-            const answerDiv = document.createElement('div');
-            answerDiv.classList.add('answer');
-            answerDiv.textContent = item.a;
-            answerDiv.style.display = 'none'; // Initially hidden
-
-            questionItem.appendChild(questionText);
-            questionItem.appendChild(answerDiv);
-            questionsContainer.appendChild(questionItem); // Add item to container
-        });
-
-        poemDisplayArea.appendChild(questionsContainer); // Append the populated container
-        console.log(`渲染了 ${questions.length} 道題目。`);
-    }
-
-    poemDisplayArea.style.display = 'block';
-    centerContentElement.scrollTop = 0;
-    setCurrentPoem(poem); // Set current poem context for AI
-    console.log(`已顯示詩文及題目: ${poem.title}`);
+     poemDisplayArea.style.display = 'block';
+     centerContentElement.scrollTop = 0;
+     setCurrentPoem(poem);
+     //console.log(`已顯示詩文及題目: ${poem.title}`);
 }
 
-/** Sets the current poem object for context */
 function setCurrentPoem(poem) {
     currentPoemObject = poem;
-    console.log("Current poem context set:", currentPoemObject?.title);
 }
 
-/** Sets up event listener for toggling answers visibility */
 function setupAnswerToggleListener() {
     if (!poemDisplayArea) return;
-
     const handleToggle = (element) => {
-         const questionItem = element.closest('.question-item');
-         if (questionItem) {
-             const answerDiv = questionItem.querySelector('.answer');
-             if (answerDiv) {
-                 const isHidden = answerDiv.style.display === 'none';
-                 answerDiv.style.display = isHidden ? 'block' : 'none';
-                 element.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-             }
+         const answerDiv = element.closest('.question-item')?.querySelector('.answer');
+         if (answerDiv) {
+             const isHidden = answerDiv.style.display === 'none';
+             answerDiv.style.display = isHidden ? 'block' : 'none';
+             element.setAttribute('aria-expanded', String(isHidden));
          }
     };
-
-    poemDisplayArea.addEventListener('click', (event) => {
-        const questionTextElement = event.target.closest('.question-text');
-        if (questionTextElement) {
-            handleToggle(questionTextElement);
-        }
-    });
-
-    poemDisplayArea.addEventListener('keydown', (event) => {
-         const questionTextElement = event.target.closest('.question-text');
-         if (questionTextElement && (event.key === 'Enter' || event.key === ' ')) {
-             event.preventDefault();
-             handleToggle(questionTextElement);
-         }
-    });
-    console.log("答案顯示/隱藏監聽器已設置。");
+    poemDisplayArea.addEventListener('click', (e) => { if (e.target.closest('.question-text')) handleToggle(e.target.closest('.question-text')); });
+    poemDisplayArea.addEventListener('keydown', (e) => { if (e.target.closest('.question-text') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); handleToggle(e.target.closest('.question-text')); } });
 }
-
 
 function setupDarkMode() {
     if (!bodyElement || !darkModeToggleButton) return;
-    if (localStorage.getItem('theme') === 'dark') {
-        bodyElement.classList.add('dark-mode');
-    } else {
-        bodyElement.classList.remove('dark-mode');
-    }
+    if (localStorage.getItem('theme') === 'dark') bodyElement.classList.add('dark-mode'); else bodyElement.classList.remove('dark-mode');
     darkModeToggleButton.addEventListener('click', () => {
         bodyElement.classList.toggle('dark-mode');
-        const isDarkMode = bodyElement.classList.contains('dark-mode');
-        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        localStorage.setItem('theme', bodyElement.classList.contains('dark-mode') ? 'dark' : 'light');
     });
 }
 
 function setupScrollIndicators(navContainer) {
     if (!navContainer) return;
-    const listContainer = navContainer.querySelector('.poem-list-container');
-    const indicatorTop = navContainer.querySelector('.scroll-indicator.top');
-    const indicatorBottom = navContainer.querySelector('.scroll-indicator.bottom');
-    if (!listContainer || !indicatorTop || !indicatorBottom) return;
-
-    const updateIndicators = () => {
-        requestAnimationFrame(() => {
-             const threshold = 5;
-             const { scrollTop, scrollHeight, clientHeight } = listContainer;
-             indicatorTop.classList.toggle('visible', scrollTop > threshold);
-             indicatorBottom.classList.toggle('visible', scrollTop + clientHeight < scrollHeight - threshold);
-        });
-    };
-
-    listContainer.addEventListener('scroll', updateIndicators, { passive: true });
-    if ('ResizeObserver' in window) {
-        const resizeObserver = new ResizeObserver(updateIndicators);
-        resizeObserver.observe(listContainer);
-    } else {
-        window.addEventListener('resize', updateIndicators);
-    }
-    const mutationObserver = new MutationObserver(updateIndicators);
-    mutationObserver.observe(listContainer, { childList: true, subtree: true });
-    setTimeout(updateIndicators, 150);
+    const list = navContainer.querySelector('.poem-list-container'), top = navContainer.querySelector('.top'), bottom = navContainer.querySelector('.bottom');
+    if (!list || !top || !bottom) return;
+    const update = () => requestAnimationFrame(() => { const { scrollTop: st, scrollHeight: sh, clientHeight: ch } = list; top.classList.toggle('visible', st > 5); bottom.classList.toggle('visible', st + ch < sh - 5); });
+    list.addEventListener('scroll', update, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(list); else window.addEventListener('resize', update);
+    new MutationObserver(update).observe(list, { childList: true, subtree: true });
+    setTimeout(update, 150);
 }
 
 /** Sets up listener for text selection */
 function setupTextSelectionListener() {
-    if (!centerContentElement) return;
+    if (!centerContentElement || !openAiBtn || !aiInterface) return;
     centerContentElement.addEventListener('mouseup', () => {
         const selection = window.getSelection();
         const selectedText = selection.toString().trim();
         if (selectedText.length > 1 && selection.anchorNode && poemDisplayArea.contains(selection.anchorNode.parentElement)) {
             currentSelection = selectedText;
             console.log("Text selected:", currentSelection);
+            if (!aiInterface.classList.contains('visible')) {
+                 openAiBtn.click();
+            }
         } else {
             currentSelection = "";
         }
     });
-    console.log("Text selection listener set up.");
+    //console.log("Text selection listener set up."); // Reduce noise
 }
 
 /** Sets up auto-resizing for the AI textarea */
@@ -366,13 +273,15 @@ function setupTextareaAutosize() {
      if (!aiInputElement || aiInputElement.tagName !== 'TEXTAREA') return;
      const adjustHeight = () => {
          aiInputElement.style.height = 'auto';
-         aiInputElement.style.height = (aiInputElement.scrollHeight) + 'px';
+         const scrollHeight = aiInputElement.scrollHeight;
+         const maxHeight = parseFloat(getComputedStyle(aiInputElement).lineHeight) * 5;
+         aiInputElement.style.height = Math.min(scrollHeight, maxHeight) + 'px';
+         aiInputElement.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
      };
      aiInputElement.addEventListener('input', adjustHeight);
      setTimeout(adjustHeight, 0);
-     console.log("Textarea autosize handler set up.");
+     //console.log("Textarea autosize handler set up.");
 }
-
 
 function setupAIChatInterface() {
      if (!aiInterface || !openAiBtn || !aiCloseBtn || !aiSendBtn || !aiInputElement || !aiMessagesElement) return;
@@ -383,126 +292,95 @@ function setupAIChatInterface() {
      });
      aiCloseBtn.addEventListener('click', () => {
         aiInterface.classList.remove('visible');
-        aiInterface.addEventListener('transitionend', () => {
-            if (!aiInterface.classList.contains('visible')) aiInterface.style.display = 'none';
-        }, { once: true });
+        aiInterface.addEventListener('transitionend', () => { if (!aiInterface.classList.contains('visible')) aiInterface.style.display = 'none'; }, { once: true });
      });
 
-     aiSendBtn.addEventListener('click', handleAISend); // Use async handler
-     aiInputElement.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleAISend(); }
-     });
-     console.log("AI 界面交互已設置。");
+     aiSendBtn.addEventListener('click', handleAISend);
+     aiInputElement.addEventListener('keypress', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleAISend(); } });
+    // console.log("AI 界面交互已設置。");
 }
 
 /** Handles sending message to AI worker */
-async function handleAISend() { // Async function
+async function handleAISend() {
     let userQuery = aiInputElement.value.trim();
     const selectionToSend = currentSelection;
-    currentSelection = ""; // Clear selection
+    currentSelection = "";
 
     if (!userQuery && !selectionToSend) return;
 
-    if (!userQuery && selectionToSend) {
-        userQuery = `解释一下这段文字：“${selectionToSend}”`;
-    }
+    if (!userQuery && selectionToSend) { userQuery = `解释一下这段文字：“${selectionToSend}”`; }
 
     appendAIMessage(userQuery, 'user');
-    if (selectionToSend) {
-        appendAIMessage(`(针对选中文字: “${selectionToSend}”)`, 'system info'); // Use a specific class
-    }
+    if (selectionToSend) { appendAIMessage(`(针对选中文字: “${selectionToSend}”)`, 'system info'); }
 
-    aiInputElement.style.height = 'auto'; // Reset height before clearing
     aiInputElement.value = '';
+    aiInputElement.style.height = 'auto';
+    aiInputElement.dispatchEvent(new Event('input'));
 
-    appendAIMessage('窺視者思考中...', 'ai thinking');
+    appendAIMessage('窺視者思考中...', 'ai-thinking'); // Use valid class name
 
-    const payload = {
-        selectedText: selectionToSend,
-        poemContext: currentPoemObject,
-        explicitQuery: userQuery
-    };
-
-    await callAIWorker(payload); // Await the worker call
-
+    const payload = { selectedText: selectionToSend, poemContext: currentPoemObject, explicitQuery: userQuery };
+    await callAIWorker(payload);
     aiInputElement.focus();
 }
 
-/**
- * Calls the Cloudflare Worker to get AI response.
- * @param {object} payload - Data to send { selectedText, poemContext, explicitQuery }
- */
-async function callAIWorker(payload) {
-    // !!! IMPORTANT: Replace with your actual deployed Worker URL !!!
-    const WORKER_URL = "https://moxie-peer.bdfz.workers.dev/"; // Replace this placeholder
+ /** Calls the Cloudflare Worker */
+ async function callAIWorker(payload) {
+     // !!! IMPORTANT: Replace with your actual deployed Worker URL !!!
+     const WORKER_URL = "https://gaokao-ai-peer.gptv.workers.dev/"; // <--- REPLACE THIS
 
-    if (!payload.poemContext) {
-        console.error("Cannot call AI without poem context.");
-        appendAIMessage("抱歉，需要先選擇一篇文章才能提問。", 'system error'); // Use specific error class
-        const thinkingMsg = aiMessagesElement?.querySelector('.thinking');
-        if (thinkingMsg) thinkingMsg.remove();
-        return;
-    }
+     const thinkingMsg = aiMessagesElement?.querySelector('.ai-thinking');
 
-    // Remove thinking message before fetch starts or after it finishes/errors
-    const thinkingMsg = aiMessagesElement?.querySelector('.thinking');
-    if (thinkingMsg) thinkingMsg.remove();
+     if (!payload.poemContext) {
+         console.error("Cannot call AI without poem context.");
+         if (thinkingMsg) thinkingMsg.remove();
+         appendAIMessage("抱歉，需要先選擇一篇文章才能提問。", 'system error');
+         return;
+     }
 
-    try {
-        const response = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
+     try {
+         const response = await fetch(WORKER_URL, {
+             method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+         });
 
-        if (!response.ok) {
-            let errorText = `AI 請求失敗 (${response.status})`;
-            try {
-                const errorJson = await response.json();
-                errorText += `: ${errorJson.error || '未知服務端錯誤'}`;
-            } catch (e) { /* Ignore if error body is not JSON */ }
-            throw new Error(errorText);
-        }
+          if (thinkingMsg) thinkingMsg.remove();
 
-        const result = await response.json();
+         if (!response.ok) {
+             let errorText = `AI 請求失敗 (${response.status})`;
+             try { errorText += `: ${(await response.json()).error || '未知服務端錯誤'}`; } catch (e) {}
+             throw new Error(errorText);
+         }
+         const result = await response.json();
+         if (result.reply) appendAIMessage(result.reply, 'ai');
+         else if (result.error) appendAIMessage(`AI 返回錯誤: ${result.error}`, 'system error');
+         else appendAIMessage("收到來自 AI 的未知回應格式。", 'system error');
+     } catch (error) {
+         console.error("Error calling AI Worker:", error);
+         if (thinkingMsg) thinkingMsg.remove();
+         appendAIMessage(`無法連接到窺視者: ${error.message}`, 'system error');
+     }
+ }
 
-        if (result.reply) {
-            appendAIMessage(result.reply, 'ai');
-        } else if (result.error) {
-            appendAIMessage(`AI 返回錯誤: ${result.error}`, 'system error');
-        } else {
-            appendAIMessage("收到來自 AI 的未知回應格式。", 'system error');
-        }
-
-    } catch (error) {
-        console.error("Error calling AI Worker:", error);
-        appendAIMessage(`無法連接到窺視者: ${error.message}`, 'system error');
-    }
-}
-
-
-/** Appends message to AI chat, handles line breaks */
-function appendAIMessage(message, sender) {
-    if (!aiMessagesElement) return;
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', sender); // Add sender class (e.g., 'user', 'ai', 'system', 'thinking', 'error')
-    // Replace newline characters with <br> tags for HTML rendering
-    message = message.replace(/\n/g, '<br>');
-    messageDiv.innerHTML = message; // Use innerHTML to render <br> tags
-    aiMessagesElement.appendChild(messageDiv);
-    aiMessagesElement.scrollTop = aiMessagesElement.scrollHeight; // Auto-scroll
-}
-
+ /** Appends message to AI chat, handles line breaks */
+ function appendAIMessage(message, senderClass) {
+     if (!aiMessagesElement) return;
+     const messageDiv = document.createElement('div');
+     const validSenderClass = senderClass.replace(/\s+/g, '-').toLowerCase();
+     messageDiv.classList.add('message', validSenderClass);
+     message = message.replace(/\n/g, '<br>');
+     messageDiv.innerHTML = message;
+     aiMessagesElement.appendChild(messageDiv);
+     aiMessagesElement.scrollTop = aiMessagesElement.scrollHeight;
+ }
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM 已載入，開始初始化...");
     setupDarkMode();
-    loadPoems(); // Loads data, renders nav, sets up poem selection listeners
-    setupMobileNavToggle(); // Sets up mobile menu button and overlay
-    setupAIChatInterface(); // Sets up AI button, window, input, send button listeners
-    setupTextSelectionListener(); // Sets up listener for text selection
-    setupTextareaAutosize(); // Sets up AI input auto-resize
-    // Answer toggle listener is now set up within loadPoems after initial render
+    loadPoems();
+    setupMobileNavToggle();
+    setupAIChatInterface();
+    setupTextSelectionListener();
+    setupTextareaAutosize();
     console.log("初始化完成。");
 });

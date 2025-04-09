@@ -26,7 +26,7 @@
       --shadow-color: rgba(80, 70, 60, 0.1);
       --header-height: 50px;
       --footer-height: 40px;
-      --container-v-margin: 40px;
+      --container-v-margin: 40px; /* 估算值，用於 max-height 計算 */
       /* --- Ghibli Background Colors for Buttons --- */
       --ghibli-color-1: #a8d8ea; /* Light Blue */
       --ghibli-color-2: #d3e0b7; /* Pale Green */
@@ -138,7 +138,7 @@
       padding: 15px;
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
+      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* 40px for .main-container margin-top+bottom */
       box-shadow: 0 2px 5px var(--shadow-color);
       transition: background-color 0.3s ease, border-color 0.3s ease;
   }
@@ -229,7 +229,6 @@
       background-color: var(--button-hover-bg);
       color: var(--header-color);
   }
-  
   
   .scroll-indicator {
       text-align: center;
@@ -403,13 +402,12 @@
       right: 15px;
       width: 310px;
       max-height: 400px;
-      /* --- Glassmorphism Effect --- */
-      background-color: rgba(255, 255, 255, 0.15); /* Very transparent white */
-      backdrop-filter: blur(15px) saturate(150%); /* Blur and saturation */
-      -webkit-backdrop-filter: blur(15px) saturate(150%); /* Safari */
-      border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle white border */
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px) saturate(150%);
+      -webkit-backdrop-filter: blur(15px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 4px 15px var(--shadow-color);
-      border-radius: 15px; /* Slightly more rounded */
+      border-radius: 15px;
       padding: 12px;
       display: none;
       flex-direction: column;
@@ -420,7 +418,7 @@
       transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   }
   body.dark-mode #ai-chat-interface {
-      background-color: rgba(30, 35, 28, 0.25); /* Darker transparent base */
+      background-color: rgba(30, 35, 28, 0.25);
       border: 1px solid rgba(255, 255, 255, 0.1);
   }
    #ai-chat-interface.visible {
@@ -458,7 +456,7 @@
       margin-bottom: 8px;
       padding-right: 5px;
       scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) rgba(255, 255, 255, 0.1); /* Adjust scrollbar track for glass */
+      scrollbar-color: var(--scrollbar-thumb) rgba(255, 255, 255, 0.1);
   }
   body.dark-mode #ai-messages {
        scrollbar-color: var(--scrollbar-thumb) rgba(0, 0, 0, 0.1);
@@ -481,50 +479,71 @@
   }
   
   #ai-messages .user {
-      background-color: rgba(112, 148, 100, 0.7); /* Darker, less transparent green */
-      color: white; /* Ensure white text */
+      background-color: rgba(112, 148, 100, 0.7);
+      color: white;
       margin-left: auto;
       border-bottom-right-radius: 5px;
   }
   body.dark-mode #ai-messages .user {
-      background-color: rgba(82, 105, 76, 0.8); /* Dark mode user bubble */
+      background-color: rgba(82, 105, 76, 0.8);
       color: var(--text-color);
   }
   
   #ai-messages .ai {
-      background-color: rgba(232, 232, 224, 0.7); /* Less transparent light grey */
-      color: #333; /* Ensure dark text */
+      background-color: rgba(232, 232, 224, 0.7);
+      color: #333;
       margin-right: auto;
       border-bottom-left-radius: 5px;
   }
   body.dark-mode #ai-messages .ai {
-      background-color: rgba(69, 74, 65, 0.8); /* Dark mode AI bubble */
+      background-color: rgba(69, 74, 65, 0.8);
       color: var(--text-color);
   }
   
-  #ai-messages .thinking,
-  #ai-messages .system {
+  /* Thinking Indicator Styling */
+  #ai-messages .message.ai-thinking {
       font-style: italic;
-      color: var(--text-color); /* Make system messages more visible on glass */
+      color: var(--text-secondary);
       text-align: center;
-      background-color: rgba(255, 255, 255, 0.1); /* Subtle background */
+      background-color: transparent;
       padding: 4px;
-      border-radius: 4px;
       font-size: 0.85em;
       box-shadow: none;
       margin-top: 5px;
       margin-bottom: 5px;
+      animation: thinking-pulse 1.5s infinite ease-in-out;
   }
-  body.dark-mode #ai-messages .thinking,
-  body.dark-mode #ai-messages .system {
-       background-color: rgba(0, 0, 0, 0.1);
+  
+  @keyframes thinking-pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
   }
-  #ai-messages .system.error { /* Style for error messages */
+  
+  /* System message styling */
+  #ai-messages .message.system {
+       font-style: italic;
+       color: var(--text-secondary);
+       text-align: center;
+       background-color: transparent;
+       padding: 4px;
+       font-size: 0.85em;
+       box-shadow: none;
+       margin-top: 5px;
+       margin-bottom: 5px;
+  }
+  #ai-messages .message.system.info {
+       font-size: 0.8em;
+       margin-top: -5px;
+       background-color: transparent;
+  }
+  #ai-messages .message.system.error {
       color: var(--no-question-color);
       font-weight: bold;
       background-color: rgba(192, 57, 43, 0.1);
+      border-radius: 4px;
   }
-  body.dark-mode #ai-messages .system.error {
+  body.dark-mode #ai-messages .message.system.error {
        background-color: rgba(231, 76, 60, 0.15);
   }
   
@@ -532,15 +551,15 @@
       display: flex;
       gap: 6px;
       margin-top: 5px;
-      align-items: flex-end; /* Align button to bottom */
+      align-items: flex-end;
   }
   
   .ai-input-area textarea {
       flex-grow: 1;
       padding: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.3); /* Lighter border for glass */
+      border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 6px;
-      background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent input bg */
+      background-color: rgba(255, 255, 255, 0.3);
       color: var(--text-color);
       font-size: 0.9em;
       font-family: inherit;
@@ -560,7 +579,7 @@
       outline: none;
       border-color: var(--accent-color);
       box-shadow: 0 0 0 2px rgba(141, 181, 128, 0.3);
-      background-color: rgba(255, 255, 255, 0.5); /* Slightly less transparent on focus */
+      background-color: rgba(255, 255, 255, 0.5);
   }
   body.dark-mode .ai-input-area textarea:focus {
        background-color: rgba(40, 45, 38, 0.8);
@@ -574,206 +593,231 @@
       border: none;
       border-radius: 6px;
       font-size: 0.9em;
-      flex-shrink: 0; /* Prevent button shrinking */
-      height: 38px; /* Match textarea min-height */
+      flex-shrink: 0;
+      height: 38px;
       transition: background-color 0.2s ease;
   }
   #ai-send-btn:hover { background-color: var(--header-color); }
   
-  footer {
-      text-align: center;
-      padding: 8px;
-      color: var(--text-secondary);
-      font-size: 0.85em;
-      background-color: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(2px);
-      border-top: 1px solid var(--border-color);
-      flex-shrink: 0;
-      height: var(--footer-height);
-      box-sizing: border-box;
-  }
-  footer a { color: var(--accent-color); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
-  body.dark-mode footer a { color: #a8c0a0; }
-  
-  /* --- Mobile Navigation Styles --- */
-  #mobile-menu-toggle {
-      display: none;
-      background: none;
-      border: none;
+  /* Ensure Open AI Button is correctly positioned */
+  #open-ai-btn {
+      position: fixed; /* Explicitly ensure fixed position */
+      bottom: 15px;
+      right: 15px;
       font-size: 1.8em;
-      color: var(--text-color);
-      cursor: pointer;
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      padding: 5px;
-      line-height: 1;
-      z-index: 1101;
-  }
-  
-  .mobile-nav {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      z-index: 1100;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      backdrop-filter: blur(5px);
-  }
-  .mobile-nav.visible { display: block; opacity: 1; }
-  
-  .mobile-nav-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.95);
-      background-color: var(--nav-bg);
-      padding: 35px 15px 15px 15px;
-      border-radius: 10px;
-      max-height: 85vh;
-      width: 90%;
-      max-width: 450px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      opacity: 0;
-      transition: opacity 0.2s 0.1s ease, transform 0.2s 0.1s ease;
-  }
-  .mobile-nav.visible .mobile-nav-content { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  
-  .mobile-nav-content h2 {
-      text-align: center;
-      color: var(--header-color);
-      margin: 0 0 12px 0;
-      font-size: 1.3em;
-      flex-shrink: 0;
-  }
-  
-  #mobile-poem-list {
-      flex-grow: 1;
-      overflow-y: auto;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) var(--nav-bg);
-  }
-  #mobile-poem-list::-webkit-scrollbar { width: 6px; }
-  #mobile-poem-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
-  #mobile-poem-list::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
-  
-  #mobile-poem-list .nav-button {
-      padding: 11px 8px;
-      font-size: 0.95em;
-  }
-  #mobile-poem-list .nav-button:last-child { border-bottom: none; }
-  #mobile-poem-list .nav-button:hover { background-color: var(--button-hover-bg); color: var(--header-color); }
-  
-  #mobile-poem-list .nav-button.has-questions {
-      background-color: var(--ghibli-color-fallback, transparent);
-      color: #333;
-      font-weight: 500;
-  }
-  body.dark-mode #mobile-poem-list .nav-button.has-questions {
-       color: #eee;
-  }
-  #mobile-poem-list .nav-button.has-questions-color-1 { background-color: var(--ghibli-color-1); }
-  #mobile-poem-list .nav-button.has-questions-color-2 { background-color: var(--ghibli-color-2); }
-  #mobile-poem-list .nav-button.has-questions-color-3 { background-color: var(--ghibli-color-3); }
-  #mobile-poem-list .nav-button.has-questions-color-4 { background-color: var(--ghibli-color-4); }
-  #mobile-poem-list .nav-button.has-questions-color-5 { background-color: var(--ghibli-color-5); }
-  #mobile-poem-list .nav-button.has-questions-color-6 { background-color: var(--ghibli-color-6); }
-  
-  #mobile-poem-list .nav-button.no-questions {
-      color: var(--no-question-color);
-      font-weight: bold;
-  }
-  #mobile-poem-list .nav-button.active-poem {
       background-color: var(--accent-color);
       color: white;
-      font-weight: bold;
-      box-shadow: none;
-  }
-  #mobile-poem-list .nav-button.has-questions.active-poem {
-       box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.7);
-       background-color: var(--accent-color);
-       color: white;
-  }
-  body.dark-mode #mobile-poem-list .nav-button.has-questions.active-poem {
-       box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.4);
-  }
-  
-  #mobile-nav-close {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: none;
       border: none;
-      font-size: 1.8em;
-      color: var(--text-secondary);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
-      line-height: 1;
-      padding: 5px;
+      box-shadow: 0 2px 10px var(--shadow-color);
+      z-index: 999; /* Ensure it's above most content */
+      transition: background-color 0.3s ease, transform 0.2s ease;
   }
-  #mobile-nav-close:hover { color: var(--text-color); }
-  
-  /* --- Responsive Design Adjustments --- */
-  @media (max-width: 1024px) {
-      header { padding: 6px 20px; height: calc(var(--header-height) - 4px); }
-      footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
-      #main-title { font-size: 1.4em; }
-      #dark-mode-toggle { font-size: 1.4em; right: 10px; }
-      #mobile-menu-toggle { font-size: 1.6em; left: 10px; }
-  
-      .main-container {
-          flex-direction: column;
-          width: 100%;
-          padding: 0 5px;
-          margin: 8px auto 10px auto;
-          gap: 10px;
-          flex-grow: 1;
-          overflow: visible;
-      }
-      .side-nav { display: none; }
-  
-      #center-content {
-          width: auto;
-          order: 0;
-          margin: 0;
-          flex-grow: 1;
-          min-height: 300px;
-          padding: 15px;
-          font-size: 1.05em;
-          max-height: none;
-          overflow-y: visible;
-      }
-      /* Poem H1 style handled by .poem-main-text h1 */
+  #open-ai-btn:hover {
+      background-color: var(--header-color);
+      transform: scale(1.1); /* Add slight scale on hover */
   }
-  
-  @media (max-width: 600px) {
-       #main-title { font-size: 1.2em; }
-       #dark-mode-toggle { font-size: 1.4em; }
-       #mobile-menu-toggle { font-size: 1.5em; }
-  
-       .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
-       #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
-  
-       .main-container { margin: 5px auto 8px auto; gap: 8px; }
-       #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
-       .poem-main-text h1 { font-size: 1.4em; }
-       .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
-       .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; }
-       .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
-       .question-item { margin-bottom: 15px; }
-       .answer { margin-left: 0.8em; padding: 8px; }
-  
-       #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
-       #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}
-       footer { font-size: 0.8em; }
-  }
+    
+    footer {
+        text-align: center;
+        padding: 8px;
+        color: var(--text-secondary);
+        font-size: 0.85em;
+        background-color: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(2px);
+        border-top: 1px solid var(--border-color);
+        flex-shrink: 0;
+        height: var(--footer-height);
+        box-sizing: border-box;
+    }
+    footer a { color: var(--accent-color); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    body.dark-mode footer a { color: #a8c0a0; }
+    
+    /* --- Mobile Navigation Styles --- */
+    #mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.8em;
+        color: var(--text-color);
+        cursor: pointer;
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 5px;
+        line-height: 1;
+        z-index: 1101;
+    }
+    
+    .mobile-nav {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1100;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+    .mobile-nav.visible { display: block; opacity: 1; }
+    
+    .mobile-nav-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.95);
+        background-color: var(--nav-bg);
+        padding: 35px 15px 15px 15px;
+        border-radius: 10px;
+        max-height: 85vh;
+        width: 90%;
+        max-width: 450px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        opacity: 0;
+        transition: opacity 0.2s 0.1s ease, transform 0.2s 0.1s ease;
+    }
+    .mobile-nav.visible .mobile-nav-content { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    
+    .mobile-nav-content h2 {
+        text-align: center;
+        color: var(--header-color);
+        margin: 0 0 12px 0;
+        font-size: 1.3em;
+        flex-shrink: 0;
+    }
+    
+    #mobile-poem-list {
+        flex-grow: 1;
+        overflow-y: auto;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb) var(--nav-bg);
+    }
+    #mobile-poem-list::-webkit-scrollbar { width: 6px; }
+    #mobile-poem-list::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
+    #mobile-poem-list::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
+    
+    #mobile-poem-list .nav-button {
+        padding: 11px 8px;
+        font-size: 0.95em;
+    }
+    #mobile-poem-list .nav-button:last-child { border-bottom: none; }
+    #mobile-poem-list .nav-button:hover { background-color: var(--button-hover-bg); color: var(--header-color); }
+    
+    #mobile-poem-list .nav-button.has-questions {
+        background-color: var(--ghibli-color-fallback, transparent);
+        color: #333;
+        font-weight: 500;
+    }
+    body.dark-mode #mobile-poem-list .nav-button.has-questions {
+         color: #eee;
+    }
+    #mobile-poem-list .nav-button.has-questions-color-1 { background-color: var(--ghibli-color-1); }
+    #mobile-poem-list .nav-button.has-questions-color-2 { background-color: var(--ghibli-color-2); }
+    #mobile-poem-list .nav-button.has-questions-color-3 { background-color: var(--ghibli-color-3); }
+    #mobile-poem-list .nav-button.has-questions-color-4 { background-color: var(--ghibli-color-4); }
+    #mobile-poem-list .nav-button.has-questions-color-5 { background-color: var(--ghibli-color-5); }
+    #mobile-poem-list .nav-button.has-questions-color-6 { background-color: var(--ghibli-color-6); }
+    
+    #mobile-poem-list .nav-button.no-questions {
+        color: var(--no-question-color);
+        font-weight: bold;
+    }
+    #mobile-poem-list .nav-button.active-poem {
+        background-color: var(--accent-color);
+        color: white;
+        font-weight: bold;
+        box-shadow: none;
+    }
+    #mobile-poem-list .nav-button.has-questions.active-poem {
+         box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.7);
+         background-color: var(--accent-color);
+         color: white;
+    }
+    body.dark-mode #mobile-poem-list .nav-button.has-questions.active-poem {
+         box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.4);
+    }
+    
+    #mobile-nav-close {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: none;
+        border: none;
+        font-size: 1.8em;
+        color: var(--text-secondary);
+        cursor: pointer;
+        line-height: 1;
+        padding: 5px;
+    }
+    #mobile-nav-close:hover { color: var(--text-color); }
+    
+    /* --- Responsive Design Adjustments --- */
+    @media (max-width: 1024px) {
+        header { padding: 6px 20px; height: calc(var(--header-height) - 4px); }
+        footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
+        #main-title { font-size: 1.4em; }
+        #dark-mode-toggle { font-size: 1.4em; right: 10px; }
+        #mobile-menu-toggle { font-size: 1.6em; left: 10px; }
+    
+        .main-container {
+            flex-direction: column;
+            width: 100%;
+            padding: 0 5px;
+            margin: 8px auto 10px auto;
+            gap: 10px;
+            flex-grow: 1;
+            overflow: visible;
+        }
+        .side-nav { display: none; }
+    
+        #center-content {
+            width: auto;
+            order: 0;
+            margin: 0;
+            flex-grow: 1;
+            min-height: 300px;
+            padding: 15px;
+            font-size: 1.05em;
+            max-height: none;
+            overflow-y: visible;
+        }
+        /* Poem H1 style handled by .poem-main-text h1 */
+    }
+    
+    @media (max-width: 600px) {
+         #main-title { font-size: 1.2em; }
+         #dark-mode-toggle { font-size: 1.4em; }
+         #mobile-menu-toggle { font-size: 1.5em; }
+    
+         .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
+         #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
+    
+         .main-container { margin: 5px auto 8px auto; gap: 8px; }
+         #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
+         .poem-main-text h1 { font-size: 1.4em; }
+         .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
+         .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; }
+         .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
+         .question-item { margin-bottom: 15px; }
+         .answer { margin-left: 0.8em; padding: 8px; }
+    
+         #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
+         #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}
+         footer { font-size: 0.8em; }
+    }
