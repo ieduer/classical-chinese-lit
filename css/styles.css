@@ -86,7 +86,7 @@
       justify-content: center;
       align-items: center;
       padding: 8px  40px 8px 40px;
-      overflow: visible; 
+      overflow: visible;
       background-color: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(5px);
       position: relative;
@@ -259,6 +259,9 @@
       max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
+      /* --- Add overflow-wrap for mobile overflow fix --- */
+      overflow-wrap: break-word;
+      word-wrap: break-word; /* Older browser support */
   }
   
   #center-content::-webkit-scrollbar { width: 8px; }
@@ -270,6 +273,10 @@
       color: var(--text-secondary);
       padding-top: 50px;
       min-height: 200px;
+      /* --- Reduce max-width to narrow text --- */
+      max-width: 85%; /* Adjust as needed */
+      margin-left: auto;
+      margin-right: auto;
   }
   #placeholder-text h2 {
        color: var(--header-color);
@@ -304,14 +311,17 @@
       margin-bottom: 25px;
   }
   .poem-main-text p {
-      /* --- Reverted to Centered Style --- */
       text-align: center;
       text-indent: 0;
       line-height: 1.8;
       margin: 0 auto 1.2em auto;
       padding: 0;
-      max-width: 90%;
-      font-weight: bold; /* Keep bold */
+      /* --- Reduce max-width to narrow text --- */
+      max-width: 85%; /* Adjust as needed */
+      font-weight: bold;
+      /* --- Add overflow-wrap --- */
+      overflow-wrap: break-word;
+      word-wrap: break-word;
   }
   
   /* Exam Marker Styling */
@@ -362,6 +372,9 @@
       text-align: left !important;
       text-indent: 0 !important;
       max-width: 100%;
+      /* --- Add overflow-wrap --- */
+      overflow-wrap: break-word;
+      word-wrap: break-word;
   }
   .question-text:focus {
        outline: 2px solid var(--accent-color);
@@ -386,6 +399,9 @@
       line-height: 1.7;
       text-align: left !important;
       animation: fadeIn 0.3s ease;
+      /* --- Add overflow-wrap --- */
+      overflow-wrap: break-word;
+      word-wrap: break-word;
   }
   
   body.dark-mode .answer {
@@ -397,7 +413,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
   
-  /* AI 聊天界面樣式 - Glassmorphism Update */
+  /* AI 聊天界面樣式 - Base Desktop/Default */
   #ai-chat-interface {
       position: fixed;
       bottom: 75px;
@@ -411,20 +427,20 @@
       box-shadow: 0 4px 15px var(--shadow-color);
       border-radius: 15px;
       padding: 12px;
-      display: none;
+      display: none; /* Initially hidden */
       flex-direction: column;
       z-index: 1000;
       opacity: 0;
       transform: translateY(20px);
       pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+      transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, width 0.3s ease, height 0.3s ease, bottom 0.3s ease, right 0.3s ease, border-radius 0.3s ease; /* Add transitions */
   }
   body.dark-mode #ai-chat-interface {
       background-color: rgba(30, 35, 28, 0.25);
       border: 1px solid rgba(255, 255, 255, 0.1);
   }
    #ai-chat-interface.visible {
-      display: flex;
+      display: flex; /* Use flex to make it appear */
       opacity: 1;
       transform: translateY(0);
       pointer-events: auto;
@@ -441,6 +457,7 @@
       color: var(--text-secondary);
       padding: 0;
       line-height: 1;
+      z-index: 1001; /* Ensure close button is above messages */
   }
   #ai-close-btn:hover { color: var(--text-color); }
   
@@ -450,13 +467,14 @@
       color: var(--header-color);
       font-family: 'Noto Sans SC', sans-serif;
       font-size: 1.1em;
+      flex-shrink: 0; /* Prevent shrinking */
   }
   
   #ai-messages {
-      flex-grow: 1;
-      overflow-y: auto;
+      flex-grow: 1; /* Take available space */
+      overflow-y: auto; /* Scroll messages */
       margin-bottom: 8px;
-      padding-right: 5px;
+      padding: 5px; /* Add some padding around messages */
       scrollbar-width: thin;
       scrollbar-color: var(--scrollbar-thumb) rgba(255, 255, 255, 0.1);
   }
@@ -478,6 +496,8 @@
       line-height: 1.45;
       font-size: 0.9em;
       box-shadow: 0 1px 1px var(--shadow-color);
+      /* --- Ensure text color is readable on glass --- */
+      color: var(--text-color);
   }
   
   #ai-messages .user {
@@ -554,6 +574,7 @@
       gap: 6px;
       margin-top: 5px;
       align-items: flex-end;
+      flex-shrink: 0; /* Prevent shrinking */
   }
   
   .ai-input-area textarea {
@@ -603,7 +624,7 @@
   
   /* Ensure Open AI Button is correctly positioned */
   #open-ai-btn {
-      position: fixed; /* Explicitly ensure fixed position */
+      position: fixed;
       bottom: 15px;
       right: 15px;
       font-size: 1.8em;
@@ -618,18 +639,24 @@
       align-items: center;
       cursor: pointer;
       box-shadow: 0 2px 10px var(--shadow-color);
-      z-index: 999; /* Ensure it's above most content */
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 999;
+      transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease; /* Added opacity transition */
+      opacity: 1; /* Default visible */
   }
   #open-ai-btn:hover {
       background-color: var(--header-color);
-      transform: scale(1.1); /* Add slight scale on hover */
+      transform: scale(1.1);
+  }
+  #open-ai-btn.hidden { /* Class to hide button when chat is open */
+      opacity: 0;
+      pointer-events: none;
   }
     
     footer {
         text-align: center;
         padding: 8px;
-        color: var(--text-secondary);
+        /* --- Footer Text Color Change --- */
+        color: var(--no-question-color); /* Changed from --text-secondary */
         font-size: 0.85em;
         background-color: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(2px);
@@ -638,27 +665,36 @@
         height: var(--footer-height);
         box-sizing: border-box;
     }
-    footer a { color: var(--accent-color); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-    body.dark-mode footer a { color: #a8c0a0; }
+    /* --- Footer Link Color Change --- */
+    footer a {
+        color: var(--no-question-color); /* Match footer text */
+        text-decoration: none;
+     }
+    footer a:hover {
+        text-decoration: underline;
+        /* Optionally slightly darken red on hover */
+        filter: brightness(0.9);
+    }
+    body.dark-mode footer a {
+         color: var(--no-question-color); /* Keep red in dark mode too */
+    }
     
-/* --- Mobile Navigation Styles (Global - Initial State) --- */
-#mobile-menu-toggle {
-    display: none; /* Default hidden */
-    background: none;
-    border: none;
-    font-size: 1.8em; /* Base size */
-    color: var(--text-color);
-    cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-    z-index: 1101; /* Keep high z-index */
-    /* Remove positioning from global scope */
-    /* position: absolute; */
-    /* left: 15px; */
-    /* top: 50%; */
-    /* transform: translateY(-50%); */
-}
+    /* --- Mobile Navigation Styles --- */
+    #mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.8em;
+        color: var(--text-color);
+        cursor: pointer;
+        padding: 5px;
+        line-height: 1;
+        z-index: 1101;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 15px;
+    }
     
     .mobile-nav {
         display: none;
@@ -770,103 +806,134 @@
     }
     #mobile-nav-close:hover { color: var(--text-color); }
     
-/* ... (之前的全局樣式, @font-face, :root, body, header, .main-container, .side-nav 等) ... */
-
-/* --- Responsive Design Adjustments --- */
-
-/* Tablet Styles (e.g., 801px to 1024px) - Keep sidebars visible, adjust layout */
-@media (max-width: 1024px) {
-    /* Keep sidebars visible here, DO NOT set display: none */
-    .main-container {
-        width: 98%; /* Slightly wider */
-        gap: 15px;  /* Reduce gap */
+    /* --- Responsive Design Adjustments --- */
+    
+    /* Tablet Styles (e.g., 801px to 1024px) - Keep sidebars visible, adjust layout */
+    @media (max-width: 1024px) {
+        .main-container {
+            width: 98%;
+            gap: 15px;
+        }
+        .side-nav {
+            width: 25%;
+            min-width: 200px;
+            padding: 12px;
+        }
+        #center-content {
+            width: 50%;
+            padding: 15px 25px;
+            font-size: 1.1em;
+        }
+        #main-title { font-size: 1.5em; }
+        #dark-mode-toggle { font-size: 1.5em; right: 15px; }
+        #mobile-menu-toggle { display: none; }
     }
-    .side-nav {
-        width: 25%; /* Adjust sidebar width for tablets */
-        min-width: 200px; /* Adjust min-width */
-        padding: 12px; /* Slightly reduce padding */
+    
+    /* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
+    @media (max-width: 800px) {
+        header { padding: 6px 15px; height: calc(var(--header-height) - 4px); }
+        footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
+        #main-title { font-size: 1.4em; }
+        #dark-mode-toggle { font-size: 1.4em; right: 10px; }
+    
+        #mobile-menu-toggle {
+            display: block; /* Show mobile toggle */
+            font-size: 1.6em;
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+        }
+    
+        .main-container {
+            flex-direction: column;
+            width: 100%;
+            padding: 0 5px;
+            margin: 8px auto 10px auto;
+            gap: 10px;
+            overflow: visible;
+        }
+        .side-nav {
+            display: none; /* Hide sidebars */
+        }
+    
+        #center-content {
+            width: auto;
+            order: 0;
+            margin: 0;
+            flex-grow: 1;
+            min-height: 300px;
+            padding: 15px;
+            font-size: 1.05em;
+            max-height: none;
+            overflow-y: visible;
+            /* --- Reduce text max-width on mobile --- */
+            overflow-wrap: break-word; /* Ensure wrap */
+            word-wrap: break-word;
+        }
+         #placeholder-text { max-width: 90%; } /* Narrow placeholder */
+         .poem-main-text p { max-width: 90%; } /* Narrow main text */
+  
+         /* --- Mobile AI Fullscreen --- */
+          #ai-chat-interface.visible { /* Style when visible on mobile */
+              width: 100%;
+              height: 100%;
+              bottom: 0;
+              right: 0;
+              border-radius: 0; /* Remove border radius */
+              max-height: none; /* Remove max height */
+              background-color: rgba(244, 241, 233, 0.85); /* Slightly less transparent BG */
+              backdrop-filter: blur(10px) saturate(120%);
+              -webkit-backdrop-filter: blur(10px) saturate(120%);
+              z-index: 1200; /* Ensure above everything else */
+              padding: 15px; /* Adjust padding */
+              box-sizing: border-box;
+          }
+          body.dark-mode #ai-chat-interface.visible {
+              background-color: rgba(58, 63, 55, 0.85);
+          }
+          #ai-chat-interface.visible #ai-close-btn { /* Make close button more prominent */
+              font-size: 1.8em;
+              top: 15px;
+              right: 15px;
+              color: var(--text-color); /* Make more visible */
+          }
+          #ai-chat-interface.visible #ai-messages {
+              padding: 10px; /* More padding for messages */
+          }
+          #ai-chat-interface.visible .ai-input-area {
+              padding: 0 10px 10px 10px; /* Padding for input area */
+              background: transparent; /* Input area transparent */
+          }
+          #open-ai-btn.hidden { /* Ensure hidden class works */
+              opacity: 0;
+              pointer-events: none;
+          }
     }
-    #center-content {
-        width: 50%; /* Adjust content width */
-        padding: 15px 25px; /* Adjust padding */
-        font-size: 1.1em; /* Slightly adjust font size */
-    }
-    /* Adjust other elements like header/footer/AI if needed for this range */
-    #main-title { font-size: 1.5em; }
-    #dark-mode-toggle { font-size: 1.5em; right: 15px; }
-}
-
-/* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
-@media (max-width: 800px) {
-    /* Adjust Header Padding */
-    header {
-        padding: 6px 15px;
-        height: calc(var(--header-height) - 4px);
-    }
-    footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
-    #main-title { font-size: 1.4em; }
-    #dark-mode-toggle { font-size: 1.4em; right: 10px; }
-
-    /* --- Ensure complete styles for mobile toggle (Only ONCE) --- */
-    #mobile-menu-toggle {
-        display: block; /* Show the button (try without !important first) */
-        font-size: 1.6em;
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        transform: translateY(-50%);
-    }
-    /* --- Removed the duplicate block --- */
-
-    .main-container {
-        flex-direction: column;
-        width: 100%;
-        padding: 0 5px;
-        margin: 8px auto 10px auto;
-        gap: 10px;
-        overflow: visible;
-    }
-    .side-nav {
-        display: none; /* Hide sidebars */
-    }
-
-    #center-content {
-        width: auto;
-        order: 0;
-        margin: 0;
-        flex-grow: 1;
-        min-height: 300px;
-        padding: 15px;
-        font-size: 1.05em;
-        max-height: none;
-        overflow-y: visible;
-    }
-    /* Styles for h1 etc. inside center content are already defined */
-}
-
-/* Mobile Phones (e.g., <= 600px) - Further adjustments */
- @media (max-width: 600px) {
-     /* Keep rules from max-width: 800px unless overridden */
-     #main-title { font-size: 1.2em; }
-     #dark-mode-toggle { font-size: 1.4em; }
-     #mobile-menu-toggle { font-size: 1.5em; }
-
-     .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
-     #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
-
-     .main-container { margin: 5px auto 8px auto; gap: 8px; }
-     #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
-     .poem-main-text h1 { font-size: 1.4em; }
-     .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
-     .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 100%; }
-     .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
-     .question-item { margin-bottom: 15px; }
-     .answer { margin-left: 0.8em; padding: 8px; }
-
-     #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
-     #ai-chat-interface { width: calc(100% - 20px); bottom: 60px; right: 10px; max-height: 55vh;}
-     footer { font-size: 0.8em; }
- }
-
-/* ... (Rest of the CSS - AI styles, footer, etc.) ... */
-/* Ensure AI and Footer styles are outside or correctly placed relative to media queries */
+    
+    /* Mobile Phones (e.g., <= 600px) - Further adjustments */
+     @media (max-width: 600px) {
+         #main-title { font-size: 1.2em; }
+         #dark-mode-toggle { font-size: 1.4em; }
+         #mobile-menu-toggle { font-size: 1.5em; }
+    
+         .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
+         #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
+    
+         .main-container { margin: 5px auto 8px auto; gap: 8px; }
+         #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
+         .poem-main-text h1 { font-size: 1.4em; }
+         .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
+         .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 95%; } /* Further adjust max-width if needed */
+         #placeholder-text { max-width: 95%; }
+         .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
+         .question-item { margin-bottom: 15px; }
+         .answer { margin-left: 0.8em; padding: 8px; }
+    
+         #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
+         /* AI Fullscreen already handled by max-width: 800px, no need to repeat unless further tweaks */
+         /* Example: further adjust padding or font size for very small screens if needed */
+         #ai-chat-interface.visible { padding: 10px; }
+  
+         footer { font-size: 0.8em; }
+     }

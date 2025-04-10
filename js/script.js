@@ -7,6 +7,7 @@ let shiciquData = [];
 let allPoemsMap = new Map();
 let currentPoemObject = null;
 let currentSelection = "";
+let isMobileView = window.innerWidth <= 800; // Check initial view
 
 // --- DOM Element References ---
 const wenyanwenListElement = document.getElementById('wenyanwen-list');
@@ -34,7 +35,6 @@ async function loadPoems() {
         const response = await fetch('data/poems.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         poemsData = await response.json();
-        //console.log("詩文數據已成功載入:", poemsData.length, "篇"); // Reduce console noise
 
         poemsData.sort((a, b) => a.order - b.order);
 
@@ -49,7 +49,6 @@ async function loadPoems() {
                 shiciquData.push(poem);
             }
         });
-        //console.log(`分類完成 - 文言文: ${wenyanwenData.length}, 诗词曲: ${shiciquData.length}`);
 
         renderNavigation(wenyanwenData, wenyanwenListElement);
         renderNavigation(shiciquData, shiciquListElement);
@@ -70,12 +69,6 @@ async function loadPoems() {
     }
 }
 
-/**
- * Render navigation items into a specific list element.
- * Includes conditional styling based on presence of questions.
- * @param {Array} data - Array of poem objects to render.
- * @param {HTMLElement} listElement - The UL element to populate.
- */
 function renderNavigation(data, listElement) {
     if (!listElement) return;
     listElement.innerHTML = '';
@@ -105,7 +98,6 @@ function renderNavigation(data, listElement) {
         listItem.appendChild(button);
         listElement.appendChild(listItem);
     });
-   // console.log(`已渲染導航列表: ${listElement.id || 'Mobile List'}`);
 }
 
 function setupNavigationListeners() {
@@ -124,7 +116,6 @@ function setupNavigationListeners() {
                 document.querySelectorAll('button.nav-button').forEach(btn => btn.classList.remove('active-poem'));
                 document.querySelectorAll(`button.nav-button[data-poem-order="${order}"]`).forEach(b => b.classList.add('active-poem'));
                 if (mobileNavOverlay?.classList.contains('visible')) closeMobileNav();
-                //console.log(`已選擇詩文 (Order ${order}): ${selectedPoem.title}`);
             }
         }
     };
@@ -202,13 +193,11 @@ function displayPoemContent(poem) {
              questionsContainer.appendChild(qItem);
          });
          poemDisplayArea.appendChild(questionsContainer);
-         //console.log(`渲染了 ${questions.length} 道題目。`);
      }
 
      poemDisplayArea.style.display = 'block';
      centerContentElement.scrollTop = 0;
      setCurrentPoem(poem);
-     //console.log(`已顯示詩文及題目: ${poem.title}`);
 }
 
 function setCurrentPoem(poem) {
@@ -258,14 +247,15 @@ function setupTextSelectionListener() {
         if (selectedText.length > 1 && selection.anchorNode && poemDisplayArea.contains(selection.anchorNode.parentElement)) {
             currentSelection = selectedText;
             console.log("Text selected:", currentSelection);
-            if (!aiInterface.classList.contains('visible')) {
+            if (!aiInterface.classList.contains('visible') && isMobileView) { // Only auto-open on mobile if closed
+                 openAiBtn.click();
+            } else if (!aiInterface.classList.contains('visible')) { // Auto-open on desktop too if closed
                  openAiBtn.click();
             }
         } else {
             currentSelection = "";
         }
     });
-    //console.log("Text selection listener set up."); // Reduce noise
 }
 
 /** Sets up auto-resizing for the AI textarea */
@@ -280,8 +270,19 @@ function setupTextareaAutosize() {
      };
      aiInputElement.addEventListener('input', adjustHeight);
      setTimeout(adjustHeight, 0);
-     //console.log("Textarea autosize handler set up.");
 }
+
+ /** Updates the isMobileView flag on resize */
+ function handleResize() {
+     isMobileView = window.innerWidth <= 800;
+     // Optionally hide/show openAiBtn immediately based on view and chat state
+     if(aiInterface?.classList.contains('visible') && isMobileView) {
+         openAiBtn?.classList.add('hidden');
+     } else {
+         openAiBtn?.classList.remove('hidden');
+     }
+ }
+
 
 function setupAIChatInterface() {
      if (!aiInterface || !openAiBtn || !aiCloseBtn || !aiSendBtn || !aiInputElement || !aiMessagesElement) return;
@@ -289,15 +290,20 @@ function setupAIChatInterface() {
         aiInterface.style.display = 'flex';
          requestAnimationFrame(() => { aiInterface.classList.add('visible'); });
         aiInputElement.focus();
+        // --- Hide open button when chat is visible on mobile ---
+        if (isMobileView) {
+            openAiBtn.classList.add('hidden');
+        }
      });
      aiCloseBtn.addEventListener('click', () => {
         aiInterface.classList.remove('visible');
         aiInterface.addEventListener('transitionend', () => { if (!aiInterface.classList.contains('visible')) aiInterface.style.display = 'none'; }, { once: true });
+        // --- Show open button when chat is closed ---
+        openAiBtn.classList.remove('hidden');
      });
 
      aiSendBtn.addEventListener('click', handleAISend);
      aiInputElement.addEventListener('keypress', (event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleAISend(); } });
-    // console.log("AI 界面交互已設置。");
 }
 
 /** Handles sending message to AI worker */
@@ -308,6 +314,12 @@ async function handleAISend() {
 
     if (!userQuery && !selectionToSend) return;
 
+    if (!currentPoemObject) {
+        appendAIMessage("請先選擇一篇文章，然後再提問或選中文字。", 'system error');
+        aiInputElement.value = userQuery;
+        return;
+    }
+
     if (!userQuery && selectionToSend) { userQuery = `解释一下这段文字：“${selectionToSend}”`; }
 
     appendAIMessage(userQuery, 'user');
@@ -317,7 +329,7 @@ async function handleAISend() {
     aiInputElement.style.height = 'auto';
     aiInputElement.dispatchEvent(new Event('input'));
 
-    appendAIMessage('窺視者思考中...', 'ai-thinking'); // Use valid class name
+    appendAIMessage('窺視者思考中...', 'ai-thinking');
 
     const payload = { selectedText: selectionToSend, poemContext: currentPoemObject, explicitQuery: userQuery };
     await callAIWorker(payload);
@@ -326,13 +338,11 @@ async function handleAISend() {
 
  /** Calls the Cloudflare Worker */
  async function callAIWorker(payload) {
-     // !!! IMPORTANT: Replace with your actual deployed Worker URL !!!
-     const WORKER_URL = "https://moxie.bdfz.net/"; // <--- REPLACE THIS
-
+     const WORKER_URL = "https://moxie-peer.bdfz.workers.dev/"; // Use the confirmed URL
      const thinkingMsg = aiMessagesElement?.querySelector('.ai-thinking');
 
      if (!payload.poemContext) {
-         console.error("Cannot call AI without poem context.");
+         console.error("Cannot call AI without poem context (safeguard check).");
          if (thinkingMsg) thinkingMsg.remove();
          appendAIMessage("抱歉，需要先選擇一篇文章才能提問。", 'system error');
          return;
@@ -357,7 +367,11 @@ async function handleAISend() {
      } catch (error) {
          console.error("Error calling AI Worker:", error);
          if (thinkingMsg) thinkingMsg.remove();
-         appendAIMessage(`無法連接到窺視者: ${error.message}`, 'system error');
+         let displayError = `無法連接到窺視者: ${error.message}`;
+         if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+              displayError = "無法連接到窺視者。請檢查網絡或 Worker 地址是否正確。";
+         }
+         appendAIMessage(displayError, 'system error');
      }
  }
 
@@ -382,5 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAIChatInterface();
     setupTextSelectionListener();
     setupTextareaAutosize();
+    // Listen for window resize to update mobile view flag
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
     console.log("初始化完成。");
 });
