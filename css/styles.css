@@ -1,700 +1,738 @@
+/* --- Global Reset and Box Sizing --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* Apply border-box universally */
+  margin: 0; /* Remove default margins */
+  padding: 0; /* Remove default padding */
+}
+
+html,
+body {
+  overflow-x: hidden; /* Prevent horizontal scrolling on the main page */
+  width: 100%;      /* Ensure they take full width */
+  /* height: 100%; /* Usually handled by min-height on body */
+}
+
+/* Remove default list styles */
+ul, ol {
+    list-style: none;
+}
+
+/* Remove default button styles */
+button {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+/* Ensure links inherit color correctly unless specified */
+a {
+    color: inherit;
+    text-decoration: none; /* Remove default underline */
+}
+
+
 /* --- 字體定義 --- */
 @font-face {
-    font-family: 'BabelStone Han';
-    src: url('../fonts/BabelStoneHan.woff2') format('woff2');
+  font-family: 'BabelStone Han';
+  src: url('../fonts/BabelStoneHan.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Ghibli 風格調色板和基礎設置 */
+:root {
+    /* Light Mode */
+    --bg-color: #f4f1e9;
+    --content-bg: rgba(255, 255, 255, 0.88);
+    --nav-bg: rgba(230, 235, 224, 0.85);
+    --text-color: #4d453e;
+    --text-secondary: #7a726a;
+    --header-color: #5c6e58;
+    --accent-color: #8db580;
+    --border-color: #d3c0a4;
+    --button-hover-bg: #d8e0cc;
+    --scrollbar-thumb: #b0a89a;
+    --scrollbar-track: rgba(230, 235, 224, 0.5);
+    --ai-bg: rgba(250, 250, 245, 0.95); /* Fallback AI BG */
+    --ai-user-bubble: #cde2c6;
+    --ai-ai-bubble: #e8e8e0;
+    --shadow-color: rgba(80, 70, 60, 0.1);
+    --header-height: 50px;
+    --footer-height: 40px;
+    --container-v-margin: 40px; /* 估算值，用於 max-height 計算 */
+    /* --- Ghibli Background Colors for Buttons --- */
+    --ghibli-color-1: #a8d8ea; /* Light Blue */
+    --ghibli-color-2: #d3e0b7; /* Pale Green */
+    --ghibli-color-3: #f9cb9c; /* Light Orange */
+    --ghibli-color-4: #f4c7c3; /* Soft Pink */
+    --ghibli-color-5: #c4b7ea; /* Lavender */
+    --ghibli-color-6: #e6d1a1; /* Sand Yellow */
+    --ghibli-color-fallback: transparent; /* Fallback color */
+    /* --- No Question Text Color --- */
+    --no-question-color: #c0392b; /* Darker Red */
+}
+
+body.dark-mode {
+    /* Dark Mode */
+    --bg-color: #3a3f37;
+    --content-bg: rgba(40, 45, 38, 0.9);
+    --nav-bg: rgba(55, 60, 52, 0.88);
+    --text-color: #d8d2c9;
+    --text-secondary: #a0988f;
+    --header-color: #a8c0a0;
+    --accent-color: #709464;
+    --border-color: #5e564a;
+    --button-hover-bg: #4a5244;
+    --scrollbar-thumb: #787168;
+    --scrollbar-track: rgba(55, 60, 52, 0.5);
+    --ai-bg: rgba(30, 35, 28, 0.95); /* Fallback AI BG Dark */
+    --ai-user-bubble: #52694c;
+    --ai-ai-bubble: #454a41;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    /* --- Dark Mode Ghibli Colors (adjust as needed) --- */
+    --ghibli-color-1: #5a7e8a;
+    --ghibli-color-2: #6a7857;
+    --ghibli-color-3: #a97b5c;
+    --ghibli-color-4: #9e7370;
+    --ghibli-color-5: #7c6e9a;
+    --ghibli-color-6: #9c8b61;
+    /* --- Dark Mode No Question Color --- */
+    --no-question-color: #e74c3c;
+}
+
+body {
+    /* Keep existing body styles, but ensure height is managed by flex */
+    min-height: 100vh; /* Use min-height instead of height for flexibility */
+    display: flex;
+    flex-direction: column;
+    /* Rest of your body styles... */
+    font-family: 'BabelStone Han', 'Noto Serif SC', 'ZCOOL XiaoWei', serif;
+    line-height: 1.7;
+    background: var(--bg-color) url('../bg.webp') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px  40px 8px 40px;
+    overflow: visible;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    position: relative;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    height: var(--header-height);
+    box-sizing: border-box;
+}
+
+#main-title {
+    margin: 0;
+    color: var(--header-color);
+    font-family: 'Noto Sans SC', 'BabelStone Han', sans-serif;
+    font-size: 1.6em;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px var(--shadow-color);
+    min-width: 0;
+}
+/* Style for link inside title if you add it back */
+#main-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+#dark-mode-toggle {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.6em;
+    cursor: pointer;
+    padding: 0 5px;
+    color: var(--text-color);
+}
+
+.main-container {
+    display: flex;
+    flex-grow: 1;
+    max-width: 1600px;
+    width: 95%;
+    margin: 15px auto;
+    gap: 20px;
+    padding: 0 10px;
+    overflow: hidden; /* Keep this to contain flex children */
+}
+
+/* 左右導航欄樣式 (桌面) */
+.side-nav {
+    width: 23%;
+    min-width: 220px;
+    background-color: var(--nav-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* 40px for .main-container margin-top+bottom */
+    box-shadow: 0 2px 5px var(--shadow-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.side-nav h2 {
+    text-align: center;
+    margin: 0 0 15px 0; /* Use margin shorthand */
+    color: var(--header-color);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 1.3em;
+    flex-shrink: 0;
+}
+
+.poem-list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0 5px 0 0;
+    margin: 0; /* Already removed by global reset */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.poem-list-container::-webkit-scrollbar { width: 8px; }
+.poem-list-container::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+.poem-list-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
+
+/* Base Nav Button Style */
+.nav-button {
+    display: block;
+    width: 100%;
+    padding: 10px 8px;
+    text-align: left;
+    border-bottom: 1px dashed rgba(128, 128, 128, 0.1);
+    font-size: 1em;
+    border-radius: 5px;
+    line-height: 1.5;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    /* Inherits button resets like background: none, border: none, font: inherit, color: inherit, cursor: pointer */
+    color: var(--text-color); /* Re-apply text color */
+}
+.nav-button:last-child { border-bottom: none; }
+
+/* Hover/Active State (Common) */
+.nav-button:hover {
+    background-color: var(--button-hover-bg);
+    color: var(--header-color);
+}
+.nav-button.active-poem {
+    font-weight: bold;
+    box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+/* --- Conditional Button Styling --- */
+.nav-button.has-questions {
+    background-color: var(--ghibli-color-fallback, transparent);
+    color: #333;
+    font-weight: 500;
+}
+.nav-button.has-questions-color-1 { background-color: var(--ghibli-color-1); }
+.nav-button.has-questions-color-2 { background-color: var(--ghibli-color-2); }
+.nav-button.has-questions-color-3 { background-color: var(--ghibli-color-3); }
+.nav-button.has-questions-color-4 { background-color: var(--ghibli-color-4); }
+.nav-button.has-questions-color-5 { background-color: var(--ghibli-color-5); }
+.nav-button.has-questions-color-6 { background-color: var(--ghibli-color-6); }
+
+body.dark-mode .nav-button.has-questions {
+    color: #eee;
+}
+.nav-button.has-questions:hover {
+    filter: brightness(1.05);
+    color: #000;
+}
+body.dark-mode .nav-button.has-questions:hover {
+    filter: brightness(1.1);
+    color: #fff;
+}
+
+.nav-button.no-questions {
+    color: var(--no-question-color);
+    font-weight: bold;
+}
+.nav-button.no-questions:hover {
+    background-color: var(--button-hover-bg);
+    color: var(--header-color);
+}
+
+.scroll-indicator {
+    text-align: center;
+    font-size: 1em;
+    color: var(--text-secondary);
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, height 0.3s ease;
+    flex-shrink: 0;
+}
+.scroll-indicator.visible { opacity: 0.6; height: 1.2em; }
+
+/* 中間內容區 */
+#center-content {
+    width: 54%;
+    background-color: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px 30px;
+    overflow-y: auto;
+    font-size: 1.15em;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    min-width: 0;
+    max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+#center-content::-webkit-scrollbar { width: 8px; }
+#center-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
+#center-content::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--content-bg); }
+
+#placeholder-text {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 50px 0 20px 0; /* Adjust padding */
+    min-height: 200px;
+    max-width: 85%;
+    margin: 0 auto; /* Re-center with margin */
+}
+#placeholder-text h2 {
+     color: var(--header-color);
+     font-size: 1.5em;
+     margin-bottom: 20px;
+}
+#placeholder-text .exam-marker-example {
+    font-size: 0.9em;
+}
+#placeholder-text p { /* Apply general p styles within placeholder */
+    line-height: 1.8;
+    margin-bottom: 1em;
+}
+#placeholder-text p:last-of-type {
+    margin-top: 15px;
+    font-style: italic;
+    font-size: 0.95em;
+}
+#placeholder-text a { /* Style links in placeholder */
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+body.dark-mode #placeholder-text a {
+    color: #a8c0a0;
+}
+
+
+#poem-display-area {
+    text-align: center;
+}
+
+/* Styles specifically for the main poem text container */
+.poem-main-text h1 {
+    font-size: 1.8em;
+    color: var(--header-color);
+    text-align: center;
+    margin: 0 0 15px 0;
+    font-weight: bold;
+}
+.poem-main-text .meta {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 0 0 25px 0;
+}
+.poem-main-text p {
+    text-align: center;
+    text-indent: 0;
+    line-height: 1.8;
+    margin: 0 auto 1.2em auto;
+    padding: 0;
+    max-width: 85%; /* Narrower text */
+    font-weight: bold;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+/* Exam Marker Styling */
+.exam-marker {
+   font-size: 0.75em;
+   color: var(--accent-color);
+   background-color: rgba(141, 181, 128, 0.15);
+   padding: 2px 5px;
+   border-radius: 4px;
+   margin-left: 6px;
+   white-space: nowrap;
+   font-family: 'Noto Sans SC', sans-serif;
+   vertical-align: baseline;
+   display: inline-block;
+}
+body.dark-mode .exam-marker {
+    color: #a8c0a0;
+    background-color: rgba(168, 192, 160, 0.2);
+}
+
+/* --- Exam Questions Styling --- */
+.exam-questions {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--border-color);
+    text-align: left;
+}
+
+.exam-questions h2 {
+    text-align: center;
+    color: var(--header-color);
+    font-size: 1.4em;
+    margin: 0 0 25px 0;
+    font-family: 'Noto Sans SC', sans-serif;
+}
+
+.question-item {
+    margin-bottom: 25px;
+}
+
+.question-text {
+    font-weight: bold;
+    color: var(--text-color);
+    cursor: pointer;
+    line-height: 1.6;
+    margin: 0 0 8px 0 !important; /* Use shorthand margin */
+    padding: 5px 0 !important;
+    text-align: left !important;
+    text-indent: 0 !important;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+.question-text:focus {
+     outline: 2px solid var(--accent-color);
+     outline-offset: 2px;
+     border-radius: 2px;
+}
+
+.question-year {
+    font-size: 0.85em;
+    color: var(--text-secondary);
     font-weight: normal;
-    font-style: normal;
-  }
+    margin-left: 8px;
+    white-space: nowrap;
+}
+
+.answer {
+    margin: 0 0 0 2em; /* Use shorthand margin */
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 6px;
+    color: var(--text-color);
+    line-height: 1.7;
+    text-align: left !important;
+    animation: fadeIn 0.3s ease;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+body.dark-mode .answer {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* AI 聊天界面樣式 - Glassmorphism Update */
+#ai-chat-interface {
+    position: fixed;
+    bottom: 75px;
+    right: 15px;
+    width: 310px;
+    max-height: 400px;
+    background-color: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px) saturate(150%);
+    -webkit-backdrop-filter: blur(15px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px var(--shadow-color);
+    border-radius: 15px;
+    padding: 12px;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, width 0.3s ease, height 0.3s ease, bottom 0.3s ease, right 0.3s ease, border-radius 0.3s ease;
+}
+body.dark-mode #ai-chat-interface {
+    background-color: rgba(30, 35, 28, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+ #ai-chat-interface.visible {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+#ai-close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1.3em;
+    color: var(--text-secondary);
+    line-height: 1;
+    z-index: 1001;
+    /* Inherits button reset */
+    padding: 0; /* Ensure no extra padding */
+}
+#ai-close-btn:hover { color: var(--text-color); }
+
+#ai-chat-interface h3 {
+    text-align: center;
+    margin: 0 0 12px 0;
+    color: var(--header-color);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
+#ai-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-bottom: 8px;
+    padding: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) rgba(255, 255, 255, 0.1);
+}
+body.dark-mode #ai-messages {
+     scrollbar-color: var(--scrollbar-thumb) rgba(0, 0, 0, 0.1);
+}
+
+#ai-messages::-webkit-scrollbar { width: 6px; }
+#ai-messages::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+body.dark-mode #ai-messages::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+#ai-messages::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
+
+#ai-messages .message {
+    padding: 7px 11px;
+    margin-bottom: 8px;
+    border-radius: 16px;
+    max-width: 90%;
+    word-wrap: break-word;
+    line-height: 1.45;
+    font-size: 0.9em;
+    box-shadow: 0 1px 1px var(--shadow-color);
+    color: var(--text-color);
+}
+
+#ai-messages .user {
+    background-color: rgba(112, 148, 100, 0.7);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+}
+body.dark-mode #ai-messages .user {
+    background-color: rgba(82, 105, 76, 0.8);
+    color: var(--text-color);
+}
+
+#ai-messages .ai {
+    background-color: rgba(232, 232, 224, 0.7);
+    color: #333;
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+}
+body.dark-mode #ai-messages .ai {
+    background-color: rgba(69, 74, 65, 0.8);
+    color: var(--text-color);
+}
+
+/* Thinking Indicator Styling */
+#ai-messages .message.ai-thinking {
+    font-style: italic;
+    color: var(--text-secondary);
+    text-align: center;
+    background-color: transparent;
+    padding: 4px;
+    font-size: 0.85em;
+    box-shadow: none;
+    margin: 5px 0; /* Use shorthand margin */
+    animation: thinking-pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes thinking-pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* System message styling */
+#ai-messages .message.system {
+     font-style: italic;
+     color: var(--text-secondary);
+     text-align: center;
+     background-color: transparent;
+     padding: 4px;
+     font-size: 0.85em;
+     box-shadow: none;
+     margin: 5px 0;
+}
+#ai-messages .message.system.info {
+     font-size: 0.8em;
+     margin-top: -5px;
+     background-color: transparent;
+}
+#ai-messages .message.system.error {
+    color: var(--no-question-color);
+    font-weight: bold;
+    background-color: rgba(192, 57, 43, 0.1);
+    border-radius: 4px;
+}
+body.dark-mode #ai-messages .message.system.error {
+     background-color: rgba(231, 76, 60, 0.15);
+}
+
+.ai-input-area {
+    display: flex;
+    gap: 6px;
+    margin-top: 5px;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+.ai-input-area textarea {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: var(--text-color);
+    font-size: 0.9em;
+    font-family: inherit;
+    resize: none;
+    overflow-y: hidden;
+    line-height: 1.4;
+    min-height: 38px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+body.dark-mode .ai-input-area textarea {
+    background-color: rgba(40, 45, 38, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.ai-input-area textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(141, 181, 128, 0.3);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+body.dark-mode .ai-input-area textarea:focus {
+     background-color: rgba(40, 45, 38, 0.8);
+}
+
+#ai-send-btn {
+    padding: 6px 12px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 6px;
+    font-size: 0.9em;
+    flex-shrink: 0;
+    height: 38px;
+    transition: background-color 0.2s ease;
+     /* Inherits button reset */
+     border: none;
+     cursor: pointer;
+}
+#ai-send-btn:hover { background-color: var(--header-color); }
+
+/* Ensure Open AI Button is correctly positioned */
+#open-ai-btn {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    font-size: 1.8em;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    z-index: 999;
+    transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
+    opacity: 1;
+    /* Inherits button reset */
+    padding: 0;
+    cursor: pointer;
+}
+#open-ai-btn:hover {
+    background-color: var(--header-color);
+    transform: scale(1.1);
+}
+#open-ai-btn.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
   
-  /* Ghibli 風格調色板和基礎設置 */
-  :root {
-      /* Light Mode */
-      --bg-color: #f4f1e9;
-      --content-bg: rgba(255, 255, 255, 0.88);
-      --nav-bg: rgba(230, 235, 224, 0.85);
-      --text-color: #4d453e;
-      --text-secondary: #7a726a;
-      --header-color: #5c6e58;
-      --accent-color: #8db580;
-      --border-color: #d3c0a4;
-      --button-hover-bg: #d8e0cc;
-      --scrollbar-thumb: #b0a89a;
-      --scrollbar-track: rgba(230, 235, 224, 0.5);
-      --ai-bg: rgba(250, 250, 245, 0.95); /* Fallback AI BG */
-      --ai-user-bubble: #cde2c6;
-      --ai-ai-bubble: #e8e8e0;
-      --shadow-color: rgba(80, 70, 60, 0.1);
-      --header-height: 50px;
-      --footer-height: 40px;
-      --container-v-margin: 40px; /* 估算值，用於 max-height 計算 */
-      /* --- Ghibli Background Colors for Buttons --- */
-      --ghibli-color-1: #a8d8ea; /* Light Blue */
-      --ghibli-color-2: #d3e0b7; /* Pale Green */
-      --ghibli-color-3: #f9cb9c; /* Light Orange */
-      --ghibli-color-4: #f4c7c3; /* Soft Pink */
-      --ghibli-color-5: #c4b7ea; /* Lavender */
-      --ghibli-color-6: #e6d1a1; /* Sand Yellow */
-      --ghibli-color-fallback: transparent; /* Fallback color */
-      /* --- No Question Text Color --- */
-      --no-question-color: #c0392b; /* Darker Red */
-  }
-  
-  body.dark-mode {
-      /* Dark Mode */
-      --bg-color: #3a3f37;
-      --content-bg: rgba(40, 45, 38, 0.9);
-      --nav-bg: rgba(55, 60, 52, 0.88);
-      --text-color: #d8d2c9;
-      --text-secondary: #a0988f;
-      --header-color: #a8c0a0;
-      --accent-color: #709464;
-      --border-color: #5e564a;
-      --button-hover-bg: #4a5244;
-      --scrollbar-thumb: #787168;
-      --scrollbar-track: rgba(55, 60, 52, 0.5);
-      --ai-bg: rgba(30, 35, 28, 0.95); /* Fallback AI BG Dark */
-      --ai-user-bubble: #52694c;
-      --ai-ai-bubble: #454a41;
-      --shadow-color: rgba(0, 0, 0, 0.2);
-      /* --- Dark Mode Ghibli Colors (adjust as needed) --- */
-      --ghibli-color-1: #5a7e8a;
-      --ghibli-color-2: #6a7857;
-      --ghibli-color-3: #a97b5c;
-      --ghibli-color-4: #9e7370;
-      --ghibli-color-5: #7c6e9a;
-      --ghibli-color-6: #9c8b61;
-      /* --- Dark Mode No Question Color --- */
-      --no-question-color: #e74c3c;
-  }
-  
-  body {
-      font-family: 'BabelStone Han', 'Noto Serif SC', 'ZCOOL XiaoWei', serif;
-      line-height: 1.7;
-      margin: 0;
-      padding: 0;
-      background: var(--bg-color) url('../bg.webp') no-repeat center center fixed;
-      background-size: cover;
-      color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-  }
-  
-  header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 8px  40px 8px 40px;
-      overflow: visible;
-      background-color: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(5px);
-      position: relative;
-      border-bottom: 1px solid var(--border-color);
-      flex-shrink: 0;
-      height: var(--header-height);
-      box-sizing: border-box;
-  }
-  
-  #main-title {
-      margin: 0;
-      color: var(--header-color);
-      font-family: 'Noto Sans SC', 'BabelStone Han', sans-serif;
-      font-size: 1.6em;
-      font-weight: 700;
-      text-shadow: 1px 1px 2px var(--shadow-color);
-      min-width: 0;
-  }
-  
-  #dark-mode-toggle {
-      position: absolute;
-      right: 30px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      font-size: 1.6em;
-      cursor: pointer;
-      padding: 0 5px;
-      color: var(--text-color);
-  }
-  
-  .main-container {
-      display: flex;
-      flex-grow: 1;
-      max-width: 1600px;
-      width: 95%;
-      margin: 15px auto;
-      gap: 20px;
-      padding: 0 10px;
-      overflow: hidden;
-  }
-  
-  /* 左右導航欄樣式 (桌面) */
-  .side-nav {
-      width: 23%;
-      min-width: 220px;
-      background-color: var(--nav-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px); /* 40px for .main-container margin-top+bottom */
-      box-shadow: 0 2px 5px var(--shadow-color);
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-  
-  .side-nav h2 {
+  footer {
       text-align: center;
-      margin-top: 0;
-      margin-bottom: 15px;
-      color: var(--header-color);
-      font-family: 'Noto Sans SC', sans-serif;
-      font-size: 1.3em;
-      flex-shrink: 0;
-  }
-  
-  .poem-list-container {
-      flex-grow: 1;
-      overflow-y: auto;
-      list-style: none;
-      padding: 0 5px 0 0;
-      margin: 0;
-      scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-  }
-  
-  .poem-list-container::-webkit-scrollbar { width: 8px; }
-  .poem-list-container::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
-  .poem-list-container::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--scrollbar-track); }
-  
-  /* Base Nav Button Style */
-  .nav-button {
-      display: block;
-      width: 100%;
-      padding: 10px 8px;
-      text-align: left;
-      background: none;
-      border: none;
-      border-bottom: 1px dashed rgba(128, 128, 128, 0.1);
-      font-family: inherit;
-      font-size: 1em;
-      color: var(--text-color);
-      border-radius: 5px;
-      cursor: pointer;
-      line-height: 1.5;
-      transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-  }
-  .nav-button:last-child { border-bottom: none; }
-  
-  /* Hover/Active State (Common) */
-  .nav-button:hover {
-      background-color: var(--button-hover-bg);
-      color: var(--header-color);
-  }
-  .nav-button.active-poem {
-      font-weight: bold;
-      box-shadow: inset 0 0 0 2px var(--accent-color);
-  }
-  
-  /* --- Conditional Button Styling --- */
-  .nav-button.has-questions {
-      background-color: var(--ghibli-color-fallback, transparent);
-      color: #333;
-      font-weight: 500;
-  }
-  .nav-button.has-questions-color-1 { background-color: var(--ghibli-color-1); }
-  .nav-button.has-questions-color-2 { background-color: var(--ghibli-color-2); }
-  .nav-button.has-questions-color-3 { background-color: var(--ghibli-color-3); }
-  .nav-button.has-questions-color-4 { background-color: var(--ghibli-color-4); }
-  .nav-button.has-questions-color-5 { background-color: var(--ghibli-color-5); }
-  .nav-button.has-questions-color-6 { background-color: var(--ghibli-color-6); }
-  
-  body.dark-mode .nav-button.has-questions {
-      color: #eee;
-  }
-  .nav-button.has-questions:hover {
-      filter: brightness(1.05);
-      color: #000;
-  }
-  body.dark-mode .nav-button.has-questions:hover {
-      filter: brightness(1.1);
-      color: #fff;
-  }
-  
-  .nav-button.no-questions {
-      color: var(--no-question-color);
-      font-weight: bold;
-  }
-  .nav-button.no-questions:hover {
-      background-color: var(--button-hover-bg);
-      color: var(--header-color);
-  }
-  
-  .scroll-indicator {
-      text-align: center;
-      font-size: 1em;
-      color: var(--text-secondary);
-      opacity: 0;
-      height: 0;
-      overflow: hidden;
-      transition: opacity 0.3s ease, height 0.3s ease;
-      flex-shrink: 0;
-  }
-  .scroll-indicator.visible { opacity: 0.6; height: 1.2em; }
-  
-  /* 中間內容區 */
-  #center-content {
-      width: 54%;
-      background-color: var(--content-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 20px 30px;
-      overflow-y: auto;
-      font-size: 1.15em;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-      min-width: 0;
-      max-height: calc(100vh - var(--header-height) - var(--footer-height) - 40px);
-      scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) var(--content-bg);
-      /* --- Add overflow-wrap for mobile overflow fix --- */
-      overflow-wrap: break-word;
-      word-wrap: break-word; /* Older browser support */
-  }
-  
-  #center-content::-webkit-scrollbar { width: 8px; }
-  #center-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
-  #center-content::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 4px; border: 2px solid var(--content-bg); }
-  
-  #placeholder-text {
-      text-align: center;
-      color: var(--text-secondary);
-      padding-top: 50px;
-      min-height: 200px;
-      /* --- Reduce max-width to narrow text --- */
-      max-width: 85%; /* Adjust as needed */
-      margin-left: auto;
-      margin-right: auto;
-  }
-  #placeholder-text h2 {
-       color: var(--header-color);
-       font-size: 1.5em;
-       margin-bottom: 20px;
-  }
-  #placeholder-text .exam-marker-example {
-      font-size: 0.9em;
-  }
-  #placeholder-text p:last-of-type {
-      margin-top: 15px;
-      font-style: italic;
-      font-size: 0.95em;
-  }
-  
-  #poem-display-area {
-      text-align: center; /* Container remains centered */
-  }
-  
-  /* Styles specifically for the main poem text container */
-  .poem-main-text h1 {
-      font-size: 1.8em;
-      color: var(--header-color);
-      text-align: center;
-      margin-bottom: 15px;
-      font-weight: bold;
-  }
-  .poem-main-text .meta {
-      font-size: 0.9em;
-      color: var(--text-secondary);
-      text-align: center;
-      margin-bottom: 25px;
-  }
-  .poem-main-text p {
-      text-align: center;
-      text-indent: 0;
-      line-height: 1.8;
-      margin: 0 auto 1.2em auto;
-      padding: 0;
-      /* --- Reduce max-width to narrow text --- */
-      max-width: 85%; /* Adjust as needed */
-      font-weight: bold;
-      /* --- Add overflow-wrap --- */
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-  }
-  
-  /* Exam Marker Styling */
-  .exam-marker {
-     font-size: 0.75em;
-     color: var(--accent-color);
-     background-color: rgba(141, 181, 128, 0.15);
-     padding: 2px 5px;
-     border-radius: 4px;
-     margin-left: 6px;
-     white-space: nowrap;
-     font-family: 'Noto Sans SC', sans-serif;
-     vertical-align: baseline;
-     display: inline-block;
-  }
-  body.dark-mode .exam-marker {
-      color: #a8c0a0;
-      background-color: rgba(168, 192, 160, 0.2);
-  }
-  
-  /* --- Exam Questions Styling --- */
-  .exam-questions {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px dashed var(--border-color);
-      text-align: left;
-  }
-  
-  .exam-questions h2 {
-      text-align: center;
-      color: var(--header-color);
-      font-size: 1.4em;
-      margin-bottom: 25px;
-      font-family: 'Noto Sans SC', sans-serif;
-  }
-  
-  .question-item {
-      margin-bottom: 25px;
-  }
-  
-  .question-text {
-      font-weight: bold;
-      color: var(--text-color);
-      cursor: pointer;
-      line-height: 1.6;
-      margin-bottom: 8px !important;
-      padding: 5px 0 !important;
-      text-align: left !important;
-      text-indent: 0 !important;
-      max-width: 100%;
-      /* --- Add overflow-wrap --- */
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-  }
-  .question-text:focus {
-       outline: 2px solid var(--accent-color);
-       outline-offset: 2px;
-       border-radius: 2px;
-  }
-  
-  .question-year {
-      font-size: 0.85em;
-      color: var(--text-secondary);
-      font-weight: normal;
-      margin-left: 8px;
-      white-space: nowrap;
-  }
-  
-  .answer {
-      margin-left: 2em;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.03);
-      border-radius: 6px;
-      color: var(--text-color);
-      line-height: 1.7;
-      text-align: left !important;
-      animation: fadeIn 0.3s ease;
-      /* --- Add overflow-wrap --- */
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-  }
-  
-  body.dark-mode .answer {
-      background-color: rgba(255, 255, 255, 0.05);
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  /* AI 聊天界面樣式 - Base Desktop/Default */
-  #ai-chat-interface {
-      position: fixed;
-      bottom: 75px;
-      right: 15px;
-      width: 310px;
-      max-height: 400px;
-      background-color: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(15px) saturate(150%);
-      -webkit-backdrop-filter: blur(15px) saturate(150%);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 4px 15px var(--shadow-color);
-      border-radius: 15px;
-      padding: 12px;
-      display: none; /* Initially hidden */
-      flex-direction: column;
-      z-index: 1000;
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, width 0.3s ease, height 0.3s ease, bottom 0.3s ease, right 0.3s ease, border-radius 0.3s ease; /* Add transitions */
-  }
-  body.dark-mode #ai-chat-interface {
-      background-color: rgba(30, 35, 28, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-   #ai-chat-interface.visible {
-      display: flex; /* Use flex to make it appear */
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-  }
-  
-  #ai-close-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: none;
-      border: none;
-      font-size: 1.3em;
-      cursor: pointer;
-      color: var(--text-secondary);
-      padding: 0;
-      line-height: 1;
-      z-index: 1001; /* Ensure close button is above messages */
-  }
-  #ai-close-btn:hover { color: var(--text-color); }
-  
-  #ai-chat-interface h3 {
-      text-align: center;
-      margin: 0 0 12px 0;
-      color: var(--header-color);
-      font-family: 'Noto Sans SC', sans-serif;
-      font-size: 1.1em;
-      flex-shrink: 0; /* Prevent shrinking */
-  }
-  
-  #ai-messages {
-      flex-grow: 1; /* Take available space */
-      overflow-y: auto; /* Scroll messages */
-      margin-bottom: 8px;
-      padding: 5px; /* Add some padding around messages */
-      scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) rgba(255, 255, 255, 0.1);
-  }
-  body.dark-mode #ai-messages {
-       scrollbar-color: var(--scrollbar-thumb) rgba(0, 0, 0, 0.1);
-  }
-  
-  #ai-messages::-webkit-scrollbar { width: 6px; }
-  #ai-messages::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
-  body.dark-mode #ai-messages::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
-  #ai-messages::-webkit-scrollbar-thumb { background-color: var(--scrollbar-thumb); border-radius: 3px; }
-  
-  #ai-messages .message {
-      padding: 7px 11px;
-      margin-bottom: 8px;
-      border-radius: 16px;
-      max-width: 90%;
-      word-wrap: break-word;
-      line-height: 1.45;
-      font-size: 0.9em;
-      box-shadow: 0 1px 1px var(--shadow-color);
-      /* --- Ensure text color is readable on glass --- */
-      color: var(--text-color);
-  }
-  
-  #ai-messages .user {
-      background-color: rgba(112, 148, 100, 0.7);
-      color: white;
-      margin-left: auto;
-      border-bottom-right-radius: 5px;
-  }
-  body.dark-mode #ai-messages .user {
-      background-color: rgba(82, 105, 76, 0.8);
-      color: var(--text-color);
-  }
-  
-  #ai-messages .ai {
-      background-color: rgba(232, 232, 224, 0.7);
-      color: #333;
-      margin-right: auto;
-      border-bottom-left-radius: 5px;
-  }
-  body.dark-mode #ai-messages .ai {
-      background-color: rgba(69, 74, 65, 0.8);
-      color: var(--text-color);
-  }
-  
-  /* Thinking Indicator Styling */
-  #ai-messages .message.ai-thinking {
-      font-style: italic;
-      color: var(--text-secondary);
-      text-align: center;
-      background-color: transparent;
-      padding: 4px;
-      font-size: 0.85em;
-      box-shadow: none;
-      margin-top: 5px;
-      margin-bottom: 5px;
-      animation: thinking-pulse 1.5s infinite ease-in-out;
-  }
-  
-  @keyframes thinking-pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
-  }
-  
-  /* System message styling */
-  #ai-messages .message.system {
-       font-style: italic;
-       color: var(--text-secondary);
-       text-align: center;
-       background-color: transparent;
-       padding: 4px;
-       font-size: 0.85em;
-       box-shadow: none;
-       margin-top: 5px;
-       margin-bottom: 5px;
-  }
-  #ai-messages .message.system.info {
-       font-size: 0.8em;
-       margin-top: -5px;
-       background-color: transparent;
-  }
-  #ai-messages .message.system.error {
-      color: var(--no-question-color);
-      font-weight: bold;
-      background-color: rgba(192, 57, 43, 0.1);
-      border-radius: 4px;
-  }
-  body.dark-mode #ai-messages .message.system.error {
-       background-color: rgba(231, 76, 60, 0.15);
-  }
-  
-  .ai-input-area {
-      display: flex;
-      gap: 6px;
-      margin-top: 5px;
-      align-items: flex-end;
-      flex-shrink: 0; /* Prevent shrinking */
-  }
-  
-  .ai-input-area textarea {
-      flex-grow: 1;
       padding: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 6px;
-      background-color: rgba(255, 255, 255, 0.3);
-      color: var(--text-color);
-      font-size: 0.9em;
-      font-family: inherit;
-      resize: none;
-      overflow-y: hidden;
-      line-height: 1.4;
-      min-height: 38px;
-      box-sizing: border-box;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-  body.dark-mode .ai-input-area textarea {
-      background-color: rgba(40, 45, 38, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-  
-  .ai-input-area textarea:focus {
-      outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 2px rgba(141, 181, 128, 0.3);
-      background-color: rgba(255, 255, 255, 0.5);
-  }
-  body.dark-mode .ai-input-area textarea:focus {
-       background-color: rgba(40, 45, 38, 0.8);
-  }
-  
-  #ai-send-btn {
-      padding: 6px 12px;
-      cursor: pointer;
-      background-color: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.9em;
+      color: var(--no-question-color); /* Changed footer text color */
+      font-size: 0.85em;
+      background-color: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(2px);
+      border-top: 1px solid var(--border-color);
       flex-shrink: 0;
-      height: 38px;
-      transition: background-color 0.2s ease;
+      height: var(--footer-height);
+      box-sizing: border-box;
   }
-  #ai-send-btn:hover { background-color: var(--header-color); }
+  footer p { /* Target the paragraph for margin reset */
+      margin: 0;
+  }
+  footer a {
+      color: var(--no-question-color); /* Match footer text color */
+      /* text-decoration: none; /* Inherited from global reset */
+   }
+  footer a:hover {
+      text-decoration: underline;
+      filter: brightness(0.9);
+  }
+  body.dark-mode footer a {
+       color: var(--no-question-color);
+  }
   
-  /* Ensure Open AI Button is correctly positioned */
-  #open-ai-btn {
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-      font-size: 1.8em;
-      background-color: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: 0 2px 10px var(--shadow-color);
-      z-index: 999;
-      transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease; /* Added opacity transition */
-      opacity: 1; /* Default visible */
-  }
-  #open-ai-btn:hover {
-      background-color: var(--header-color);
-      transform: scale(1.1);
-  }
-  #open-ai-btn.hidden { /* Class to hide button when chat is open */
-      opacity: 0;
-      pointer-events: none;
-  }
-    
-    footer {
-        text-align: center;
-        padding: 8px;
-        /* --- Footer Text Color Change --- */
-        color: var(--no-question-color); /* Changed from --text-secondary */
-        font-size: 0.85em;
-        background-color: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(2px);
-        border-top: 1px solid var(--border-color);
-        flex-shrink: 0;
-        height: var(--footer-height);
-        box-sizing: border-box;
-    }
-    /* --- Footer Link Color Change --- */
-    footer a {
-        color: var(--no-question-color); /* Match footer text */
-        text-decoration: none;
-     }
-    footer a:hover {
-        text-decoration: underline;
-        /* Optionally slightly darken red on hover */
-        filter: brightness(0.9);
-    }
-    body.dark-mode footer a {
-         color: var(--no-question-color); /* Keep red in dark mode too */
-    }
-    
-    /* --- Mobile Navigation Styles --- */
-    #mobile-menu-toggle {
-        display: none;
-        background: none;
-        border: none;
-        font-size: 1.8em;
-        color: var(--text-color);
-        cursor: pointer;
-        padding: 5px;
-        line-height: 1;
-        z-index: 1101;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 15px;
-    }
+/* --- Mobile Navigation Styles (Global - Initial State) --- */
+#mobile-menu-toggle {
+    display: none;
+    font-size: 1.8em;
+    color: var(--text-color);
+    padding: 5px;
+    line-height: 1;
+    z-index: 1101;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 15px;
+    /* Inherits button reset */
+}
     
     .mobile-nav {
         display: none;
@@ -741,7 +779,7 @@
     #mobile-poem-list {
         flex-grow: 1;
         overflow-y: auto;
-        list-style: none;
+        /* list-style: none; Inherited */
         padding: 0;
         margin: 0;
         scrollbar-width: thin;
@@ -796,144 +834,138 @@
         position: absolute;
         top: 8px;
         right: 8px;
-        background: none;
-        border: none;
         font-size: 1.8em;
         color: var(--text-secondary);
-        cursor: pointer;
         line-height: 1;
         padding: 5px;
+        /* Inherits button reset */
     }
     #mobile-nav-close:hover { color: var(--text-color); }
     
-    /* --- Responsive Design Adjustments --- */
-    
-    /* Tablet Styles (e.g., 801px to 1024px) - Keep sidebars visible, adjust layout */
-    @media (max-width: 1024px) {
-        .main-container {
-            width: 98%;
-            gap: 15px;
-        }
-        .side-nav {
-            width: 25%;
-            min-width: 200px;
-            padding: 12px;
-        }
-        #center-content {
-            width: 50%;
-            padding: 15px 25px;
-            font-size: 1.1em;
-        }
-        #main-title { font-size: 1.5em; }
-        #dark-mode-toggle { font-size: 1.5em; right: 15px; }
-        #mobile-menu-toggle { display: none; }
+/* --- Responsive Design Adjustments --- */
+
+/* Tablet Styles (e.g., 801px to 1024px) - Keep sidebars visible, adjust layout */
+@media (max-width: 1024px) {
+    .main-container {
+        width: 98%;
+        gap: 15px;
     }
-    
-    /* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
-    @media (max-width: 800px) {
-        header { padding: 6px 15px; height: calc(var(--header-height) - 4px); }
-        footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
-        #main-title { font-size: 1.4em; }
-        #dark-mode-toggle { font-size: 1.4em; right: 10px; }
-    
-        #mobile-menu-toggle {
-            display: block; /* Show mobile toggle */
-            font-size: 1.6em;
-            position: absolute;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-        }
-    
-        .main-container {
-            flex-direction: column;
-            width: 100%;
-            padding: 0 5px;
-            margin: 8px auto 10px auto;
-            gap: 10px;
-            overflow: visible;
-        }
-        .side-nav {
-            display: none; /* Hide sidebars */
-        }
-    
-        #center-content {
-            width: auto;
-            order: 0;
-            margin: 0;
-            flex-grow: 1;
-            min-height: 300px;
-            padding: 15px;
-            font-size: 1.05em;
-            max-height: none;
-            overflow-y: visible;
-            /* --- Reduce text max-width on mobile --- */
-            overflow-wrap: break-word; /* Ensure wrap */
-            word-wrap: break-word;
-        }
-         #placeholder-text { max-width: 90%; } /* Narrow placeholder */
-         .poem-main-text p { max-width: 90%; } /* Narrow main text */
-  
-         /* --- Mobile AI Fullscreen --- */
-          #ai-chat-interface.visible { /* Style when visible on mobile */
-              width: 100%;
-              height: 100%;
-              bottom: 0;
-              right: 0;
-              border-radius: 0; /* Remove border radius */
-              max-height: none; /* Remove max height */
-              background-color: rgba(244, 241, 233, 0.85); /* Slightly less transparent BG */
-              backdrop-filter: blur(10px) saturate(120%);
-              -webkit-backdrop-filter: blur(10px) saturate(120%);
-              z-index: 1200; /* Ensure above everything else */
-              padding: 15px; /* Adjust padding */
-              box-sizing: border-box;
-          }
-          body.dark-mode #ai-chat-interface.visible {
-              background-color: rgba(58, 63, 55, 0.85);
-          }
-          #ai-chat-interface.visible #ai-close-btn { /* Make close button more prominent */
-              font-size: 1.8em;
-              top: 15px;
-              right: 15px;
-              color: var(--text-color); /* Make more visible */
-          }
-          #ai-chat-interface.visible #ai-messages {
-              padding: 10px; /* More padding for messages */
-          }
-          #ai-chat-interface.visible .ai-input-area {
-              padding: 0 10px 10px 10px; /* Padding for input area */
-              background: transparent; /* Input area transparent */
-          }
-          #open-ai-btn.hidden { /* Ensure hidden class works */
-              opacity: 0;
-              pointer-events: none;
-          }
+    .side-nav {
+        width: 25%;
+        min-width: 200px;
+        padding: 12px;
     }
-    
-    /* Mobile Phones (e.g., <= 600px) - Further adjustments */
-     @media (max-width: 600px) {
-         #main-title { font-size: 1.2em; }
-         #dark-mode-toggle { font-size: 1.4em; }
-         #mobile-menu-toggle { font-size: 1.5em; }
-    
-         .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
-         #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
-    
-         .main-container { margin: 5px auto 8px auto; gap: 8px; }
-         #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
-         .poem-main-text h1 { font-size: 1.4em; }
-         .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
-         .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 95%; } /* Further adjust max-width if needed */
-         #placeholder-text { max-width: 95%; }
-         .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
-         .question-item { margin-bottom: 15px; }
-         .answer { margin-left: 0.8em; padding: 8px; }
-    
-         #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
-         /* AI Fullscreen already handled by max-width: 800px, no need to repeat unless further tweaks */
-         /* Example: further adjust padding or font size for very small screens if needed */
-         #ai-chat-interface.visible { padding: 10px; }
-  
-         footer { font-size: 0.8em; }
-     }
+    #center-content {
+        width: 50%;
+        padding: 15px 25px;
+        font-size: 1.1em;
+    }
+    #main-title { font-size: 1.5em; }
+    #dark-mode-toggle { font-size: 1.5em; right: 15px; }
+    /* #mobile-menu-toggle { display: none; } /* Removed redundant rule */
+}
+
+/* Smaller Tablets and Large Phones (e.g., <= 800px) - Hide sidebars, show mobile toggle */
+@media (max-width: 800px) {
+    header { padding: 6px 15px; height: calc(var(--header-height) - 4px); }
+    footer { padding: 6px; height: calc(var(--footer-height) - 4px); }
+    #main-title { font-size: 1.4em; }
+    #dark-mode-toggle { font-size: 1.4em; right: 10px; }
+
+    #mobile-menu-toggle {
+        display: block; /* Show the button */
+        font-size: 1.6em;
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+    }
+
+    .main-container {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 5px;
+        margin: 8px auto 10px auto;
+        gap: 10px;
+        overflow: visible;
+    }
+    .side-nav {
+        display: none; /* Hide sidebars */
+    }
+
+    #center-content {
+        width: auto;
+        order: 0;
+        margin: 0;
+        flex-grow: 1;
+        min-height: 300px;
+        padding: 15px;
+        font-size: 1.05em;
+        max-height: none;
+        overflow-y: visible;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+     #placeholder-text { max-width: 90%; }
+     .poem-main-text p { max-width: 90%; }
+
+     /* --- Mobile AI Fullscreen --- */
+      #ai-chat-interface.visible {
+          width: 100%;
+          height: 100%; /* Cover full height */
+          bottom: 0;
+          right: 0;
+          border-radius: 0;
+          max-height: none;
+          background-color: rgba(244, 241, 233, 0.88); /* Slightly less transparent */
+          backdrop-filter: blur(10px) saturate(120%);
+          -webkit-backdrop-filter: blur(10px) saturate(120%);
+          z-index: 1200;
+          padding: 15px;
+          box-sizing: border-box;
+      }
+      body.dark-mode #ai-chat-interface.visible {
+          background-color: rgba(58, 63, 55, 0.9); /* Darker BG for mobile */
+      }
+      #ai-chat-interface.visible #ai-close-btn {
+          font-size: 1.8em;
+          top: 15px;
+          right: 15px;
+          color: var(--text-color);
+      }
+      #ai-chat-interface.visible #ai-messages {
+          padding: 10px;
+          margin-bottom: 10px; /* Increase spacing */
+      }
+      #ai-chat-interface.visible .ai-input-area {
+          padding: 0 10px 10px 10px;
+          background: transparent;
+      }
+      /* #open-ai-btn.hidden handled by JS */
+}
+
+/* Mobile Phones (e.g., <= 600px) - Further adjustments */
+ @media (max-width: 600px) {
+     #main-title { font-size: 1.2em; }
+     #dark-mode-toggle { font-size: 1.4em; }
+     #mobile-menu-toggle { font-size: 1.5em; }
+
+     .mobile-nav-content { width: 95%; padding: 30px 10px 10px 10px; }
+     #mobile-poem-list .nav-button { padding: 9px 5px; font-size: 0.9em; }
+
+     .main-container { margin: 5px auto 8px auto; gap: 8px; }
+     #center-content { padding: 10px; font-size: 1em; min-height: 150px; }
+     .poem-main-text h1 { font-size: 1.4em; }
+     .poem-main-text .meta { font-size: 0.85em; margin-bottom: 15px; }
+     .poem-main-text p { line-height: 1.8; margin-bottom: 1.2em; font-size: 1em; max-width: 95%; }
+     #placeholder-text { max-width: 95%; }
+     .exam-questions h2 { font-size: 1.1em; margin-bottom: 15px; }
+     .question-item { margin-bottom: 15px; }
+     .answer { margin-left: 0.8em; padding: 8px; }
+
+     #open-ai-btn { width: 45px; height: 45px; font-size: 1.6em; bottom: 10px; right: 10px; }
+     /* AI Fullscreen already handled by max-width: 800px */
+     #ai-chat-interface.visible { padding: 10px; } /* Adjust padding if needed */
+
+     footer { font-size: 0.8em; }
+ }

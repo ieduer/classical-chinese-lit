@@ -35,6 +35,7 @@ async function loadPoems() {
         const response = await fetch('data/poems.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         poemsData = await response.json();
+        //console.log("詩文數據已成功載入:", poemsData.length, "篇");
 
         poemsData.sort((a, b) => a.order - b.order);
 
@@ -49,6 +50,7 @@ async function loadPoems() {
                 shiciquData.push(poem);
             }
         });
+        //console.log(`分類完成 - 文言文: ${wenyanwenData.length}, 诗词曲: ${shiciquData.length}`);
 
         renderNavigation(wenyanwenData, wenyanwenListElement);
         renderNavigation(shiciquData, shiciquListElement);
@@ -69,6 +71,12 @@ async function loadPoems() {
     }
 }
 
+/**
+ * Render navigation items into a specific list element.
+ * Includes conditional styling based on presence of questions.
+ * @param {Array} data - Array of poem objects to render.
+ * @param {HTMLElement} listElement - The UL element to populate.
+ */
 function renderNavigation(data, listElement) {
     if (!listElement) return;
     listElement.innerHTML = '';
@@ -247,9 +255,7 @@ function setupTextSelectionListener() {
         if (selectedText.length > 1 && selection.anchorNode && poemDisplayArea.contains(selection.anchorNode.parentElement)) {
             currentSelection = selectedText;
             console.log("Text selected:", currentSelection);
-            if (!aiInterface.classList.contains('visible') && isMobileView) { // Only auto-open on mobile if closed
-                 openAiBtn.click();
-            } else if (!aiInterface.classList.contains('visible')) { // Auto-open on desktop too if closed
+            if (!aiInterface.classList.contains('visible')) { // Auto-open only if closed
                  openAiBtn.click();
             }
         } else {
@@ -264,7 +270,7 @@ function setupTextareaAutosize() {
      const adjustHeight = () => {
          aiInputElement.style.height = 'auto';
          const scrollHeight = aiInputElement.scrollHeight;
-         const maxHeight = parseFloat(getComputedStyle(aiInputElement).lineHeight) * 5;
+         const maxHeight = parseFloat(getComputedStyle(aiInputElement).lineHeight) * 5; // Max height approx 5 lines
          aiInputElement.style.height = Math.min(scrollHeight, maxHeight) + 'px';
          aiInputElement.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
      };
@@ -272,17 +278,16 @@ function setupTextareaAutosize() {
      setTimeout(adjustHeight, 0);
 }
 
- /** Updates the isMobileView flag on resize */
- function handleResize() {
-     isMobileView = window.innerWidth <= 800;
-     // Optionally hide/show openAiBtn immediately based on view and chat state
-     if(aiInterface?.classList.contains('visible') && isMobileView) {
-         openAiBtn?.classList.add('hidden');
-     } else {
-         openAiBtn?.classList.remove('hidden');
-     }
- }
-
+/** Updates the isMobileView flag on resize and hides/shows AI button */
+function handleResize() {
+    isMobileView = window.innerWidth <= 800;
+    // Hide open button if chat is visible AND it's mobile view
+    if(aiInterface?.classList.contains('visible') && isMobileView) {
+        openAiBtn?.classList.add('hidden');
+    } else {
+        openAiBtn?.classList.remove('hidden'); // Show otherwise
+    }
+}
 
 function setupAIChatInterface() {
      if (!aiInterface || !openAiBtn || !aiCloseBtn || !aiSendBtn || !aiInputElement || !aiMessagesElement) return;
@@ -290,7 +295,7 @@ function setupAIChatInterface() {
         aiInterface.style.display = 'flex';
          requestAnimationFrame(() => { aiInterface.classList.add('visible'); });
         aiInputElement.focus();
-        // --- Hide open button when chat is visible on mobile ---
+        // Hide open button when chat is opened, if on mobile
         if (isMobileView) {
             openAiBtn.classList.add('hidden');
         }
@@ -298,7 +303,7 @@ function setupAIChatInterface() {
      aiCloseBtn.addEventListener('click', () => {
         aiInterface.classList.remove('visible');
         aiInterface.addEventListener('transitionend', () => { if (!aiInterface.classList.contains('visible')) aiInterface.style.display = 'none'; }, { once: true });
-        // --- Show open button when chat is closed ---
+        // Show open button when chat is closed
         openAiBtn.classList.remove('hidden');
      });
 
@@ -329,7 +334,7 @@ async function handleAISend() {
     aiInputElement.style.height = 'auto';
     aiInputElement.dispatchEvent(new Event('input'));
 
-    appendAIMessage('窺視者思考中...', 'ai-thinking');
+    appendAIMessage('窺視者思考中...', 'ai-thinking'); // Use valid class name
 
     const payload = { selectedText: selectionToSend, poemContext: currentPoemObject, explicitQuery: userQuery };
     await callAIWorker(payload);
@@ -338,7 +343,9 @@ async function handleAISend() {
 
  /** Calls the Cloudflare Worker */
  async function callAIWorker(payload) {
-     const WORKER_URL = "https://moxie-peer.bdfz.workers.dev/"; // Use the confirmed URL
+     // !!! IMPORTANT: Ensure this URL is correct !!!
+     const WORKER_URL = "https://moxie-peer.bdfz.workers.dev/";
+
      const thinkingMsg = aiMessagesElement?.querySelector('.ai-thinking');
 
      if (!payload.poemContext) {
@@ -396,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAIChatInterface();
     setupTextSelectionListener();
     setupTextareaAutosize();
-    // Listen for window resize to update mobile view flag
+    // Listen for window resize to update mobile view flag and AI button visibility
     window.addEventListener('resize', handleResize);
     handleResize(); // Initial check
     console.log("初始化完成。");
