@@ -354,8 +354,12 @@ body.dark-mode #placeholder-text a {
 .poem-main-text .meta {
     font-size: 0.9em;
     color: var(--text-secondary);
-    text-align: center;
-    margin: 0 0 25px 0;
+    text-align: center; /* 保留 */
+    margin: 0 auto 25px auto; /* 修改: 使用 margin auto 嘗試水平居中塊本身 */
+    padding: 0; /* 確保沒有左右 padding 影響 */
+    display: block; /* 添加/確認: 確保是塊級 */
+    width: fit-content; /* 修改: 讓寬度包裹內容 */
+    /* 或者嘗試 width: 100%; 如果 fit-content 不行 */
 }
 .poem-main-text p {
     text-align: center;
