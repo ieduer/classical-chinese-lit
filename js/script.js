@@ -344,7 +344,7 @@ async function handleAISend() {
  /** Calls the Cloudflare Worker */
  async function callAIWorker(payload) {
      // !!! IMPORTANT: Ensure this URL is correct !!!
-     const WORKER_URL = "https://moxie-peer.bdfz.workers.dev/";
+     const WORKER_URL = "https://moxie.bdfz.net/";
 
      const thinkingMsg = aiMessagesElement?.querySelector('.ai-thinking');
 
