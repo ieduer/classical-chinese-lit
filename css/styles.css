@@ -38,7 +38,7 @@ a {
 /* --- 字體定義 --- */
 @font-face {
   font-family: 'BabelStone Han';
-  src: url('../fonts/BabelStoneHan.woff2') format('woff2');
+  src: url('../Fonts/BabelStoneHan.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -226,6 +226,79 @@ header {
 }
 .nav-button:last-child { border-bottom: none; }
 
+.poem-list-container li,
+#mobile-poem-list li {
+    margin-bottom: 6px;
+}
+
+.nav-item-row {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.nav-item-row .nav-button {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.achievement-toggle {
+    width: 42px;
+    min-width: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(92, 110, 88, 0.18);
+    background: rgba(255, 255, 255, 0.52);
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 2px 8px rgba(80, 70, 60, 0.08);
+}
+
+body.dark-mode .achievement-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.achievement-toggle:hover {
+    transform: translateY(-1px);
+    border-color: var(--accent-color);
+    color: var(--header-color);
+}
+
+.achievement-mark {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 2px solid currentColor;
+    position: relative;
+    display: block;
+}
+
+.achievement-toggle.is-achieved {
+    color: #fff;
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--accent-color), var(--header-color));
+    box-shadow: 0 10px 22px rgba(92, 110, 88, 0.2);
+}
+
+.achievement-toggle.is-achieved .achievement-mark {
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+.achievement-toggle.is-achieved .achievement-mark::after {
+    content: "✓";
+    position: absolute;
+    inset: -4px 0 0 1px;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.achievement-toggle.sync-pending {
+    border-style: dashed;
+}
+
 /* Hover/Active State (Common) */
 .nav-button:hover {
     background-color: var(--button-hover-bg);
@@ -234,6 +307,14 @@ header {
 .nav-button.active-poem {
     font-weight: bold;
     box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+.nav-button.is-achieved {
+    box-shadow: inset 0 0 0 2px rgba(92, 110, 88, 0.28), 0 8px 20px rgba(80, 70, 60, 0.08);
+}
+
+.nav-button.is-achieved.active-poem {
+    box-shadow: inset 0 0 0 3px var(--accent-color), 0 8px 20px rgba(80, 70, 60, 0.12);
 }
 
 /* --- Conditional Button Styling --- */
@@ -281,6 +362,34 @@ body.dark-mode .nav-button.has-questions:hover {
     flex-shrink: 0;
 }
 .scroll-indicator.visible { opacity: 0.6; height: 1.2em; }
+
+.nav-achievement-summary {
+    margin: -6px 0 12px 0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.42);
+    color: var(--text-secondary);
+    font-size: 0.88em;
+    line-height: 1.45;
+}
+
+body.dark-mode .nav-achievement-summary {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-achievement-summary strong {
+    display: block;
+    color: var(--header-color);
+    margin-bottom: 3px;
+}
+
+.nav-achievement-summary .sync-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    font-size: 0.8em;
+}
 
 /* 中間內容區 */
 #center-content {
@@ -797,6 +906,10 @@ body.dark-mode .ai-input-area textarea:focus {
         padding: 11px 8px;
         font-size: 0.95em;
     }
+    #mobile-poem-list .achievement-toggle {
+        width: 40px;
+        min-width: 40px;
+    }
     #mobile-poem-list .nav-button:last-child { border-bottom: none; }
     #mobile-poem-list .nav-button:hover { background-color: var(--button-hover-bg); color: var(--header-color); }
     
@@ -832,6 +945,10 @@ body.dark-mode .ai-input-area textarea:focus {
     }
     body.dark-mode #mobile-poem-list .nav-button.has-questions.active-poem {
          box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.4);
+    }
+
+    .mobile-nav-content .nav-achievement-summary {
+        margin: 0 0 12px 0;
     }
     
     #mobile-nav-close {
