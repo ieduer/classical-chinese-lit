@@ -15,6 +15,8 @@ let isMobileView = window.innerWidth <= 800;
 let achievementState = new Map();
 let remoteProgressChecked = false;
 let remoteProgressEnabled = false;
+let aiConversation = [];
+let aiConversationSessionKey = '';
 
 const wenyanwenListElement = document.getElementById('wenyanwen-list');
 const shiciquListElement = document.getElementById('shiciqu-list');
@@ -42,6 +44,42 @@ const achievementSummaries = {
 
 function mountIdentity() {
     window.BdfzIdentity?.mount({ siteKey: PROGRESS_SITE_KEY });
+}
+
+function resetAiConversationSession() {
+    aiConversationSessionKey = window.BdfzIdentity?.createSessionKey?.(`${PROGRESS_SITE_KEY}-chat`) || `${PROGRESS_SITE_KEY}-chat-${Date.now().toString(36)}`;
+}
+
+function syncAiConversation(reason = 'update') {
+    if (!aiConversation.length) return;
+    if (!aiConversationSessionKey) resetAiConversationSession();
+    window.BdfzIdentity?.recordConversation?.({
+        siteKey: PROGRESS_SITE_KEY,
+        sessionKey: aiConversationSessionKey,
+        title: (currentPoemObject?.title || '高考默写').slice(0, 80),
+        summary: aiConversation[aiConversation.length - 1]?.content?.slice(0, 120) || '默写对话',
+        sourceUrl: window.location.href,
+        messages: aiConversation.map((message, index) => ({
+            id: String(index + 1),
+            role: message.role,
+            content: message.content,
+        })),
+        meta: {
+            reason,
+            poemOrder: currentPoemObject?.order || '',
+        },
+    }).catch(() => {});
+}
+
+function pushAiConversation(role, content, reason = 'update') {
+    const normalizedRole = role === 'assistant' || role === 'system' ? role : 'user';
+    const text = String(content || '').trim();
+    if (!text) return;
+    aiConversation.push({ role: normalizedRole, content: text });
+    if (aiConversation.length > 80) {
+        aiConversation = aiConversation.slice(-80);
+    }
+    syncAiConversation(reason);
 }
 
 function poemItemKey(poem) {
@@ -519,6 +557,8 @@ function displayPoemContent(poem) {
     poemDisplayArea.style.display = 'block';
     centerContentElement.scrollTop = 0;
     currentPoemObject = poem;
+    aiConversation = [];
+    resetAiConversationSession();
 }
 
 function setupAnswerToggleListener() {
@@ -674,8 +714,10 @@ async function handleAISend() {
     }
 
     appendAIMessage(userQuery, 'user');
+    pushAiConversation('user', userQuery, 'user-message');
     if (selectionToSend) {
         appendAIMessage(`(针对选中文字: “${selectionToSend}”)`, 'system info');
+        pushAiConversation('system', `(针对选中文字: “${selectionToSend}”)`, 'selection');
     }
 
     aiInputElement.value = '';
@@ -698,6 +740,7 @@ async function callAIWorker(payload) {
     if (!payload.poemContext) {
         if (thinkingMessage) thinkingMessage.remove();
         appendAIMessage('抱歉，需要先選擇一篇文章才能提問。', 'system error');
+        pushAiConversation('assistant', '抱歉，需要先選擇一篇文章才能提問。', 'assistant-message');
         return;
     }
 
@@ -727,10 +770,13 @@ async function callAIWorker(payload) {
         const result = await response.json();
         if (result.reply) {
             appendAIMessage(result.reply, 'ai');
+            pushAiConversation('assistant', result.reply, 'assistant-message');
         } else if (result.error) {
             appendAIMessage(`AI 返回錯誤: ${result.error}`, 'system error');
+            pushAiConversation('assistant', `AI 返回錯誤: ${result.error}`, 'assistant-error');
         } else {
             appendAIMessage('收到來自 AI 的未知回應格式。', 'system error');
+            pushAiConversation('assistant', '收到來自 AI 的未知回應格式。', 'assistant-error');
         }
     } catch (error) {
         if (thinkingMessage) thinkingMessage.remove();
@@ -741,6 +787,7 @@ async function callAIWorker(payload) {
             displayError = '無法連接到窺視者。請檢查網絡或 Worker 地址是否正確。';
         }
         appendAIMessage(displayError, 'system error');
+        pushAiConversation('assistant', displayError, 'assistant-error');
     } finally {
         window.clearTimeout(timeoutId);
     }
@@ -762,6 +809,7 @@ function appendAIMessage(message, senderClass) {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM 已載入，開始初始化...');
     mountIdentity();
+    resetAiConversationSession();
     setupDarkMode();
     setupMobileNavToggle();
     setupAIChatInterface();
