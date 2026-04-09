@@ -40,6 +40,10 @@ const achievementSummaries = {
     mobile: null,
 };
 
+function mountIdentity() {
+    window.BdfzIdentity?.mount({ siteKey: PROGRESS_SITE_KEY });
+}
+
 function poemItemKey(poem) {
     return `poem-${poem.order}`;
 }
@@ -757,6 +761,7 @@ function appendAIMessage(message, senderClass) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM 已載入，開始初始化...');
+    mountIdentity();
     setupDarkMode();
     setupMobileNavToggle();
     setupAIChatInterface();
