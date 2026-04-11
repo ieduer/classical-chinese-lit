@@ -155,8 +155,8 @@ function renderAchievementSummaries() {
         const completed = source.filter((poem) => isPoemAchieved(poem)).length;
         const label = key === 'wenyanwen' ? '文言文' : key === 'shiciqu' ? '诗词曲' : '全站';
         element.innerHTML = `
-            <strong>${label}已点亮 ${completed} / ${source.length}</strong>
-            <span>点右侧小勋章即可标记完成，再点一次可取消。</span>
+            <strong>${label}已閱讀 ${completed} / ${source.length}</strong>
+            <span>點擊篇目閱讀即自動標記。</span>
             <span class="sync-state">${getSummarySyncText()}</span>
         `;
     });
@@ -166,16 +166,8 @@ function updateAchievementUI(order) {
     const itemKey = `poem-${order}`;
     const record = achievementState.get(itemKey);
     const achieved = Boolean(record);
-    document.querySelectorAll(`[data-poem-order="${order}"]`).forEach((element) => {
-        if (element.classList.contains('nav-button')) {
-            element.classList.toggle('is-achieved', achieved);
-        }
-        if (element.classList.contains('achievement-toggle')) {
-            element.classList.toggle('is-achieved', achieved);
-            element.classList.toggle('sync-pending', achieved && record?.synced === false);
-            element.setAttribute('aria-pressed', String(achieved));
-            element.title = achieved ? '已标记完成，再点一次取消' : '标记为已完成';
-        }
+    document.querySelectorAll(`button.nav-button[data-poem-order="${order}"]`).forEach((element) => {
+        element.classList.toggle('is-achieved', achieved);
     });
 }
 
@@ -294,46 +286,6 @@ async function hydrateRemoteAchievements() {
     }
 }
 
-async function toggleAchievement(order) {
-    const poem = allPoemsMap.get(order);
-    if (!poem) return;
-
-    const itemKey = poemItemKey(poem);
-    if (achievementState.has(itemKey)) {
-        achievementState.delete(itemKey);
-        persistAchievements();
-        updateAchievementUI(order);
-        renderAchievementSummaries();
-
-        try {
-            await hydrateRemoteAchievements();
-            if (remoteProgressEnabled) {
-                await upsertRemoteProgress(poem, false);
-            }
-        } catch (error) {
-            console.warn('取消同步远端成就失败。', error);
-        }
-        return;
-    }
-
-    achievementState.set(itemKey, buildAchievementRecord(poem, false));
-    persistAchievements();
-    updateAchievementUI(order);
-    renderAchievementSummaries();
-
-    try {
-        await hydrateRemoteAchievements();
-        if (remoteProgressEnabled) {
-            await upsertRemoteProgress(poem, true);
-            achievementState.set(itemKey, buildAchievementRecord(poem, true));
-            persistAchievements();
-            updateAchievementUI(order);
-            renderAchievementSummaries();
-        }
-    } catch (error) {
-        console.warn('同步远端成就失败，保留本地记录。', error);
-    }
-}
 
 async function initializeAchievements() {
     readStoredAchievements();
@@ -355,8 +307,6 @@ function renderNavigation(data, listElement) {
 
     data.forEach((poem) => {
         const listItem = document.createElement('li');
-        const row = document.createElement('div');
-        row.className = 'nav-item-row';
 
         const button = document.createElement('button');
         button.textContent = `${poem.order}. ${poem.title} - ${poem.author}`;
@@ -373,16 +323,7 @@ function renderNavigation(data, listElement) {
             button.classList.add('no-questions');
         }
 
-        const achievementButton = document.createElement('button');
-        achievementButton.type = 'button';
-        achievementButton.className = 'achievement-toggle';
-        achievementButton.dataset.poemOrder = poem.order;
-        achievementButton.setAttribute('aria-pressed', 'false');
-        achievementButton.title = '标记为已完成';
-        achievementButton.innerHTML = '<span class="achievement-mark" aria-hidden="true"></span>';
-
-        row.append(button, achievementButton);
-        listItem.appendChild(row);
+        listItem.appendChild(button);
         listElement.appendChild(listItem);
         updateAchievementUI(poem.order);
     });
@@ -396,14 +337,6 @@ function setupNavigationListeners() {
     ];
 
     const handleClick = async (event) => {
-        const toggle = event.target.closest('button.achievement-toggle[data-poem-order]');
-        if (toggle) {
-            event.preventDefault();
-            event.stopPropagation();
-            await toggleAchievement(parseInt(toggle.dataset.poemOrder, 10));
-            return;
-        }
-
         const button = event.target.closest('button.nav-button[data-poem-order]');
         if (!button) return;
 
@@ -415,6 +348,9 @@ function setupNavigationListeners() {
         document.querySelectorAll('button.nav-button').forEach((item) => item.classList.remove('active-poem'));
         document.querySelectorAll(`button.nav-button[data-poem-order="${order}"]`).forEach((item) => item.classList.add('active-poem'));
         if (mobileNavOverlay?.classList.contains('visible')) closeMobileNav();
+
+        // 點擊即標記已讀
+        await markPoemAsRead(selectedPoem);
     };
 
     navContainers.forEach((container) => {
@@ -422,6 +358,30 @@ function setupNavigationListeners() {
             container.addEventListener('click', handleClick);
         }
     });
+}
+
+// 點擊篇目自動標記已讀（不可取消，與論語模式一致）
+async function markPoemAsRead(poem) {
+    if (!poem) return;
+    const itemKey = poemItemKey(poem);
+    if (achievementState.has(itemKey)) return; // 已標記，無需重複
+
+    achievementState.set(itemKey, buildAchievementRecord(poem, false));
+    persistAchievements();
+    updateAchievementUI(poem.order);
+    renderAchievementSummaries();
+
+    try {
+        await hydrateRemoteAchievements();
+        if (remoteProgressEnabled) {
+            await upsertRemoteProgress(poem, true);
+            achievementState.set(itemKey, buildAchievementRecord(poem, true));
+            persistAchievements();
+            updateAchievementUI(poem.order);
+        }
+    } catch (error) {
+        console.warn('同步已讀狀態失敗，保留本地記錄。', error);
+    }
 }
 
 async function loadPoems() {

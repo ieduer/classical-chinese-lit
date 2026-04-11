@@ -231,81 +231,6 @@ header {
     margin-bottom: 6px;
 }
 
-.nav-item-row {
-    display: flex;
-    align-items: stretch;
-    gap: 8px;
-}
-
-.nav-item-row .nav-button {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-
-.achievement-toggle {
-    width: 42px;
-    min-width: 42px;
-    border-radius: 10px;
-    border: 1px solid rgba(92, 110, 88, 0.18);
-    background: rgba(255, 255, 255, 0.52);
-    color: var(--text-secondary);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
-    box-shadow: 0 2px 8px rgba(80, 70, 60, 0.08);
-}
-
-body.dark-mode .achievement-toggle {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-.achievement-toggle:hover {
-    transform: translateY(-1px);
-    border-color: var(--accent-color);
-    color: var(--header-color);
-}
-
-.achievement-mark {
-    width: 18px;
-    height: 18px;
-    border-radius: 6px;
-    border: 2px solid currentColor;
-    position: relative;
-    display: block;
-}
-
-.achievement-toggle.is-achieved {
-    color: #fff;
-    border-color: transparent;
-    background: linear-gradient(135deg, var(--accent-color), var(--header-color));
-    box-shadow: 0 10px 22px rgba(92, 110, 88, 0.2);
-}
-
-.achievement-toggle.is-achieved .achievement-mark {
-    border-color: transparent;
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='9' fill='white' fill-opacity='0.92'/><path d='M6 10.2 L8.6 12.8 L14 7.6' fill='none' stroke='%23556B2F' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
-    transition: transform 0.15s ease;
-}
-
-.achievement-toggle.is-achieved:hover .achievement-mark {
-    transform: scale(1.1);
-}
-
-.achievement-toggle.sync-pending {
-    border-style: dashed;
-}
-
-body.dark-mode .achievement-toggle.is-achieved {
-    background: linear-gradient(135deg, #3a5a3a, #4a6a4a);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-}
-
-body.dark-mode .achievement-toggle.is-achieved .achievement-mark {
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='9' fill='%23b5d89a'/><path d='M6 10.2 L8.6 12.8 L14 7.6' fill='none' stroke='%231f2b16' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
-}
-
 /* Hover/Active State (Common) */
 .nav-button:hover {
     background-color: var(--button-hover-bg);
@@ -316,13 +241,35 @@ body.dark-mode .achievement-toggle.is-achieved .achievement-mark {
     box-shadow: inset 0 0 0 2px var(--accent-color);
 }
 
+/* 已讀標記 — 直接顯示在篇目按鈕上 */
 .nav-button.is-achieved {
     border-left: 3px solid #556B2F;
-    box-shadow: inset 0 0 0 2px rgba(92, 110, 88, 0.28), 0 8px 20px rgba(80, 70, 60, 0.08);
+    position: relative;
+    padding-right: 30px;
+}
+
+.nav-button.is-achieved::after {
+    content: '';
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='9' fill='%23556B2F'/><path d='M6 10.2 L8.6 12.8 L14 7.6' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
+    transition: transform 0.15s ease;
+}
+
+.nav-button.is-achieved:hover::after {
+    transform: translateY(-50%) scale(1.12);
 }
 
 body.dark-mode .nav-button.is-achieved {
     border-left-color: #8bc48b;
+}
+
+body.dark-mode .nav-button.is-achieved::after {
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><circle cx='10' cy='10' r='9' fill='%23b5d89a'/><path d='M6 10.2 L8.6 12.8 L14 7.6' fill='none' stroke='%231f2b16' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/contain no-repeat;
 }
 
 .nav-button.is-achieved.active-poem {
@@ -917,10 +864,6 @@ body.dark-mode .ai-input-area textarea:focus {
     #mobile-poem-list .nav-button {
         padding: 11px 8px;
         font-size: 0.95em;
-    }
-    #mobile-poem-list .achievement-toggle {
-        width: 40px;
-        min-width: 40px;
     }
     #mobile-poem-list .nav-button:last-child { border-bottom: none; }
     #mobile-poem-list .nav-button:hover { background-color: var(--button-hover-bg); color: var(--header-color); }
