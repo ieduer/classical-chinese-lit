@@ -40,3 +40,9 @@ No new Cloudflare capability, binding, route, identity, data store or shared-hub
 
 Rollback by promoting deployment `24b07328-8be8-4d95-9a3e-54efb12c1afa`, then repeat the root, asset,
 data and dependency readbacks. Static rollback does not mutate student progress or shared services.
+
+Last verified: 2026-08-16. The normal Git gate passed without override at pushed commit
+`8ca8d77d70c077d95fcd26ef0717938042522535`; Pages production deployment
+`196c6dc7-ff25-49d5-a5ba-af8843fb31de` is live. The public data, JavaScript and CSS SHA-256 values
+exactly match the committed hash-pinned artifact. The root references the new JavaScript, all four
+2026 entries are present, and the User Center and navigation dependencies returned HTTP 200.
