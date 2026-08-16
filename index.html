@@ -6,14 +6,26 @@
     <title>高考默写</title>
     <!-- Add Favicon -->
     <link rel="icon" href="https://img.bdfz.net/20250503004.webp" type="image/webp">
-    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        try {
+            if (localStorage.getItem('mf-reading-mode-v1') === 'focus') {
+                document.documentElement.classList.add('is-reading-focus');
+            }
+        } catch (_) {
+            // Keep the default layout when browser storage is unavailable.
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.5f855963.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <script>
         window.__BDFZ_WIDGET_CONFIG__ = {
-            insetBottom: 84,
-            mobileInsetBottom: 68
+            position: 'left',
+            insetBottom: 18,
+            insetSide: 18,
+            mobileInsetBottom: 68,
+            mobileInsetSide: 12
         };
     </script>
 </head>
@@ -21,6 +33,10 @@
     <!-- Rest of the body remains the same -->
     <header>
         <button id="mobile-menu-toggle" aria-label="Toggle Menu" aria-expanded="false">☰</button>
+        <button id="reading-mode-toggle" type="button" aria-pressed="false" aria-controls="left-nav right-nav center-content immersive-sequence-nav">
+            <span class="reading-mode-icon" aria-hidden="true">⤢</span>
+            <span class="reading-mode-label">沉浸阅读</span>
+        </button>
         <h1 id="main-title">高考默写</h1>
         <button id="dark-mode-toggle" title="切換模式">🌗</button>
     </header>
@@ -46,7 +62,8 @@
         </nav>
 
         <main id="center-content">
-            <div id="placeholder-text">
+            <div id="reading-scroll-region">
+                <div id="placeholder-text">
                 <h2>并不欢迎你来</h2>
                 <p>点击目录，开始背诵；但你真正要的高考8分是写出来的。所以，不在路上的话，笔墨伺候，边写边背。切切！</p>
                 <p>本站包含高考课标和课本要求背诵全部内容，取合集。篇目文字以现行部编本教材为准，课标有但现行部编本无者，以此前人教版教材为准。中译中一下，这个世界上没有比本网站更权威的背诵资料了。</p>
@@ -56,15 +73,32 @@
                 <p>网页右下角有窥视者，你可以咬ta，或者被ta咬。</p>
                 <p>网站已校对过第一轮。还有差池辛苦论坛说，或右键打开： <a href="mailto:sunyulei@i.pkuschool.edu.cn">反个馈</a> </p>
                 <p>教材有CJK-Ext-C级汉字："𫐓"、"𪭢"，一个CJK-Ext-E级类推简化字："𬘢"，虽然我引入了 BabelStoneHan 字库，但大概率手机依旧乱码或不显示；错……在国家文字规范那儿，你知道就好。</p>
+                </div>
+                <article id="poem-display-area" style="display: none;">
+                    <div class="poem-main-text">
+                        <!-- Main poem text will be rendered here -->
+                    </div>
+                    <div class="exam-questions">
+                         <!-- Exam questions will be rendered here -->
+                    </div>
+                </article>
             </div>
-            <article id="poem-display-area" style="display: none;">
-                <div class="poem-main-text">
-                    <!-- Main poem text will be rendered here -->
-                </div>
-                <div class="exam-questions">
-                     <!-- Exam questions will be rendered here -->
-                </div>
-            </article>
+            <nav id="immersive-sequence-nav" aria-label="沉浸阅读篇目切换" hidden>
+                <button id="immersive-previous-poem" class="sequence-poem-button previous" type="button" hidden>
+                    <span class="sequence-arrow" aria-hidden="true">←</span>
+                    <span class="sequence-copy">
+                        <span class="sequence-direction">上一篇</span>
+                        <span class="sequence-title"></span>
+                    </span>
+                </button>
+                <button id="immersive-next-poem" class="sequence-poem-button next" type="button" hidden>
+                    <span class="sequence-copy">
+                        <span class="sequence-direction">下一篇</span>
+                        <span class="sequence-title"></span>
+                    </span>
+                    <span class="sequence-arrow" aria-hidden="true">→</span>
+                </button>
+            </nav>
         </main>
 
         <nav id="right-nav" class="side-nav">
@@ -95,7 +129,7 @@
     </footer>
 
     <script src="https://my.bdfz.net/site-auth.js"></script>
-    <script src="js/script.js" defer></script>
+    <script src="js/script.5d5119fe.js" defer></script>
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};

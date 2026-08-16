@@ -514,7 +514,7 @@ async function markPoemAsRead(poem) {
 
 async function loadPoems() {
     try {
-        const response = await fetch('data/poems.ad0aad72.json');
+        const response = await fetch('data/poems.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         poemsData = await response.json();
         poemsData.sort((a, b) => a.order - b.order);
@@ -737,12 +737,7 @@ function displayPoemContent(poem) {
 
     const questions = [];
     if (poem.question) {
-        questions.push({
-            q: poem.question,
-            a: poem.reference_answer || '暂无答案',
-            y: poem.year || '年份未知',
-            origin: poem.answer_origin || '',
-        });
+        questions.push({ q: poem.question, a: poem.reference_answer || '暂无答案', y: poem.year || '年份未知' });
     }
     let index = 1;
     while (poem[`question${index}`]) {
@@ -750,7 +745,6 @@ function displayPoemContent(poem) {
             q: poem[`question${index}`],
             a: poem[`reference_answer${index}`] || '暂无答案',
             y: poem[`year${index}`] || '年份未知',
-            origin: poem[`answer_origin${index}`] || '',
         });
         index += 1;
     }
@@ -771,7 +765,7 @@ function displayPoemContent(poem) {
             questionText.setAttribute('aria-expanded', 'false');
             const answerDiv = document.createElement('div');
             answerDiv.className = 'answer';
-            answerDiv.textContent = item.origin ? `${item.a}\n${item.origin}（非官方答案）` : item.a;
+            answerDiv.textContent = item.a;
             answerDiv.style.display = 'none';
             questionItem.append(questionText, answerDiv);
             questionsContainer.appendChild(questionItem);
