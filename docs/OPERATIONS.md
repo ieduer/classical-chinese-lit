@@ -1,4 +1,16 @@
-## 2026-09-10：閱讀進度同步修復，尚未部署
+## 2026-09-10 00:52Z：修復已上線，真實閱讀與 My 重載通過
+
+正式 Pages `5f53e801-27e7-4ac5-81e7-2372cf5062bc`，執行來源 `c81ce3f96751ce5a8c1bef18c7aa3dc6f92eb2c0`，程式 `script.4906f6b1.js`。預覽 `04001854-db89-4f7a-8f3f-5d9ab3f4049e` 的 11 個檔案完全相符；正式站 10 個非 HTML 檔案相符，首頁只多出 Cloudflare 的同站隱藏 nofollow 連結及電郵保護。精確移除該連結、還原已核對的原電郵連結並移除指定解碼程式後，整份 HTML 與產物逐位相同。保留最初失敗的原始雜湊收據，沒有任意忽略 HTML 或關閉安全設定。正式設定未變，沒有其他發布者。
+
+已登入使用者原有 36 筆中央 MF 紀錄，修復前在同源靜態圖片頁讀取本機基線，避免舊程式啟動同步。新版載入後完整恢復這 36 筆，中央雜湊未變。於 00:49:54Z 正常點開第 29 篇《滕王閣序》，只發出一筆寫入，收到 `ok:true`、`mf/poem-29` 的正向回執。普通重載 MF 與 My 後，兩邊各有 37 筆；新增紀錄與回執雜湊一致，原 36 筆中央及已恢復本機紀錄逐項未变。My 正常「學習記錄」頁可見該篇。不得重播這次驗收操作。
+
+這項真實流程已通過；自然匿名流量的 401 與寫入失敗是否下降仍未驗收。舊資料中的錯誤 synced 標記沒有批次重寫，歷史受影響數仍未知。MF 通用進度是 `record_only`，不冒充合格學習證據或新增積分。GK 的匿名進度讀取、UC 限流候選版回退與其他 My／機隊目標仍另案未完成。
+
+回退錨點仍為 Pages `196c6dc7-ff25-49d5-a5ba-af8843fb31de`／來源 `8ca8d77d70c077d95fcd26ef0717938042522535`；保留新增及既有學習紀錄。任何回退先確認目前正式版本及操作擁有權。所有發布程序已有終端收據，不得重播 `mf-progress-pages-release.mjs` 的預覽或正式呼叫。
+
+接手先讀 E7（下方完整路徑）中的 `mf-progress-real-owner-acceptance.json`、`mf-progress-production-deployment.json`、`mf-progress-production-readback-reviewed.json`、`mf-progress-owner-baseline.json`、`mf-progress-owner-hydrated.json`、`mf-progress-owner-after.json`、`mf-progress-normal-owner-read.json`、`mf-progress-my-ui-after-reload.json`。中央同步收據是 `reports/operations/shared_hub_changes/2026-09-10-mf-progress-sync-recovery.json`。此文件提交只發布至既有分支，使用 CF-Pages-Skip，不會改變上述執行來源或 Pages ID。
+
+## 發布前規格與本機驗證（現況以上方為準）
 
 獨立交易 `20260910-mf-progress-sync-recovery`，執行者 `codex-my-architecture-serial7`。00:26Z 控制面與檔案讀回確認：正式環境為 Pages `196c6dc7-ff25-49d5-a5ba-af8843fb31de`，來源 `8ca8d77d70c077d95fcd26ef0717938042522535`，線上 `script.5d5119fe.js` 與 Git 完全一致。Git main 的 `182f4048` 早於正式環境；本次從已發布的正式版本歷史 `341fbe214dcbb6e542b80d72cf0d1b6bf62c53fe` 接續，禁止盲目部署舊 main。原始目錄內兩份未提交的儲存稽核文件保持不動。
 

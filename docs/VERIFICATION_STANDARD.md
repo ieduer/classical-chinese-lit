@@ -1,5 +1,7 @@
 # MF executable verification standard
 
+Current00:52Z result: Pages5f53e801/sourcec81ce3f9 is live; original36 records retained exactly, one normalpoem29 write→matchingcentralreceipt→My/source ordinaryreload andvisibleMyrecord passed, counts37/37. EvidenceE7/mf-progress-real-owner-acceptance.json. Natural401/writefailure decrease remains unaccepted. Rollback196c6dc7/source8ca8d77 preservesforwarddata. Terminalpreview/productionpublishers mustnotreplay. Earlier source notesbelow describe the prepublication baseline.
+
 1. Source authority: Pagesmf production196c6dc7/source8ca8d77 plus livehash5d5119fe; existingGit341fbe2records deployment. Never useolderGitmain182f4048 ordirtycanonicaltree. Inspectgitstatus, exactbranchpublication andworkspacegit-deploy-gate.
 2. Safe structuralreadback: exactPagescontrol/config andstaticroot/hashscript/data/CSS, hashedbytecomparisons. NoAI,progresswrite,healthactivation ornotification probe.
 3. Contracts: Node24.18.0 `npm test`; `node --check js/script.js`; exactunversioned/hashedJSparity; immutablepoemdataSHAad0aad7245517e84d49fe967c6207ed07df51bd6c9c4c483d770336f1eaa1f50; `git diff --check`. Denied/missingack mustnevermark synced; same-eventreload retrypreserveslocal records.
