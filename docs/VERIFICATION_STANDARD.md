@@ -1,0 +1,13 @@
+# MF executable verification standard
+
+1. Source authority: Pagesmf production196c6dc7/source8ca8d77 plus livehash5d5119fe; existingGit341fbe2records deployment. Never useolderGitmain182f4048 ordirtycanonicaltree. Inspectgitstatus, exactbranchpublication andworkspacegit-deploy-gate.
+2. Safe structuralreadback: exactPagescontrol/config andstaticroot/hashscript/data/CSS, hashedbytecomparisons. NoAI,progresswrite,healthactivation ornotification probe.
+3. Contracts: Node24.18.0 `npm test`; `node --check js/script.js`; exactunversioned/hashedJSparity; immutablepoemdataSHAad0aad7245517e84d49fe967c6207ed07df51bd6c9c4c483d770336f1eaa1f50; `git diff --check`. Denied/missingack mustnevermark synced; same-eventreload retrypreserveslocal records.
+4. Deploy: existingPagesartifactauthority inOPERATIONS: onlyindex.html,Fonts,bg.webp,css,js,data; cleanpublishedbranch andnormalgate, exactcommithash, branchpreview then mainproduction. Do notuploadrepo docs/tests/backups, mutate projectconfig, createanotherpublisher orblindmergeoldmain.
+5. Dependencyregression: Myexistingidentity/session/progress contract andMFkeys stable; nav/images/AI unchanged. Actualowneroneordinaryreading→centralMFitem→My/source reload mustpass. KZ/UC401 release andGKfollow-up remainindependent; noAppclaimfromdesktop.
+6. Backup/restore: nocorpus/data rewrite; preserveallforwardMy/localprogress andexistingGitoldhashedassets. Useexistingobjectstore at exactacceptedcommit intoabsentregisteredworktree; compareallpublishedassets beforebuild. OriginalGKS/archive gaps retained inoperations, notsilentlyaccepted.
+7. Rollback: promoteexactcurrent196c6dc7 onlyafterownership/currentdeploymentreadback; verifyoldsource8ca8d77 andscript5d5119fe; preserveforwardprogress. Newreleaseanchors mustreplace thiscurrentsectionafteractualreadback.
+8. Lastverified2026-09-10:12localrecovery tests passed andcurrentproductionassets matched. Release, trueownerflow andnaturalerrorreduction notyetaccepted; exactexecutedresults followinprojectstate andE7evidence.
+
+
+Source-only branch publication uses the official `[CF-Pages-Skip]` commit prefix to avoid the Git integration uploading the repository root. This is not a skipped test/release gate: all required local checks and the normal Git gate remain mandatory, and the existing handbook's allowlisted Pages artifact is the sole release publisher. Official authority: https://developers.cloudflare.com/pages/configuration/git-integration/github-integration/#skipping-a-build-via-a-commit-message (read2026-09-10). Publish documentation with the same prefix to avoid an unrelated second publisher.

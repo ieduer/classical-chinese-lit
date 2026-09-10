@@ -8,7 +8,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dataBytes = await readFile(resolve(root, 'data/poems.json'));
 const data = JSON.parse(dataBytes);
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
-const script = await readFile(resolve(root, 'js/script.5d5119fe.js'), 'utf8');
+const script = await readFile(resolve(root, 'js/script.4906f6b1.js'), 'utf8');
 const expected = [
   [4, '思国之安者 必积其德义'],
   [7, '战不善 弊在赂秦'],
@@ -40,7 +40,7 @@ for (const [order, answer] of expected) {
 
 const dataHash = createHash('sha256').update(dataBytes).digest('hex');
 if (dataHash !== 'ad0aad7245517e84d49fe967c6207ed07df51bd6c9c4c483d770336f1eaa1f50') failures.push('data hash mismatch');
-if (!html.includes('js/script.5d5119fe.js')) failures.push('HTML does not bind the new script');
+if (!html.includes('js/script.4906f6b1.js')) failures.push('HTML does not bind the new script');
 if (!script.includes('data/poems.ad0aad72.json') || !script.includes('answer_origin') || !script.includes('非官方答案')) failures.push('script data binding or attribution missing');
 
 if (failures.length) {
