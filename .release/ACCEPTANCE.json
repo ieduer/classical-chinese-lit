@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-20T05:58:13.187Z",
+  "scope": "release-channel control acceptance; project product/data acceptance remains distinct",
+  "repository": "ieduer/classical-chinese-lit",
+  "branch": "main",
+  "targets": [
+    {
+      "target": "mf",
+      "mode": "guarded_automatic",
+      "deployment": "f54fe139-37b9-4c97-897f-98a46e4145bc",
+      "source_commit": "1d22f9fc79bb335bdd1148f543211112de7304ca",
+      "artifacts": 11,
+      "policy_file": ".release/policies.json"
+    }
+  ]
+}
