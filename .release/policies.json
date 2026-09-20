@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "guard_source": "ieduer/cf-ops-scripts@6aef139c359a50c38b5ac3d2522a481540a3daab",
+  "targets": [
+    {
+      "schema_version": 1,
+      "target": "mf",
+      "repository": "https://github.com/ieduer/classical-chinese-lit",
+      "branch": "main",
+      "origin": "https://mf-7hn.pages.dev",
+      "baseline_commit": "c81ce3f96751ce5a8c1bef18c7aa3dc6f92eb2c0",
+      "source_root": "",
+      "output": ".release-output/mf",
+      "stage_tracked_static": true,
+      "build_command": "",
+      "required_paths": [
+        "index.html"
+      ],
+      "required_artifacts": [
+        "index.html"
+      ],
+      "checks": [],
+      "bootstrap": {
+        "deployment_id": "5f53e801-27e7-4ac5-81e7-2372cf5062bc",
+        "fingerprints": [
+          {
+            "path": "/",
+            "artifact": "index.html",
+            "sha256": "f58a1daffa8ddb4a1f28faa41e7d57d39c8ce8944263815918604994d3a3ee73"
+          },
+          {
+            "path": "/css/styles.5f855963.css",
+            "artifact": "css/styles.5f855963.css",
+            "sha256": "5f855963402763041b8485ec7f33bb44fa214bf64bdbacfe0eaa3eba57c79a88"
+          },
+          {
+            "path": "/js/script.4906f6b1.js",
+            "artifact": "js/script.4906f6b1.js",
+            "sha256": "4906f6b1bd31764d2414f93505d4f60245c4f0f822eecc45a8ef841ee0b18973"
+          }
+        ]
+      }
+    }
+  ]
+}
