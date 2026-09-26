@@ -1,3 +1,10 @@
+
+## 2026-09-26 detailed learning recorder candidate
+
+Candidate descends accepted runtime1d22f9fc and docs-only main5f13d3a. The existing reading progress, source corpus and Beijing2026 answer content are unchanged. Full question/selection/poem, request, typed failure and full response are recorded through the accepted private journal with original times, parent chain, fixed account and per-poem ancestry. Model/version unknowns remain null. Durable writes precede model dispatch; explicit storage retry never repeats a model call. Account switch clears visible chat and preserves original-owner pending captures. Anonymous/unconfirmed captures remain local and are never adopted by a later account.
+
+Existing12 progress tests and7 detailed capture tests pass; full hashed UI with native IndexedDB verifies lost acknowledgement/reload, exact15300byte question/21900byte reply, parent/time/dedup, two-owner isolation/recovery and390px layout. Synthetic model transport only: external model0, production grades0, notifications0. Evidence `/Users/ylsuen/CF/reports/operations/learning-records-validity-20260925/mf-browser-candidate.json`. Formal native publication and authenticated production recorder acceptance remain pending; rollbackf54fe139/source1d22f9fc preserves forward data. No automatic server delivery or historical backfill claim.
+
 ## 2026-09-10：閱讀進度同步修復，尚未部署
 
 獨立交易 `20260910-mf-progress-sync-recovery`，執行者 `codex-my-architecture-serial7`。00:26Z 控制面與檔案讀回確認：正式環境為 Pages `196c6dc7-ff25-49d5-a5ba-af8843fb31de`，來源 `8ca8d77d70c077d95fcd26ef0717938042522535`，線上 `script.5d5119fe.js` 與 Git 完全一致。Git main 的 `182f4048` 早於正式環境；本次從已發布的正式版本歷史 `341fbe214dcbb6e542b80d72cf0d1b6bf62c53fe` 接續，禁止盲目部署舊 main。原始目錄內兩份未提交的儲存稽核文件保持不動。

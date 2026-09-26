@@ -8,7 +8,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dataBytes = await readFile(resolve(root, 'data/poems.json'));
 const data = JSON.parse(dataBytes);
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
-const script = await readFile(resolve(root, 'js/script.4906f6b1.js'), 'utf8');
+const scriptPath = html.match(/src="(js\/script\.[a-f0-9]{8}\.js)"/)?.[1];
+if (!scriptPath) throw new Error('Missing hash-bound application');
+const script = await readFile(resolve(root, scriptPath), 'utf8');
 const expected = [
   [4, '思国之安者 必积其德义'],
   [7, '战不善 弊在赂秦'],
@@ -40,7 +42,7 @@ for (const [order, answer] of expected) {
 
 const dataHash = createHash('sha256').update(dataBytes).digest('hex');
 if (dataHash !== 'ad0aad7245517e84d49fe967c6207ed07df51bd6c9c4c483d770336f1eaa1f50') failures.push('data hash mismatch');
-if (!html.includes('js/script.4906f6b1.js')) failures.push('HTML does not bind the new script');
+if (!scriptPath.includes(createHash('sha256').update(script).digest('hex').slice(0, 8))) failures.push('HTML script hash mismatch');
 if (!script.includes('data/poems.ad0aad72.json') || !script.includes('answer_origin') || !script.includes('非官方答案')) failures.push('script data binding or attribution missing');
 
 if (failures.length) {
