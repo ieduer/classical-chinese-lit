@@ -1,3 +1,7 @@
+## 2026-10-03 source-page activation correction
+
+The first source advance to873b874 was consumed, but Pages deployment9bd2b457 is explicitly skipped because the commit carries `[CF-Pages-Skip]`. It never replaced production03db7a47/c2607698. This follow-up leaves all application bytes identical and records activation through a new exact-source preview/native transaction. Do not retry the skipped transaction or bypass the registered native publisher. Evidence: guwen-merge-20261002/mf-native-terminal.json. Real cross-origin copy remains unified acceptance; original data and all15 prior assets remain preserved.
+
 ## 2026-10-03 guwen compatibility candidate — not deployed
 
 Candidate begins at accepted source c2607698c4d4f2922584ecd0400c56304c49cd2d. The original index, 78-piece corpus, capture, progress and every existing asset are unchanged. Add only /merge-transfer.html and two content-hashed scripts to copy approved browser storage to https://recite.bdfz.net after an explicit source-page confirmation. Exact origin/window/nonce/version and size bounds are mandatory; source localStorage/IndexedDB stays read-only and secrets/session keys are excluded. The destination stores exact serialized rows and verifies SHA-256 before receipts. No automatic server replay or anonymous-account adoption occurs.
