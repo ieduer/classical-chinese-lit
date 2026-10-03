@@ -1,3 +1,9 @@
+## 2026-10-03 guwen compatibility candidate — not deployed
+
+Candidate begins at accepted source c2607698c4d4f2922584ecd0400c56304c49cd2d. The original index, 78-piece corpus, capture, progress and every existing asset are unchanged. Add only /merge-transfer.html and two content-hashed scripts to copy approved browser storage to https://recite.bdfz.net after an explicit source-page confirmation. Exact origin/window/nonce/version and size bounds are mandatory; source localStorage/IndexedDB stays read-only and secrets/session keys are excluded. The destination stores exact serialized rows and verifies SHA-256 before receipts. No automatic server replay or anonymous-account adoption occurs.
+
+Reviewable manifest: docs/guwen-transfer-manifest.json; shared implementation and tests are in the Recite merger candidate. Full cross-origin real-browser acceptance is pending. Existing guarded Pages publisher remains the sole production channel. The new root transfer page must be included in the exact reviewed artifact; do not silently omit it from the historical static allowlist. Original host/assets remain reachable and rollback preserves forward local/central data. Main evidence: /Users/ylsuen/CF/reports/operations/guwen-merge-20261002/PROGRESS.md.
+
 
 ## 2026-09-26 detailed learning recorder candidate
 

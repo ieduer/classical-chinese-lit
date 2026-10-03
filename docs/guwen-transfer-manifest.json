@@ -1,0 +1,17 @@
+{
+  "protocol": "langlang-legacy-copy-v1",
+  "target": "https://recite.bdfz.net",
+  "sourceDataWrites": 0,
+  "core": {
+    "file": "js/legacy-transfer-core.1c254c8037cd.js",
+    "sha256": "1c254c8037cdb1e561a4972bbe3361748d16cbabf3797cbe369a53601952e259"
+  },
+  "source": {
+    "file": "js/legacy-transfer-source.b0789d08f6d7.js",
+    "sha256": "b0789d08f6d7428f6273d612d02a22a0da85c84441f5531af52d68cbb66d2f17"
+  },
+  "page": {
+    "file": "merge-transfer.html",
+    "sha256": "683f43a1f6279a6b3440a132c5cc01cb45919569c0b40c46e4cffad8383c0b7b"
+  }
+}
