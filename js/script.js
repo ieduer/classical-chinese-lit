@@ -970,7 +970,7 @@ async function handleAISend() {
     aiSendBtn.disabled = true;
     appendAIMessage(userQuery, 'user');
     if (selectionToSend) appendAIMessage(`(针对选中文字: “${selectionToSend}”)`, 'system info');
-    const thinking = appendAIMessage('窺視者思考中...', 'ai-thinking');
+    const thinking = appendAIMessage('窺視者思考中...（回答较长时可能要等半分钟以上）', 'ai-thinking');
     try {
         const result = await window.MfLearningChat.send(capture, callAIWorker);
         if (!result.visible || currentPoemObject !== poem) return;
@@ -992,7 +992,9 @@ async function handleAISend() {
 
 async function callAIWorker(payload) {
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => controller.abort(), 25000);
+    // 70 s since 2026-11-18 (25 s before): the companion's Worker waits 65 s for the AI gateway, and a long answer by the
+    // first-choice model takes 30 to 40 s. A page that gives up earlier shows a timeout for an answer that was produced.
+    const timeoutId = window.setTimeout(() => controller.abort(), 70000);
     try {
         const response = await fetch(AI_WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: controller.signal });
         if (!response.ok) throw Object.assign(new Error(`HTTP ${response.status}`), { status: response.status, responseBody: await response.text() });
