@@ -1,3 +1,8 @@
+## 2026-11-18 accepted: companion request waits 70 s
+
+- Source `f9b95db` on `main`, Pages deployment `cef20919-5b3c-4054-8579-a8fb5ea8cb8d`, effective 2026-11-18T11:37:21Z; rollback `8b9dede5` (`c2f4fe9`).
+- The page loads `js/script.5862c280.js`; the companion request waits 70 s (25 s before). Details: `docs/OPERATIONS.md`, first section. Earlier sections of this file describe older candidates and are history.
+
 ## 2026-10-03 guwen compatibility candidate — not deployed
 
 Candidate begins at accepted source c2607698c4d4f2922584ecd0400c56304c49cd2d. The original index, 78-piece corpus, capture, progress and every existing asset are unchanged. Add only /merge-transfer.html and two content-hashed scripts to copy approved browser storage to https://recite.bdfz.net after an explicit source-page confirmation. Exact origin/window/nonce/version and size bounds are mandatory; source localStorage/IndexedDB stays read-only and secrets/session keys are excluded. The destination stores exact serialized rows and verifies SHA-256 before receipts. No automatic server replay or anonymous-account adoption occurs.

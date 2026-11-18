@@ -1,3 +1,12 @@
+## 2026-11-18 companion request waits 70 s (sites-three-tier-20261118)
+
+- Accepted: source `f9b95db` on `main`, Pages deployment `cef20919-5b3c-4054-8579-a8fb5ea8cb8d`, effective 2026-11-18T11:37:21Z. Rollback: Pages rollback to `8b9dede5` (source `c2f4fe9`); withdraw the gateway admission of moxie-peer first, because the previous script gives up after 25 s.
+- What changed: `callAIWorker` in `js/script.js` waits 70 s instead of 25 s, and the waiting line says a long answer may take more than half a minute. Reason: the companion's Worker (moxie.bdfz.net) waits 65 s for the AI gateway, and since the same day its answers come from Claude first; a long answer (about 1,500 characters) took 30 to 40 s on production.
+- Hashed copy: the page loads `js/script.5862c280.js` (first eight hex digits of the SHA-256 of `js/script.js`; `scripts/check-beijing-2026.mjs` checks the match). Earlier hashed copies stay in the repository so pages opened before a release keep working. To change the script: edit `js/script.js`, copy it to its new hashed name, point `index.html` at it, run `npm test`.
+- Not changed: corpus, capture, progress, learning records, styles, fonts, the legacy copy page. No Function, binding or guard-policy change.
+- Acceptance: the public page loads exactly the new script; the served script waits 70 s and no longer 25 s; the previous hashed script is still served. The companion itself was exercised through its Worker after the gateway admitted it again (see the gateway report).
+- Evidence: `/Users/ylsuen/CF/_meta/reports/operations/sites-three-tier-20261118/b3/mf/`. Report: `/Users/ylsuen/CF/_meta/reports/operations/sites-three-tier-20261118/REPORT.md`.
+
 ## 2026-10-03 source-page activation correction
 
 The first source advance to873b874 was consumed, but Pages deployment9bd2b457 is explicitly skipped because the commit carries `[CF-Pages-Skip]`. It never replaced production03db7a47/c2607698. This follow-up leaves all application bytes identical and records activation through a new exact-source preview/native transaction. Do not retry the skipped transaction or bypass the registered native publisher. Evidence: guwen-merge-20261002/mf-native-terminal.json. Real cross-origin copy remains unified acceptance; original data and all15 prior assets remain preserved.
