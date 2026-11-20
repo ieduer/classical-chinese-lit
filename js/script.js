@@ -965,9 +965,18 @@ async function handleAISend() {
     const poem = currentPoemObject;
     const payload = { selectedText: selectionToSend, poemContext: poem, explicitQuery: userQuery };
     let capture;
-    try { capture = window.MfLearningChat.capture(payload, aiConversationSessionKey); }
-    catch (_) { appendAIMessage('学习记录尚未准备好，请稍后重试。', 'system error'); return; }
     aiSendBtn.disabled = true;
+    try {
+        capture = await window.MfLearningChat.prepareCapture(payload, aiConversationSessionKey);
+    } catch (_) {
+        appendAIMessage('暂时无法确认当前账号。问题仍在输入框，请稍后再发送。', 'system error');
+        aiSendBtn.disabled = false;
+        return;
+    }
+    if (currentPoemObject !== poem || !capture.current()) {
+        aiSendBtn.disabled = false;
+        return;
+    }
     appendAIMessage(userQuery, 'user');
     if (selectionToSend) appendAIMessage(`(针对选中文字: “${selectionToSend}”)`, 'system info');
     const thinking = appendAIMessage('窺視者思考中...（回答较长时可能要等半分钟以上）', 'ai-thinking');

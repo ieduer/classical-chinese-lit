@@ -10,6 +10,32 @@ function fixture({fail}={}){
  const root={BdfzLearningRecords:service,addEventListener:(k,f)=>events[k]=f,localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)}};
  vm.runInNewContext(source,{window:root,Map,JSON,Error});return{api:root.MfLearningChat,service,records,events,storage};
 }
+test('a submitted question waits for the current account before fixing its owner', async () => {
+ const f = fixture();
+ f.service.scope = null;
+ let release;
+ f.service.prepare = () => new Promise(resolve => { release = resolve; });
+ const preparing = f.api.prepareCapture(payload(), 'session');
+ assert.equal(f.records.length, 0);
+ f.service.scope = 'signed-in-owner';
+ release();
+ const captured = await preparing;
+ assert.equal(captured.context.captureScope, 'signed-in-owner');
+});
+test('confirmed guests retain device-only questions and unknown identity stops submission', async () => {
+ const f = fixture();
+ f.service.scope = null;
+ f.service.prepare = async () => { throw Object.assign(Error('guest'), {code:'LEARNING_LOGIN_REQUIRED'}); };
+ assert.equal((await f.api.prepareCapture(payload(),'session')).context.captureScope, null);
+ f.service.prepare = async () => { throw Error('offline'); };
+ await assert.rejects(f.api.prepareCapture(payload(),'session'), /offline/);
+});
+test('changing accounts while identity is being resolved cancels the pending question', async () => {
+ const f = fixture();
+ f.service.prepare = async () => { f.events['bdfz:session-invalidated'](); };
+ await assert.rejects(f.api.prepareCapture(payload(),'session'), /账号已切换/);
+ assert.deepEqual(f.records, []);
+});
 test('durable original question and request precede transport; full reply and model provenance are linked',async()=>{
  const f=fixture(),p=payload(),c=f.api.capture(p,'session');p.poemContext.title='changed after capture';const raw={reply:' 完整回答\n'.repeat(2000),model:'synthetic-fixture',modelVersion:'v1'};
  const out=await f.api.send(c,async sent=>{assert.equal(f.records.length,2);assert.equal(sent.poemContext.title,'合成文章');return raw;});

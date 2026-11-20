@@ -8,6 +8,18 @@
         if (!root.BdfzLearningRecords) throw new Error('学习记录尚未准备好，请稍后重试。');
         return root.BdfzLearningRecords;
     }
+    async function prepareCapture(payload, sessionKey) {
+        const s = service();
+        const epoch = generation;
+        try {
+            await s.prepare();
+        } catch (error) {
+            // A confirmed guest may use the device-only recording path.
+            if (error.code !== 'LEARNING_LOGIN_REQUIRED' || s.scope) throw error;
+        }
+        if (epoch !== generation) throw new Error('账号已切换，请重新发送。');
+        return capture(payload, sessionKey);
+    }
     async function save(s, operation) {
         pending.set(operation.operationId, { s, operation });
         await s.record(operation);
@@ -54,5 +66,5 @@
         for (const { s, operation } of [...pending.values()]) await save(s, operation);
         return service().retry();
     }
-    root.MfLearningChat = { capture, send, retryStorage, pendingCount: () => pending.size };
+    root.MfLearningChat = { capture, prepareCapture, send, retryStorage, pendingCount: () => pending.size };
 })(typeof window === 'undefined' ? globalThis : window);

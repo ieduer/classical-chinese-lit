@@ -1,3 +1,7 @@
+## 2026-11-20　默寫對話的帳號歸屬候選
+
+在已登入的頁面剛開啟時送出，原版可能在帳號核對完成前把第一個問題記成未歸戶，稍後重試保存也不能補掛。候選在送出前等候學習紀錄服務辨明訪客或當前帳號。核對失敗時保留輸入，在等待期間換帳號會取消本次送出。歷史訪客紀錄繼續保存在原裝置。正式版本及驗收範圍見[本次報告](/Users/ylsuen/CF/_meta/reports/operations/forum-primary-20261120/REPORT.md)。
+
 ## 2026-11-18 accepted: companion request waits 70 s
 
 - Source `f9b95db` on `main`, Pages deployment `cef20919-5b3c-4054-8579-a8fb5ea8cb8d`, effective 2026-11-18T11:37:21Z; rollback `8b9dede5` (`c2f4fe9`).
